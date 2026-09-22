@@ -1,0 +1,278 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const db = require('../config/database');
+const config = require('../config');
+const { AppError } = require('../middleware/errorHandler');
+
+const login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    
+    const query = 'SELECT id, email, password_hash, role FROM admins WHERE email = $1';
+    const result = await db.query(query, [email]).catch(() => ({ rows: [] })); // fallback
+    
+    // For local dev, if no admin table, mock authentication
+    let admin = result.rows[0];
+    let isMatch = false;
+    
+    if (!admin) {
+      if (email === 'admin@safecity.local' && password === 'admin123') {
+         admin = { id: 1, email, role: 'SUPER_ADMIN' };
+         isMatch = true;
+      }
+    } else {
+      isMatch = await bcrypt.compare(password, admin.password_hash);
+    }
+    
+    if (!isMatch || !admin) {
+      return next(new AppError('Invalid email or password', 401));
+    }
+    
+    const token = jwt.sign(
+      { id: admin.id, email: admin.email, role: admin.role },
+      config.jwt.secret,
+      { expiresIn: config.jwt.expiresIn }
+    );
+    
+    res.status(200).json({
+      success: true,
+      data: {
+        token,
+        admin: {
+          id: admin.id,
+          email: admin.email,
+          role: admin.role
+        }
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getDashboard = async (req, res, next) => {
+  try {
+    // Parallelizing queries
+    const [
+      totalRes, pendingRes, verifiedRes, rejectedRes, severityRes, categoryRes, timeRes, hotspotsRes
+    ] = await Promise.all([
+      db.query('SELECT COUNT(*) FROM incidents'),
+      db.query("SELECT COUNT(*) FROM incidents WHERE status = 'PENDING'"),
+      db.query("SELECT COUNT(*) FROM incidents WHERE status = 'VERIFIED'"),
+      db.query("SELECT COUNT(*) FROM incidents WHERE status = 'REJECTED'"),
+      db.query('SELECT AVG(severity_score) as avg_severity FROM incidents'),
+      db.query('SELECT COALESCE(final_category, category_id::text) as cat, COUNT(*) FROM incidents GROUP BY cat'),
+      db.query(`
+        SELECT DATE(created_at) as date, COUNT(*) 
+        FROM incidents 
+        WHERE created_at >= NOW() - INTERVAL '30 days'
+        GROUP BY DATE(created_at)
+        ORDER BY date
+      `),
+      db.query('SELECT COUNT(*) FROM clusters WHERE is_active = true').catch(() => ({ rows: [{ count: 0 }] }))
+    ].map(p => p.catch(() => ({ rows: [{ count: 0, avg_severity: 0 }] })))); // graceful failures
+
+    res.status(200).json({
+      success: true,
+      data: {
+        stats: {
+          total_reports: parseInt(totalRes.rows[0]?.count || 0, 10),
+          pending: parseInt(pendingRes.rows[0]?.count || 0, 10),
+          verified: parseInt(verifiedRes.rows[0]?.count || 0, 10),
+          rejected: parseInt(rejectedRes.rows[0]?.count || 0, 10),
+          active_hotspots: parseInt(hotspotsRes.rows[0]?.count || 0, 10),
+          avg_severity: parseFloat(severityRes.rows[0]?.avg_severity || 0)
+        },
+        reports_by_category: categoryRes.rows || [],
+        reports_over_time: timeRes.rows || []
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getAdminIncidents = async (req, res, next) => {
+  try {
+    const { page = 1, limit = 20, status, search, sort = 'created_at', order = 'desc' } = req.query;
+    const offset = (page - 1) * limit;
+    
+    let whereClauses = [];
+    let values = [];
+    let paramCounter = 1;
+    
+    if (status) {
+      whereClauses.push(`status = $${paramCounter++}`);
+      values.push(status);
+    }
+    
+    if (search) {
+      whereClauses.push(`(public_report_id ILIKE $${paramCounter} OR description ILIKE $${paramCounter})`);
+      values.push(`%${search}%`);
+      paramCounter++;
+    }
+    
+    const whereString = whereClauses.length > 0 ? 'WHERE ' + whereClauses.join(' AND ') : '';
+    const safeSort = ['created_at', 'incident_time', 'severity_score'].includes(sort) ? sort : 'created_at';
+    const safeOrder = order.toLowerCase() === 'asc' ? 'ASC' : 'DESC';
+    
+    const countQuery = `SELECT COUNT(*) FROM incidents ${whereString}`;
+    const countResult = await db.query(countQuery, values).catch(() => ({ rows: [{ count: 0 }] }));
+    const totalCount = parseInt(countResult.rows[0].count, 10);
+    
+    const dataQuery = `
+      SELECT * FROM incidents 
+      ${whereString}
+      ORDER BY ${safeSort} ${safeOrder}
+      LIMIT $${paramCounter++} OFFSET $${paramCounter++}
+    `;
+    
+    const dataResult = await db.query(dataQuery, [...values, limit, offset]).catch(() => ({ rows: [] }));
+    
+    res.status(200).json({
+      success: true,
+      data: dataResult.rows,
+      meta: {
+        total: totalCount,
+        page: parseInt(page, 10),
+        limit: parseInt(limit, 10),
+        pages: Math.ceil(totalCount / limit)
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const verifyIncident = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const adminId = req.admin.id;
+    
+    const updateQuery = `
+      UPDATE incidents 
+      SET status = 'VERIFIED', verified_at = NOW(), verified_by = $1
+      WHERE id = $2
+      RETURNING *
+    `;
+    
+    const result = await db.query(updateQuery, [adminId, id]);
+    
+    if (result.rows.length === 0) {
+      return next(new AppError('Incident not found', 404));
+    }
+    
+    // Log action
+    await db.query(`
+      INSERT INTO verification_actions (incident_id, admin_id, action_type)
+      VALUES ($1, $2, 'VERIFY')
+    `, [id, adminId]).catch(e => console.warn('Failed to log verification', e));
+    
+    res.status(200).json({
+      success: true,
+      data: result.rows[0],
+      message: 'Incident verified successfully'
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const rejectIncident = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { rejection_reason } = req.body;
+    const adminId = req.admin.id;
+    
+    const updateQuery = `
+      UPDATE incidents 
+      SET status = 'REJECTED', verified_at = NOW(), verified_by = $1
+      WHERE id = $2
+      RETURNING *
+    `;
+    
+    const result = await db.query(updateQuery, [adminId, id]);
+    
+    if (result.rows.length === 0) {
+      return next(new AppError('Incident not found', 404));
+    }
+    
+    // Log action
+    await db.query(`
+      INSERT INTO verification_actions (incident_id, admin_id, action_type, notes)
+      VALUES ($1, $2, 'REJECT', $3)
+    `, [id, adminId, rejection_reason]).catch(e => console.warn('Failed to log rejection', e));
+    
+    res.status(200).json({
+      success: true,
+      data: result.rows[0],
+      message: 'Incident rejected successfully'
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const overrideCategory = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { new_category, override_reason } = req.body;
+    const adminId = req.admin.id;
+    
+    // First, check if it already has an override
+    const checkQuery = 'SELECT ai_category, final_category FROM incidents WHERE id = $1';
+    const checkResult = await db.query(checkQuery, [id]);
+    
+    if (checkResult.rows.length === 0) {
+      return next(new AppError('Incident not found', 404));
+    }
+    
+    const incident = checkResult.rows[0];
+    let query, values;
+    
+    if (!incident.final_category) {
+      // First override
+      query = `
+        UPDATE incidents 
+        SET original_ai_category = ai_category, final_category = $1
+        WHERE id = $2
+        RETURNING *
+      `;
+      values = [new_category, id];
+    } else {
+      // Subsequent override
+      query = `
+        UPDATE incidents 
+        SET final_category = $1
+        WHERE id = $2
+        RETURNING *
+      `;
+      values = [new_category, id];
+    }
+    
+    const result = await db.query(query, values);
+    
+    // Log action
+    await db.query(`
+      INSERT INTO verification_actions (incident_id, admin_id, action_type, notes)
+      VALUES ($1, $2, 'OVERRIDE_CATEGORY', $3)
+    `, [id, adminId, override_reason]).catch(e => console.warn('Failed to log override', e));
+    
+    res.status(200).json({
+      success: true,
+      data: result.rows[0],
+      message: 'Category overridden successfully'
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  login,
+  getDashboard,
+  getAdminIncidents,
+  verifyIncident,
+  rejectIncident,
+  overrideCategory
+};

@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # ── PostgreSQL + PostGIS ──
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: safecity-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: safecity_db
+      POSTGRES_USER: safecity_user
+      POSTGRES_PASSWORD: safecity_pass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U safecity_user -d safecity_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Node.js Backend API ──
+  backend:
+    build: ./backend
+    container_name: safecity-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://safecity_user:safecity_pass@db:5432/safecity_db
+      JWT_SECRET: docker-dev-secret-change-in-production
+      JWT_EXPIRES_IN: 24h
+      AI_SERVICE_URL: http://ai-service:8000
+      FRONTEND_URL: http://localhost:5173
+      PORT: 3001
+      NODE_ENV: development
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── Python AI Service ──
+  ai-service:
+    build: ./ai-service
+    container_name: safecity-ai
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      AI_DEMO_MODE: "true"
+      AI_MODEL_PATH: app/model/saved
+
+  # ── React Frontend (dev server) ──
+  frontend:
+    build: ./frontend
+    container_name: safecity-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3001
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
