@@ -20,7 +20,7 @@ const errorHandler = (err, req, res, next) => {
 
   const response = {
     success: false,
-    error: message,
+    error: err.message || message,
   };
 
   if (process.env.NODE_ENV === 'development') {
