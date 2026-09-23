@@ -31,9 +31,15 @@ app.use('/api/incidents', incidentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/ai', aiRoutes);
 
-// Health Check
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ success: true, message: 'API is running' });
+// Health Check with DB ping
+app.get('/api/health', async (req, res) => {
+  try {
+    const db = require('./config/database');
+    const r = await db.query('SELECT 1 as test');
+    res.status(200).json({ success: true, message: 'API is running', db: 'connected', version: 'v2' });
+  } catch (err) {
+    res.status(200).json({ success: true, message: 'API is running', db: 'error', error: err.message, version: 'v2' });
+  }
 });
 
 // 404 Handler
