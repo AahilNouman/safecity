@@ -53,13 +53,11 @@ const ReportPage = () => {
     setLoading(true);
     try {
       const payload = {
-        category: formData.category,
+        category_id: CATEGORIES.indexOf(formData.category) + 1, // Simple mapping for demo
         description: formData.description,
-        location: {
-          type: 'Point',
-          coordinates: [formData.location.lng, formData.location.lat]
-        },
-        incidentDate: new Date(formData.incidentDate).toISOString()
+        latitude: formData.location.lat,
+        longitude: formData.location.lng,
+        incident_time: new Date(formData.incidentDate).toISOString()
       };
 
       const result = await submitIncident(payload);

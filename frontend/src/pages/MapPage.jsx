@@ -35,8 +35,11 @@ const MapPage = () => {
         getHotspots()
       ]);
 
-      setIncidents(incidentsData);
-      setHotspots(hotspotsData);
+      const incList = Array.isArray(incidentsData) ? incidentsData : (incidentsData?.data || []);
+      const hotList = Array.isArray(hotspotsData) ? hotspotsData : (hotspotsData?.data || []);
+
+      setIncidents(incList);
+      setHotspots(hotList);
     } catch (err) {
       toast.error('Failed to load map data');
     } finally {

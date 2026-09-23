@@ -20,9 +20,10 @@ const IncidentDetail = () => {
 
   const fetchIncident = async () => {
     try {
-      const data = await getIncidentById(id);
+      const res = await getIncidentById(id);
+      const data = res?.data || res;
       setIncident(data);
-      setOverrideCat(data.category);
+      setOverrideCat(data.final_category || data.ai_category || data.category_id || data.category || '');
     } catch (error) {
       toast.error('Failed to load incident details');
       navigate('/admin/incidents');
@@ -72,6 +73,10 @@ const IncidentDetail = () => {
   if (loading) return <LoadingSpinner />;
   if (!incident) return null;
 
+  const currentStatus = incident.verification_status || incident.status;
+  const lat = parseFloat(incident.latitude || incident.location?.coordinates?.[1] || 12.9716);
+  const lng = parseFloat(incident.longitude || incident.location?.coordinates?.[0] || 77.5946);
+
   return (
     <div>
       <div style={{ marginBottom: '2rem' }}>
@@ -81,15 +86,15 @@ const IncidentDetail = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h1 style={{ margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              Incident {incident.reportId}
-              {incident.status === 'PENDING' && <span className="badge badge-pending">PENDING</span>}
-              {incident.status === 'VERIFIED' && <span className="badge badge-verified">VERIFIED</span>}
-              {incident.status === 'REJECTED' && <span className="badge badge-rejected">REJECTED</span>}
+              Incident {incident.public_report_id || incident.reportId}
+              {currentStatus === 'PENDING' && <span className="badge badge-pending">PENDING</span>}
+              {currentStatus === 'VERIFIED' && <span className="badge badge-verified">VERIFIED</span>}
+              {currentStatus === 'REJECTED' && <span className="badge badge-rejected">REJECTED</span>}
             </h1>
-            <p style={{ color: 'var(--text-muted)', margin: 0 }}>Reported {new Date(incident.createdAt).toLocaleString()}</p>
+            <p style={{ color: 'var(--text-muted)', margin: 0 }}>Reported {new Date(incident.created_at || incident.createdAt || Date.now()).toLocaleString()}</p>
           </div>
           
-          {incident.status === 'PENDING' && (
+          {currentStatus === 'PENDING' && (
             <div style={{ display: 'flex', gap: '1rem' }}>
               <button onClick={handleVerify} className="btn btn-success"><Check size={18} /> Verify & Publish</button>
             </div>
@@ -105,10 +110,10 @@ const IncidentDetail = () => {
             <hr style={{ margin: '1rem 0', borderColor: 'var(--border)' }} />
             <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
               <span style={{ color: 'var(--text-muted)' }}>Category:</span>
-              <strong>{incident.category}</strong>
+              <strong>{incident.final_category || incident.ai_category || incident.category_id || incident.category}</strong>
               
               <span style={{ color: 'var(--text-muted)' }}>Date of Incident:</span>
-              <span>{new Date(incident.incidentDate).toLocaleString()}</span>
+              <span>{new Date(incident.incident_time || incident.incidentDate || incident.created_at || Date.now()).toLocaleString()}</span>
               
               <span style={{ color: 'var(--text-muted)' }}>Description:</span>
               <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{incident.description}</p>
@@ -123,13 +128,13 @@ const IncidentDetail = () => {
               <div>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Predicted Category</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <strong style={{ fontSize: '1.25rem' }}>{incident.category}</strong>
-                  <span className="badge" style={{ background: 'var(--blue)', color: 'white' }}>{(incident.aiConfidence * 100).toFixed(1)}% Confident</span>
+                  <strong style={{ fontSize: '1.25rem' }}>{incident.ai_category || incident.final_category || incident.category}</strong>
+                  <span className="badge" style={{ background: 'var(--blue)', color: 'white' }}>{((incident.ai_confidence || incident.aiConfidence || 0) * 100).toFixed(1)}% Confident</span>
                 </div>
               </div>
               <div>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Assessed Severity</p>
-                <strong style={{ fontSize: '1.25rem' }}>{incident.severityLevel}/10</strong>
+                <strong style={{ fontSize: '1.25rem' }}>{incident.severity_level || incident.severityLevel || 'N/A'}</strong>
               </div>
             </div>
           </div>
@@ -141,12 +146,12 @@ const IncidentDetail = () => {
             </div>
             <div style={{ height: '300px' }}>
               <MapContainer 
-                center={[incident.location.coordinates[1], incident.location.coordinates[0]]} 
+                center={[lat, lng]} 
                 zoom={15} 
                 style={{ height: '100%', width: '100%' }}
               >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <Marker position={[incident.location.coordinates[1], incident.location.coordinates[0]]} />
+                <Marker position={[lat, lng]} />
               </MapContainer>
             </div>
           </div>

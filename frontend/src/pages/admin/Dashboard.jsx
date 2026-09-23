@@ -29,19 +29,24 @@ const Dashboard = () => {
   if (loading) return <LoadingSpinner />;
   if (!data) return <div>Error loading dashboard</div>;
 
+  const stats = data.stats || {};
+  const categoryData = data.categoryDistribution || data.reports_by_category || [];
+  const trendData = data.trends || data.reports_over_time || [];
+  const recentPending = data.recentPending || data.recent_pending || [];
+
   const doughnutData = {
-    labels: data.categoryDistribution.map(d => d._id),
+    labels: categoryData.map(d => d._id || d.cat || 'Unknown'),
     datasets: [{
-      data: data.categoryDistribution.map(d => d.count),
+      data: categoryData.map(d => parseInt(d.count || 0, 10)),
       backgroundColor: ['#D97706', '#E11D48', '#7C3AED', '#2563EB', '#059669', '#0D9488', '#475569'],
     }]
   };
 
   const lineData = {
-    labels: data.trends.map(d => d._id),
+    labels: trendData.map(d => d._id || (d.date ? new Date(d.date).toLocaleDateString() : '')),
     datasets: [{
       label: 'Reports per Day',
-      data: data.trends.map(d => d.count),
+      data: trendData.map(d => parseInt(d.count || 0, 10)),
       borderColor: 'var(--blue)',
       backgroundColor: 'rgba(37, 99, 235, 0.1)',
       fill: true,
@@ -54,10 +59,10 @@ const Dashboard = () => {
       <h1 style={{ marginBottom: '2rem', color: 'var(--navy)' }}>System Dashboard</h1>
 
       <div className="grid md:grid-cols-4" style={{ marginBottom: '2rem' }}>
-        <StatsCard icon={ShieldAlert} label="Total Reports" value={data.stats.total} color="var(--blue)" />
-        <StatsCard icon={Clock} label="Pending Review" value={data.stats.pending} color="var(--amber)" />
-        <StatsCard icon={CheckCircle} label="Verified" value={data.stats.verified} color="var(--emerald)" />
-        <StatsCard icon={MapPin} label="Active Hotspots" value={data.activeHotspots} color="var(--rose)" />
+        <StatsCard icon={ShieldAlert} label="Total Reports" value={stats.total_reports ?? stats.total ?? 0} color="var(--blue)" />
+        <StatsCard icon={Clock} label="Pending Review" value={stats.pending ?? 0} color="var(--amber)" />
+        <StatsCard icon={CheckCircle} label="Verified" value={stats.verified ?? 0} color="var(--emerald)" />
+        <StatsCard icon={MapPin} label="Active Hotspots" value={data.activeHotspots ?? stats.active_hotspots ?? 0} color="var(--rose)" />
       </div>
 
       <div className="grid md:grid-cols-2" style={{ gap: '2rem', marginBottom: '2rem' }}>
@@ -89,21 +94,21 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {data.recentPending.map(inc => (
-                <tr key={inc._id} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '1rem 0', fontFamily: 'monospace' }}>{inc.reportId}</td>
-                  <td>{inc.category}</td>
-                  <td>{(inc.aiConfidence * 100).toFixed(0)}%</td>
+              {recentPending.map(inc => (
+                <tr key={inc.id || inc._id || inc.public_report_id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '1rem 0', fontFamily: 'monospace' }}>{inc.public_report_id || inc.reportId}</td>
+                  <td>{inc.final_category || inc.category_id || inc.category}</td>
+                  <td>{((inc.ai_confidence || inc.aiConfidence || 0) * 100).toFixed(0)}%</td>
                   <td>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: inc.severityLevel > 7 ? 'var(--rose)' : 'inherit' }}>
-                      {inc.severityLevel > 7 && <AlertTriangle size={14} />}
-                      {inc.severityLevel}/10
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: inc.severity_level === 'HIGH' ? 'var(--rose)' : 'inherit' }}>
+                      {inc.severity_level === 'HIGH' && <AlertTriangle size={14} />}
+                      {inc.severity_level || inc.severityLevel || 'N/A'}
                     </span>
                   </td>
-                  <td>{new Date(inc.createdAt).toLocaleDateString()}</td>
+                  <td>{new Date(inc.created_at || inc.createdAt || Date.now()).toLocaleDateString()}</td>
                 </tr>
               ))}
-              {data.recentPending.length === 0 && (
+              {recentPending.length === 0 && (
                 <tr><td colSpan="5" style={{ padding: '1rem 0', textAlign: 'center', color: 'var(--text-muted)' }}>No pending incidents</td></tr>
               )}
             </tbody>

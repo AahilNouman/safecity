@@ -16,7 +16,8 @@ const IncidentQueue = () => {
     setLoading(true);
     try {
       const data = await getAdminIncidents(filters);
-      setIncidents(data.incidents || []);
+      const list = Array.isArray(data) ? data : (data?.data || data?.incidents || []);
+      setIncidents(list);
     } catch (error) {
       console.error(error);
     } finally {
@@ -89,14 +90,14 @@ const IncidentQueue = () => {
               </thead>
               <tbody>
                 {incidents.map((inc) => (
-                  <tr key={inc._id} style={{ borderBottom: '1px solid var(--border)' }}>
-                    <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>{inc.reportId}</td>
-                    <td style={{ padding: '1rem' }}>{new Date(inc.createdAt).toLocaleString()}</td>
-                    <td style={{ padding: '1rem' }}>{inc.category}</td>
-                    <td style={{ padding: '1rem' }}>{inc.severityLevel}/10</td>
-                    <td style={{ padding: '1rem' }}>{getStatusBadge(inc.status)}</td>
+                  <tr key={inc.id || inc._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>{inc.public_report_id || inc.reportId}</td>
+                    <td style={{ padding: '1rem' }}>{new Date(inc.created_at || inc.createdAt || Date.now()).toLocaleString()}</td>
+                    <td style={{ padding: '1rem' }}>{inc.final_category || inc.ai_category || inc.category_id || inc.category}</td>
+                    <td style={{ padding: '1rem' }}>{inc.severity_level || inc.severityLevel || 'N/A'}</td>
+                    <td style={{ padding: '1rem' }}>{getStatusBadge(inc.status || inc.verification_status)}</td>
                     <td style={{ padding: '1rem' }}>
-                      <Link to={`/admin/incidents/${inc._id}`} className="btn btn-outline" style={{ padding: '0.25rem 0.5rem', fontSize: '0.875rem' }}>
+                      <Link to={`/admin/incidents/${inc.id || inc._id}`} className="btn btn-outline" style={{ padding: '0.25rem 0.5rem', fontSize: '0.875rem' }}>
                         <Eye size={16} /> View
                       </Link>
                     </td>

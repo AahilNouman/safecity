@@ -1,5 +1,8 @@
 import os
-from pydantic import BaseSettings
+try:
+    from pydantic_settings import BaseSettings
+except ImportError:
+    from pydantic import BaseSettings
 
 class Settings(BaseSettings):
     AI_DEMO_MODE: bool = True

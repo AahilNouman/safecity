@@ -23,7 +23,9 @@ const AdminLogin = () => {
     setLoading(true);
     try {
       const response = await adminLogin(email, password);
-      login(response.token);
+      const token = response?.token || response?.data?.token;
+      if (!token) throw new Error('Token not received');
+      login(token);
       toast.success('Login successful');
       navigate(from, { replace: true });
     } catch (err) {

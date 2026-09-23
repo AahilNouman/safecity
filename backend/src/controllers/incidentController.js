@@ -38,9 +38,9 @@ const createIncident = async (req, res, next) => {
     const insertQuery = `
       INSERT INTO incidents (
         public_report_id, description, category_id, ai_category, ai_confidence, 
-        latitude, longitude, incident_time, severity_score, severity_level, status
+        latitude, longitude, incident_time, severity_score, severity_level, verification_status
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'PENDING')
-      RETURNING id, public_report_id, status
+      RETURNING id, public_report_id, verification_status as status
     `;
     
     const values = [
@@ -79,7 +79,7 @@ const getIncidents = async (req, res, next) => {
       values.push(category);
     }
     if (status) {
-      whereClauses.push(`status = $${paramCounter++}`);
+      whereClauses.push(`verification_status = $${paramCounter++}`);
       values.push(status);
     }
     if (date_from) {
@@ -98,7 +98,7 @@ const getIncidents = async (req, res, next) => {
     const totalCount = parseInt(countResult.rows[0].count, 10);
     
     const dataQuery = `
-      SELECT id, public_report_id, category_id, final_category, incident_time, status, severity_level 
+      SELECT id, public_report_id, category_id, final_category, incident_time, verification_status as status, severity_level 
       FROM incidents 
       ${whereString}
       ORDER BY created_at DESC
@@ -128,7 +128,7 @@ const getIncidentById = async (req, res, next) => {
     
     const query = `
       SELECT id, public_report_id, description, category_id, final_category, ai_category,
-             latitude, longitude, incident_time, status, severity_level, created_at
+             latitude, longitude, incident_time, verification_status as status, severity_level, created_at
       FROM incidents
       WHERE id::text = $1 OR public_report_id = $1
     `;
@@ -160,7 +160,7 @@ const getMapIncidents = async (req, res, next) => {
         incident_time,
         severity_level
       FROM incidents
-      WHERE status = 'VERIFIED'
+      WHERE verification_status = 'VERIFIED'
       ORDER BY incident_time DESC
       LIMIT 1000
     `;

@@ -57,9 +57,9 @@ const getDashboard = async (req, res, next) => {
       totalRes, pendingRes, verifiedRes, rejectedRes, severityRes, categoryRes, timeRes, hotspotsRes
     ] = await Promise.all([
       db.query('SELECT COUNT(*) FROM incidents'),
-      db.query("SELECT COUNT(*) FROM incidents WHERE status = 'PENDING'"),
-      db.query("SELECT COUNT(*) FROM incidents WHERE status = 'VERIFIED'"),
-      db.query("SELECT COUNT(*) FROM incidents WHERE status = 'REJECTED'"),
+      db.query("SELECT COUNT(*) FROM incidents WHERE verification_status = 'PENDING'"),
+      db.query("SELECT COUNT(*) FROM incidents WHERE verification_status = 'VERIFIED'"),
+      db.query("SELECT COUNT(*) FROM incidents WHERE verification_status = 'REJECTED'"),
       db.query('SELECT AVG(severity_score) as avg_severity FROM incidents'),
       db.query('SELECT COALESCE(final_category, category_id::text) as cat, COUNT(*) FROM incidents GROUP BY cat'),
       db.query(`
@@ -102,7 +102,7 @@ const getAdminIncidents = async (req, res, next) => {
     let paramCounter = 1;
     
     if (status) {
-      whereClauses.push(`status = $${paramCounter++}`);
+      whereClauses.push(`verification_status = $${paramCounter++}`);
       values.push(status);
     }
     
@@ -151,7 +151,7 @@ const verifyIncident = async (req, res, next) => {
     
     const updateQuery = `
       UPDATE incidents 
-      SET status = 'VERIFIED', verified_at = NOW(), verified_by = $1
+      SET verification_status = 'VERIFIED', verified_at = NOW(), verified_by = $1
       WHERE id = $2
       RETURNING *
     `;
@@ -186,7 +186,7 @@ const rejectIncident = async (req, res, next) => {
     
     const updateQuery = `
       UPDATE incidents 
-      SET status = 'REJECTED', verified_at = NOW(), verified_by = $1
+      SET verification_status = 'REJECTED', verified_at = NOW(), verified_by = $1
       WHERE id = $2
       RETURNING *
     `;

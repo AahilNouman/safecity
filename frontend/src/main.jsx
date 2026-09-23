@@ -4,6 +4,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import App from './App.jsx'
 import './App.css'
+import L from 'leaflet'
+window.L = L
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
