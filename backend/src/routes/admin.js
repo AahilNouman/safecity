@@ -16,8 +16,19 @@ router.use(verifyToken);
 
 router.get('/dashboard', adminController.getDashboard);
 router.get('/incidents', adminController.getAdminIncidents);
-router.patch('/incidents/:id/verify', validateVerifyIncident, adminController.verifyIncident);
-router.patch('/incidents/:id/reject', validateRejectIncident, adminController.rejectIncident);
-router.patch('/incidents/:id/category', validateOverrideCategory, adminController.overrideCategory);
+// Support both PATCH and PUT for verify
+router.route('/incidents/:id/verify')
+  .patch(validateVerifyIncident, adminController.verifyIncident)
+  .put(validateVerifyIncident, adminController.verifyIncident);
+
+// Support both PATCH and PUT for reject
+router.route('/incidents/:id/reject')
+  .patch(validateRejectIncident, adminController.rejectIncident)
+  .put(validateRejectIncident, adminController.rejectIncident);
+
+// Support both PATCH and PUT, and both /category and /override paths
+router.route(['/incidents/:id/category', '/incidents/:id/override'])
+  .patch(validateOverrideCategory, adminController.overrideCategory)
+  .put(validateOverrideCategory, adminController.overrideCategory);
 
 module.exports = router;

@@ -61,13 +61,13 @@ const IncidentQueue = () => {
             onChange={e => setFilters({...filters, category: e.target.value})}
           >
             <option value="">All Categories</option>
-            <option value="THEFT">Theft</option>
-            <option value="ASSAULT">Assault</option>
-            <option value="HARASSMENT">Harassment</option>
-            <option value="VANDALISM">Vandalism</option>
-            <option value="SUSPICIOUS_ACTIVITY">Suspicious Activity</option>
-            <option value="ROAD_HAZARD">Road Hazard</option>
-            <option value="OTHER">Other</option>
+            <option value="Harassment">Harassment</option>
+            <option value="Stalking">Stalking</option>
+            <option value="Threat">Threat</option>
+            <option value="Unsafe Area">Unsafe Area</option>
+            <option value="Poor Lighting">Poor Lighting</option>
+            <option value="Suspicious Activity">Suspicious Activity</option>
+            <option value="Other">Other</option>
           </select>
         </div>
       </div>
@@ -89,20 +89,32 @@ const IncidentQueue = () => {
                 </tr>
               </thead>
               <tbody>
-                {incidents.map((inc) => (
-                  <tr key={inc.id || inc._id} style={{ borderBottom: '1px solid var(--border)' }}>
-                    <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>{inc.public_report_id || inc.reportId}</td>
-                    <td style={{ padding: '1rem' }}>{new Date(inc.created_at || inc.createdAt || Date.now()).toLocaleString()}</td>
-                    <td style={{ padding: '1rem' }}>{inc.final_category || inc.ai_category || inc.category_id || inc.category}</td>
-                    <td style={{ padding: '1rem' }}>{inc.severity_level || inc.severityLevel || 'N/A'}</td>
-                    <td style={{ padding: '1rem' }}>{getStatusBadge(inc.status || inc.verification_status)}</td>
-                    <td style={{ padding: '1rem' }}>
-                      <Link to={`/admin/incidents/${inc.id || inc._id}`} className="btn btn-outline" style={{ padding: '0.25rem 0.5rem', fontSize: '0.875rem' }}>
-                        <Eye size={16} /> View
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
+                {incidents.map((inc) => {
+                  const categoryMap = {
+                    1: 'Harassment',
+                    2: 'Stalking',
+                    3: 'Threat',
+                    4: 'Unsafe Area',
+                    5: 'Poor Lighting',
+                    6: 'Suspicious Activity',
+                    7: 'Other'
+                  };
+                  const displayCat = inc.final_category || inc.category_name || categoryMap[inc.category_id] || inc.ai_category || inc.category || 'N/A';
+                  return (
+                    <tr key={inc.id || inc._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                      <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>{inc.public_report_id || inc.reportId}</td>
+                      <td style={{ padding: '1rem' }}>{new Date(inc.created_at || inc.createdAt || Date.now()).toLocaleString()}</td>
+                      <td style={{ padding: '1rem' }}>{displayCat}</td>
+                      <td style={{ padding: '1rem' }}>{inc.severity_level || inc.severityLevel || 'N/A'}</td>
+                      <td style={{ padding: '1rem' }}>{getStatusBadge(inc.status || inc.verification_status)}</td>
+                      <td style={{ padding: '1rem' }}>
+                        <Link to={`/admin/incidents/${inc.id || inc._id || inc.public_report_id}`} className="btn btn-outline" style={{ padding: '0.25rem 0.5rem', fontSize: '0.875rem' }}>
+                          <Eye size={16} /> View
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
                 {incidents.length === 0 && (
                   <tr>
                     <td colSpan="6" style={{ padding: '3rem 1rem', textAlign: 'center', color: 'var(--text-muted)' }}>

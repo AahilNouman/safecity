@@ -44,6 +44,12 @@ const validateVerifyIncident = [
 ];
 
 const validateRejectIncident = [
+  (req, res, next) => {
+    if (!req.body.rejection_reason && req.body.reason) {
+      req.body.rejection_reason = req.body.reason;
+    }
+    next();
+  },
   body('rejection_reason')
     .isString().withMessage('Rejection reason must be a string')
     .trim()
@@ -52,6 +58,15 @@ const validateRejectIncident = [
 ];
 
 const validateOverrideCategory = [
+  (req, res, next) => {
+    if (!req.body.new_category && req.body.category) {
+      req.body.new_category = req.body.category;
+    }
+    if (!req.body.override_reason && req.body.reason) {
+      req.body.override_reason = req.body.reason;
+    }
+    next();
+  },
   body('new_category')
     .isString().withMessage('New category must be a string')
     .trim()

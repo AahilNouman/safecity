@@ -35,8 +35,8 @@ export const getIncidentById = (id) => api.get(`/incidents/${id}`).then(res => r
 export const adminLogin = (email, password) => api.post('/admin/login', { email, password }).then(res => res.data);
 export const getDashboard = () => api.get('/admin/dashboard').then(res => res.data);
 export const getAdminIncidents = (params) => api.get('/admin/incidents', { params }).then(res => res.data);
-export const verifyIncident = (id) => api.put(`/admin/incidents/${id}/verify`).then(res => res.data);
-export const rejectIncident = (id, reason) => api.put(`/admin/incidents/${id}/reject`, { reason }).then(res => res.data);
-export const overrideCategory = (id, newCategory, reason) => api.put(`/admin/incidents/${id}/override`, { category: newCategory, reason }).then(res => res.data);
+export const verifyIncident = (id) => api.patch(`/admin/incidents/${id}/verify`).then(res => res.data);
+export const rejectIncident = (id, reason) => api.patch(`/admin/incidents/${id}/reject`, { reason, rejection_reason: reason }).then(res => res.data);
+export const overrideCategory = (id, newCategory, reason) => api.patch(`/admin/incidents/${id}/category`, { category: newCategory, new_category: newCategory, reason, override_reason: reason }).then(res => res.data);
 
 export default api;

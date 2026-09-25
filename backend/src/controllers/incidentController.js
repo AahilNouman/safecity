@@ -127,10 +127,13 @@ const getIncidentById = async (req, res, next) => {
     const { id } = req.params;
     
     const query = `
-      SELECT id, public_report_id, description, category_id, final_category, ai_category,
-             latitude, longitude, incident_time, verification_status as status, severity_level, created_at
-      FROM incidents
-      WHERE id::text = $1 OR public_report_id = $1
+      SELECT i.id, i.public_report_id, i.description, i.category_id, i.final_category, i.ai_category,
+             i.latitude, i.longitude, i.incident_time, i.verification_status as status, i.verification_status,
+             i.severity_level, i.severity_score, i.ai_confidence, i.created_at,
+             c.name as category_name
+      FROM incidents i
+      LEFT JOIN incident_categories c ON i.category_id = c.id
+      WHERE i.id::text = $1 OR i.public_report_id = $1
     `;
     
     const result = await db.query(query, [id]);

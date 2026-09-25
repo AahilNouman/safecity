@@ -147,12 +147,20 @@ const getAdminIncidents = async (req, res, next) => {
 const verifyIncident = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const adminId = req.admin.id;
+    let adminId = req.admin ? req.admin.id : null;
+    
+    // Ensure admin exists to avoid foreign key violations
+    if (adminId) {
+      const adminCheck = await db.query('SELECT id FROM admins WHERE id = $1', [adminId]).catch(() => ({ rows: [] }));
+      if (adminCheck.rows.length === 0) {
+        adminId = null;
+      }
+    }
     
     const updateQuery = `
       UPDATE incidents 
       SET verification_status = 'VERIFIED', verified_at = NOW(), verified_by = $1
-      WHERE id = $2
+      WHERE id::text = $2 OR public_report_id = $2
       RETURNING *
     `;
     
@@ -162,15 +170,19 @@ const verifyIncident = async (req, res, next) => {
       return next(new AppError('Incident not found', 404));
     }
     
-    // Log action
-    await db.query(`
-      INSERT INTO verification_actions (incident_id, admin_id, action_type)
-      VALUES ($1, $2, 'VERIFY')
-    `, [id, adminId]).catch(e => console.warn('Failed to log verification', e));
+    const incident = result.rows[0];
+    
+    // Log action to verification_actions (non-blocking)
+    if (adminId) {
+      await db.query(`
+        INSERT INTO verification_actions (incident_id, admin_id, action, previous_status, new_status)
+        VALUES ($1, $2, 'VERIFY', $3, 'VERIFIED')
+      `, [incident.id, adminId, incident.verification_status || 'PENDING']).catch(e => console.warn('Failed to log verification', e));
+    }
     
     res.status(200).json({
       success: true,
-      data: result.rows[0],
+      data: incident,
       message: 'Incident verified successfully'
     });
   } catch (err) {
@@ -181,31 +193,42 @@ const verifyIncident = async (req, res, next) => {
 const rejectIncident = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { rejection_reason } = req.body;
-    const adminId = req.admin.id;
+    const rejection_reason = req.body.rejection_reason || req.body.reason;
+    let adminId = req.admin ? req.admin.id : null;
+    
+    if (adminId) {
+      const adminCheck = await db.query('SELECT id FROM admins WHERE id = $1', [adminId]).catch(() => ({ rows: [] }));
+      if (adminCheck.rows.length === 0) {
+        adminId = null;
+      }
+    }
     
     const updateQuery = `
       UPDATE incidents 
-      SET verification_status = 'REJECTED', verified_at = NOW(), verified_by = $1
-      WHERE id = $2
+      SET verification_status = 'REJECTED', verified_at = NOW(), verified_by = $1, rejection_reason = $3
+      WHERE id::text = $2 OR public_report_id = $2
       RETURNING *
     `;
     
-    const result = await db.query(updateQuery, [adminId, id]);
+    const result = await db.query(updateQuery, [adminId, id, rejection_reason]);
     
     if (result.rows.length === 0) {
       return next(new AppError('Incident not found', 404));
     }
     
-    // Log action
-    await db.query(`
-      INSERT INTO verification_actions (incident_id, admin_id, action_type, notes)
-      VALUES ($1, $2, 'REJECT', $3)
-    `, [id, adminId, rejection_reason]).catch(e => console.warn('Failed to log rejection', e));
+    const incident = result.rows[0];
+    
+    // Log action to verification_actions
+    if (adminId) {
+      await db.query(`
+        INSERT INTO verification_actions (incident_id, admin_id, action, reason, previous_status, new_status)
+        VALUES ($1, $2, 'REJECT', $3, $4, 'REJECTED')
+      `, [incident.id, adminId, rejection_reason, incident.verification_status || 'PENDING']).catch(e => console.warn('Failed to log rejection', e));
+    }
     
     res.status(200).json({
       success: true,
-      data: result.rows[0],
+      data: incident,
       message: 'Incident rejected successfully'
     });
   } catch (err) {
@@ -216,11 +239,19 @@ const rejectIncident = async (req, res, next) => {
 const overrideCategory = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { new_category, override_reason } = req.body;
-    const adminId = req.admin.id;
+    const new_category = req.body.new_category || req.body.category;
+    const override_reason = req.body.override_reason || req.body.reason;
+    let adminId = req.admin ? req.admin.id : null;
+    
+    if (adminId) {
+      const adminCheck = await db.query('SELECT id FROM admins WHERE id = $1', [adminId]).catch(() => ({ rows: [] }));
+      if (adminCheck.rows.length === 0) {
+        adminId = null;
+      }
+    }
     
     // First, check if it already has an override
-    const checkQuery = 'SELECT ai_category, final_category FROM incidents WHERE id = $1';
+    const checkQuery = 'SELECT id, ai_category, final_category FROM incidents WHERE id::text = $1 OR public_report_id = $1';
     const checkResult = await db.query(checkQuery, [id]);
     
     if (checkResult.rows.length === 0) {
@@ -228,35 +259,38 @@ const overrideCategory = async (req, res, next) => {
     }
     
     const incident = checkResult.rows[0];
+    const realId = incident.id;
     let query, values;
     
     if (!incident.final_category) {
       // First override
       query = `
         UPDATE incidents 
-        SET original_ai_category = ai_category, final_category = $1
-        WHERE id = $2
+        SET original_ai_category = ai_category, final_category = $1, override_reason = $2
+        WHERE id = $3
         RETURNING *
       `;
-      values = [new_category, id];
+      values = [new_category, override_reason, realId];
     } else {
       // Subsequent override
       query = `
         UPDATE incidents 
-        SET final_category = $1
-        WHERE id = $2
+        SET final_category = $1, override_reason = $2
+        WHERE id = $3
         RETURNING *
       `;
-      values = [new_category, id];
+      values = [new_category, override_reason, realId];
     }
     
     const result = await db.query(query, values);
     
-    // Log action
-    await db.query(`
-      INSERT INTO verification_actions (incident_id, admin_id, action_type, notes)
-      VALUES ($1, $2, 'OVERRIDE_CATEGORY', $3)
-    `, [id, adminId, override_reason]).catch(e => console.warn('Failed to log override', e));
+    // Log action to verification_actions
+    if (adminId) {
+      await db.query(`
+        INSERT INTO verification_actions (incident_id, admin_id, action, previous_category, new_category, reason)
+        VALUES ($1, $2, 'OVERRIDE_CATEGORY', $3, $4, $5)
+      `, [realId, adminId, incident.final_category || incident.ai_category, new_category, override_reason]).catch(e => console.warn('Failed to log override', e));
+    }
     
     res.status(200).json({
       success: true,
