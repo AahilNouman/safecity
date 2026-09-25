@@ -54,23 +54,40 @@ const getDashboard = async (req, res, next) => {
   try {
     // Parallelizing queries
     const [
-      totalRes, pendingRes, verifiedRes, rejectedRes, severityRes, categoryRes, timeRes, hotspotsRes
+      totalRes, pendingRes, verifiedRes, rejectedRes, severityRes, categoryRes, timeRes, hotspotsRes, recentPendingRes
     ] = await Promise.all([
       db.query('SELECT COUNT(*) FROM incidents'),
       db.query("SELECT COUNT(*) FROM incidents WHERE verification_status = 'PENDING'"),
       db.query("SELECT COUNT(*) FROM incidents WHERE verification_status = 'VERIFIED'"),
       db.query("SELECT COUNT(*) FROM incidents WHERE verification_status = 'REJECTED'"),
       db.query('SELECT AVG(severity_score) as avg_severity FROM incidents'),
-      db.query('SELECT COALESCE(final_category, category_id::text) as cat, COUNT(*) FROM incidents GROUP BY cat'),
       db.query(`
-        SELECT DATE(created_at) as date, COUNT(*) 
+        SELECT COALESCE(i.final_category, c.name, i.ai_category, 'Other') as cat, COUNT(*) as count 
+        FROM incidents i
+        LEFT JOIN incident_categories c ON i.category_id = c.id
+        GROUP BY cat
+      `),
+      db.query(`
+        SELECT TO_CHAR(DATE(created_at), 'YYYY-MM-DD') as date, COUNT(*) as count 
         FROM incidents 
         WHERE created_at >= NOW() - INTERVAL '30 days'
         GROUP BY DATE(created_at)
         ORDER BY date
       `),
-      db.query('SELECT COUNT(*) FROM clusters WHERE is_active = true').catch(() => ({ rows: [{ count: 0 }] }))
-    ].map(p => p.catch(() => ({ rows: [{ count: 0, avg_severity: 0 }] })))); // graceful failures
+      db.query('SELECT COUNT(*) FROM clusters WHERE is_active = true'),
+      db.query(`
+        SELECT i.id, i.public_report_id, i.description, i.category_id, i.final_category, i.ai_category,
+               i.ai_confidence, i.severity_level, i.created_at, c.name as category_name
+        FROM incidents i
+        LEFT JOIN incident_categories c ON i.category_id = c.id
+        WHERE i.verification_status = 'PENDING'
+        ORDER BY i.created_at DESC
+        LIMIT 5
+      `)
+    ].map(p => p.catch((err) => {
+      console.warn('Dashboard query fallback', err?.message);
+      return { rows: [{ count: 0, avg_severity: 0 }] };
+    })));
 
     res.status(200).json({
       success: true,
@@ -84,7 +101,8 @@ const getDashboard = async (req, res, next) => {
           avg_severity: parseFloat(severityRes.rows[0]?.avg_severity || 0)
         },
         reports_by_category: categoryRes.rows || [],
-        reports_over_time: timeRes.rows || []
+        reports_over_time: timeRes.rows || [],
+        recent_pending: recentPendingRes.rows || []
       }
     });
   } catch (err) {

@@ -16,7 +16,8 @@ const Dashboard = () => {
     const fetchDashboard = async () => {
       try {
         const res = await getDashboard();
-        setData(res);
+        const payload = res?.data || res;
+        setData(payload);
       } catch (error) {
         console.error("Dashboard fetch error", error);
       } finally {
@@ -29,13 +30,23 @@ const Dashboard = () => {
   if (loading) return <LoadingSpinner />;
   if (!data) return <div>Error loading dashboard</div>;
 
+  const categoryMap = {
+    1: 'Harassment',
+    2: 'Stalking',
+    3: 'Threat',
+    4: 'Unsafe Area',
+    5: 'Poor Lighting',
+    6: 'Suspicious Activity',
+    7: 'Other'
+  };
+
   const stats = data.stats || {};
-  const categoryData = data.categoryDistribution || data.reports_by_category || [];
-  const trendData = data.trends || data.reports_over_time || [];
-  const recentPending = data.recentPending || data.recent_pending || [];
+  const categoryData = Array.isArray(data.reports_by_category) ? data.reports_by_category : (data.categoryDistribution || []);
+  const trendData = Array.isArray(data.reports_over_time) ? data.reports_over_time : (data.trends || []);
+  const recentPending = Array.isArray(data.recent_pending) ? data.recent_pending : (data.recentPending || []);
 
   const doughnutData = {
-    labels: categoryData.map(d => d._id || d.cat || 'Unknown'),
+    labels: categoryData.map(d => categoryMap[d.cat] || d.cat || d._id || 'Unknown'),
     datasets: [{
       data: categoryData.map(d => parseInt(d.count || 0, 10)),
       backgroundColor: ['#D97706', '#E11D48', '#7C3AED', '#2563EB', '#059669', '#0D9488', '#475569'],
@@ -97,7 +108,7 @@ const Dashboard = () => {
               {recentPending.map(inc => (
                 <tr key={inc.id || inc._id || inc.public_report_id} style={{ borderBottom: '1px solid var(--border)' }}>
                   <td style={{ padding: '1rem 0', fontFamily: 'monospace' }}>{inc.public_report_id || inc.reportId}</td>
-                  <td>{inc.final_category || inc.category_id || inc.category}</td>
+                  <td>{inc.final_category || inc.category_name || categoryMap[inc.category_id] || inc.category || 'N/A'}</td>
                   <td>{((inc.ai_confidence || inc.aiConfidence || 0) * 100).toFixed(0)}%</td>
                   <td>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: inc.severity_level === 'HIGH' ? 'var(--rose)' : 'inherit' }}>

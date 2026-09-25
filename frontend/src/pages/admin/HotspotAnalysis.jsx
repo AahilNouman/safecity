@@ -13,10 +13,12 @@ const HotspotAnalysis = () => {
 
   const fetchHotspots = async () => {
     try {
-      const data = await getHotspots();
-      setHotspots(data);
+      const res = await getHotspots();
+      const list = Array.isArray(res) ? res : (res?.data || []);
+      setHotspots(list);
     } catch (error) {
       console.error(error);
+      setHotspots([]);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -60,7 +62,7 @@ const HotspotAnalysis = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             
-            {hotspots.map((hotspot) => (
+            {(Array.isArray(hotspots) ? hotspots : []).map((hotspot) => (
               <Circle
                 key={hotspot.id}
                 center={[parseFloat(hotspot.centroid_lat), parseFloat(hotspot.centroid_lng)]}
@@ -90,11 +92,11 @@ const HotspotAnalysis = () => {
             <h3 style={{ color: 'white', margin: '0 0 1rem 0' }}>Summary</h3>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
               <span>Active Hotspots</span>
-              <strong style={{ fontSize: '1.25rem' }}>{hotspots.length}</strong>
+              <strong style={{ fontSize: '1.25rem' }}>{(hotspots || []).length}</strong>
             </div>
           </div>
 
-          {hotspots.map(hotspot => (
+          {(Array.isArray(hotspots) ? hotspots : []).map(hotspot => (
             <div 
               key={hotspot.id} 
               className="card"
