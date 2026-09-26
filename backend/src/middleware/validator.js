@@ -97,6 +97,12 @@ const validateRegister = [
     .optional({ checkFalsy: true })
     .trim()
     .isLength({ min: 7, max: 20 }).withMessage('Emergency contact must be valid'),
+  body('emergency_contact_name')
+    .optional({ checkFalsy: true })
+    .trim(),
+  body('emergency_contact_relationship')
+    .optional({ checkFalsy: true })
+    .trim(),
   handleValidationErrors
 ];
 

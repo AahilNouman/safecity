@@ -47,9 +47,11 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'Report', path: '/report' },
+    { name: 'Safe Route', path: '/safe-route' },
+    { name: 'Walk With Me', path: '/walk-buddy' },
     { name: 'Safety Map', path: '/map' },
     { name: 'Community Feed', path: '/feed' },
+    { name: 'Report', path: '/report' },
   ];
 
   if (isAuthenticated && isAdmin) {
@@ -307,6 +309,42 @@ const Navbar = () => {
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                       >
                         <MapPin size={15} color="#14b8a6" /> Safety Map
+                      </Link>
+                      <Link
+                        to="/safe-route"
+                        onClick={() => setIsProfileOpen(false)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          padding: '0.5rem 0.65rem',
+                          borderRadius: '6px',
+                          color: '#e2e8f0',
+                          fontSize: '0.85rem',
+                          textDecoration: 'none'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <Shield size={15} color="#14b8a6" /> Safest Route Finder
+                      </Link>
+                      <Link
+                        to="/walk-buddy"
+                        onClick={() => setIsProfileOpen(false)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          padding: '0.5rem 0.65rem',
+                          borderRadius: '6px',
+                          color: '#e2e8f0',
+                          fontSize: '0.85rem',
+                          textDecoration: 'none'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <UserCheck size={15} color="#14b8a6" /> Walk With Me & Guardian
                       </Link>
                     </div>
 

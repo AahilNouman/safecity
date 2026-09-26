@@ -6,7 +6,16 @@ const { AppError } = require('../middleware/errorHandler');
 
 const register = async (req, res, next) => {
   try {
-    const { full_name, email, password, phone, emergency_contact } = req.body;
+    const {
+      full_name,
+      email,
+      password,
+      phone,
+      emergency_contact,
+      emergency_contact_name,
+      emergency_contact_relationship
+    } = req.body;
+
     const normalizedEmail = email.toLowerCase().trim();
 
     // Check if user already exists in users or admins
@@ -25,16 +34,21 @@ const register = async (req, res, next) => {
 
     // Insert user
     const insertQuery = `
-      INSERT INTO users (full_name, email, password_hash, phone, emergency_contact, role)
-      VALUES ($1, $2, $3, $4, $5, 'citizen')
-      RETURNING id, full_name, email, phone, emergency_contact, role, created_at
+      INSERT INTO users (
+        full_name, email, password_hash, phone, 
+        emergency_contact, emergency_contact_name, emergency_contact_relationship, role
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, 'citizen')
+      RETURNING id, full_name, email, phone, emergency_contact, emergency_contact_name, emergency_contact_relationship, role, created_at
     `;
     const result = await db.query(insertQuery, [
       full_name.trim(),
       normalizedEmail,
       password_hash,
       phone ? phone.trim() : null,
-      emergency_contact ? emergency_contact.trim() : null
+      emergency_contact ? emergency_contact.trim() : null,
+      emergency_contact_name ? emergency_contact_name.trim() : null,
+      emergency_contact_relationship ? emergency_contact_relationship.trim() : null
     ]);
 
     const user = result.rows[0];
@@ -61,6 +75,8 @@ const register = async (req, res, next) => {
           email: user.email,
           phone: user.phone,
           emergency_contact: user.emergency_contact,
+          emergency_contact_name: user.emergency_contact_name,
+          emergency_contact_relationship: user.emergency_contact_relationship,
           role: user.role
         }
       },
@@ -77,7 +93,12 @@ const login = async (req, res, next) => {
     const normalizedEmail = email.toLowerCase().trim();
 
     // 1. Check users table
-    const userQuery = 'SELECT id, full_name, email, password_hash, role, phone, emergency_contact FROM users WHERE LOWER(email) = $1 AND is_active = true';
+    const userQuery = `
+      SELECT id, full_name, email, password_hash, role, phone, 
+             emergency_contact, emergency_contact_name, emergency_contact_relationship 
+      FROM users 
+      WHERE LOWER(email) = $1 AND is_active = true
+    `;
     const userRes = await db.query(userQuery, [normalizedEmail]).catch(() => ({ rows: [] }));
 
     let account = userRes.rows[0];
@@ -140,7 +161,9 @@ const login = async (req, res, next) => {
           email: account.email,
           role: account.role || accountType,
           phone: account.phone || null,
-          emergency_contact: account.emergency_contact || null
+          emergency_contact: account.emergency_contact || null,
+          emergency_contact_name: account.emergency_contact_name || null,
+          emergency_contact_relationship: account.emergency_contact_relationship || null
         }
       },
       message: 'Logged in successfully'
@@ -167,7 +190,12 @@ const getMe = async (req, res, next) => {
       return res.status(200).json({ success: true, data: adminRes.rows[0] });
     }
 
-    const userRes = await db.query('SELECT id, full_name, email, role, phone, emergency_contact, created_at FROM users WHERE id = $1', [userId]);
+    const userRes = await db.query(`
+      SELECT id, full_name, email, role, phone, emergency_contact, 
+             emergency_contact_name, emergency_contact_relationship, created_at 
+      FROM users WHERE id = $1
+    `, [userId]);
+
     if (userRes.rows.length === 0) {
       return next(new AppError('User not found', 404));
     }
@@ -175,6 +203,54 @@ const getMe = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: userRes.rows[0]
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const updateEmergencyContact = async (req, res, next) => {
+  try {
+    const userId = req.admin?.id;
+    if (!userId) {
+      return next(new AppError('Unauthorized - please sign in to update emergency contact', 401));
+    }
+
+    const {
+      emergency_contact_name,
+      emergency_contact_phone,
+      emergency_contact_relationship,
+      emergency_contact
+    } = req.body;
+
+    const phoneVal = (emergency_contact_phone || emergency_contact || '').trim();
+    const nameVal = (emergency_contact_name || '').trim();
+    const relVal = (emergency_contact_relationship || '').trim();
+
+    if (!phoneVal && !nameVal) {
+      return next(new AppError('Please provide emergency contact name and phone number', 400));
+    }
+
+    const query = `
+      UPDATE users 
+      SET emergency_contact = COALESCE(NULLIF($1, ''), emergency_contact),
+          emergency_contact_name = COALESCE(NULLIF($2, ''), emergency_contact_name),
+          emergency_contact_relationship = COALESCE(NULLIF($3, ''), emergency_contact_relationship)
+      WHERE id = $4
+      RETURNING id, full_name, email, phone, emergency_contact, 
+                emergency_contact_name, emergency_contact_relationship, role
+    `;
+
+    const result = await db.query(query, [phoneVal, nameVal, relVal, userId]);
+
+    if (result.rows.length === 0) {
+      return next(new AppError('User account not found', 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      data: result.rows[0],
+      message: 'Emergency contact successfully saved'
     });
   } catch (err) {
     next(err);
@@ -191,7 +267,11 @@ const googleAuth = async (req, res, next) => {
     const fullName = (name || email.split('@')[0] || 'Google User').trim();
 
     // 1. Check if user exists in users table
-    const userQuery = 'SELECT id, full_name, email, role, phone, emergency_contact, avatar_url, auth_provider FROM users WHERE LOWER(email) = $1';
+    const userQuery = `
+      SELECT id, full_name, email, role, phone, emergency_contact, 
+             emergency_contact_name, emergency_contact_relationship, avatar_url, auth_provider 
+      FROM users WHERE LOWER(email) = $1
+    `;
     const userRes = await db.query(userQuery, [normalizedEmail]).catch(() => ({ rows: [] }));
     let user = userRes.rows[0];
 
@@ -238,7 +318,7 @@ const googleAuth = async (req, res, next) => {
       const insertQuery = `
         INSERT INTO users (full_name, email, password_hash, role, auth_provider, avatar_url, last_login)
         VALUES ($1, $2, $3, 'citizen', 'google', $4, NOW())
-        RETURNING id, full_name, email, role, phone, emergency_contact, avatar_url, auth_provider, created_at
+        RETURNING id, full_name, email, role, phone, emergency_contact, emergency_contact_name, emergency_contact_relationship, avatar_url, auth_provider, created_at
       `;
       const insertRes = await db.query(insertQuery, [fullName, normalizedEmail, password_hash, avatar || null]);
       user = insertRes.rows[0];
@@ -270,7 +350,9 @@ const googleAuth = async (req, res, next) => {
           role: user.role || 'citizen',
           avatar: user.avatar_url || avatar || null,
           phone: user.phone || null,
-          emergency_contact: user.emergency_contact || null
+          emergency_contact: user.emergency_contact || null,
+          emergency_contact_name: user.emergency_contact_name || null,
+          emergency_contact_relationship: user.emergency_contact_relationship || null
         }
       },
       message: 'Signed in successfully with Google'
@@ -284,5 +366,6 @@ module.exports = {
   register,
   login,
   googleAuth,
-  getMe
+  getMe,
+  updateEmergencyContact
 };

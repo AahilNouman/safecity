@@ -36,6 +36,16 @@ export const userRegister = (data) => api.post('/auth/register', data).then(res 
 export const userLogin = (email, password) => api.post('/auth/login', { email, password }).then(res => res.data);
 export const googleAuth = (data) => api.post('/auth/google', data).then(res => res.data);
 export const getMe = () => api.get('/auth/me').then(res => res.data);
+export const updateEmergencyContact = (data) => api.put('/auth/emergency-contact', data).then(res => res.data);
+
+// Safest Route & Geospatial Navigation endpoints
+export const analyzeRoutes = (data) => api.post('/routes/analyze', data).then(res => res.data);
+export const getRoutePresets = () => api.get('/routes/presets').then(res => res.data);
+
+// Virtual Walk With Me & Emergency SOS endpoints
+export const triggerEmergencyAlert = (data) => api.post('/safety/emergency-alert', data).then(res => res.data);
+export const resolveEmergencyAlert = (id, data) => api.patch(`/safety/alerts/${id}/resolve`, data).then(res => res.data);
+export const getEmergencyAlerts = () => api.get('/safety/alerts').then(res => res.data);
 
 // Admin endpoints
 export const adminLogin = (email, password) => api.post('/admin/login', { email, password }).then(res => res.data);

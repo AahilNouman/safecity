@@ -13,5 +13,6 @@ router.post('/signin', authLimiter, validateLogin, authController.login);
 router.post('/google', authLimiter, authController.googleAuth);
 
 router.get('/me', verifyToken, authController.getMe);
+router.put('/emergency-contact', verifyToken, authController.updateEmergencyContact);
 
 module.exports = router;

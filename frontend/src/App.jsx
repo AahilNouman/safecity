@@ -5,12 +5,14 @@ import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
 import ErrorBoundary from './components/Common/ErrorBoundary';
 
-// Public Pages
+// Public & Citizen Pages
 import HomePage from './pages/HomePage';
 import ReportPage from './pages/ReportPage';
 import ReportConfirmation from './pages/ReportConfirmation';
 import MapPage from './pages/MapPage';
 import SafetyFeed from './pages/SafetyFeed';
+import SafeRoutePage from './pages/SafeRoutePage';
+import WalkBuddyPage from './pages/WalkBuddyPage';
 import AuthPage from './pages/auth/AuthPage';
 
 // Admin Pages
@@ -33,22 +35,22 @@ function AppContent() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#032128',
-        color: '#2dd4bf',
+        background: '#070B14',
+        color: '#0D9488',
         fontFamily: 'Inter, system-ui, sans-serif'
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{
             width: '44px',
             height: '44px',
-            border: '3px solid rgba(45, 212, 191, 0.2)',
-            borderTopColor: '#2dd4bf',
+            border: '3px solid rgba(13, 148, 136, 0.2)',
+            borderTopColor: '#0D9488',
             borderRadius: '50%',
             animation: 'spin 0.8s linear infinite',
             margin: '0 auto 1rem'
           }} />
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-          <div style={{ fontWeight: '600', fontSize: '0.95rem' }}>Loading SafeCity Platform...</div>
+          <div style={{ fontWeight: '600', fontSize: '0.95rem' }}>Loading SafeCity Intelligence...</div>
         </div>
       </div>
     );
@@ -108,6 +110,10 @@ function AppContent() {
                   <Route path="/report/confirm/:reportId" element={<ReportConfirmation />} />
                   <Route path="/map" element={<MapPage />} />
                   <Route path="/feed" element={<SafetyFeed />} />
+                  <Route path="/safe-route" element={<SafeRoutePage />} />
+                  <Route path="/routes" element={<SafeRoutePage />} />
+                  <Route path="/walk-buddy" element={<WalkBuddyPage />} />
+                  <Route path="/walk-with-me" element={<WalkBuddyPage />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </main>

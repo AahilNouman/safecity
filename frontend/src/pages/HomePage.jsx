@@ -11,7 +11,11 @@ import {
   Activity,
   CheckCircle2,
   Lock,
-  Layers
+  Layers,
+  Navigation,
+  Footprints,
+  AlertTriangle,
+  Compass
 } from 'lucide-react';
 
 const HomePage = () => {
@@ -73,22 +77,49 @@ const HomePage = () => {
               maxWidth: '560px',
               marginBottom: '2.25rem'
             }}>
-              SafeCity aggregates verified civic incident reports into actionable spatial intelligence. Designed with mathematical privacy, DistilBERT NLP classification, and DBSCAN clustering for proactive municipal safety.
+              SafeCity aggregates verified civic incident reports into actionable spatial intelligence. Featuring real-time <strong>Safest Route Detection</strong> avoiding high-risk red zones and <strong>Virtual Walk With Me</strong> with GPS inactivity guardian monitoring.
             </p>
 
             {/* Action Buttons */}
             <div style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap', alignItems: 'center' }}>
               <Link
-                to="/report"
+                to="/safe-route"
                 className="btn btn-primary"
-                style={{ padding: '0.75rem 1.6rem', fontSize: '0.95rem' }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.75rem 1.6rem',
+                  fontSize: '0.95rem',
+                  fontWeight: '700'
+                }}
               >
-                Report an Incident <ArrowRight size={16} />
+                <Navigation size={17} /> Safest Route Detection
+              </Link>
+              <Link
+                to="/walk-buddy"
+                className="btn btn-secondary"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.75rem 1.5rem',
+                  fontSize: '0.95rem',
+                  fontWeight: '700'
+                }}
+              >
+                <Footprints size={17} /> Walk With Me
               </Link>
               <Link
                 to="/map"
                 className="btn btn-outline"
-                style={{ padding: '0.75rem 1.5rem', fontSize: '0.95rem' }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.75rem 1.4rem',
+                  fontSize: '0.95rem'
+                }}
               >
                 <MapPin size={16} /> Explore Safety Map
               </Link>
@@ -138,43 +169,72 @@ const HomePage = () => {
               </div>
 
               {/* Emergency Numbers Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
-                <div style={{
-                  padding: '0.6rem 0.75rem',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '8px'
-                }}>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>National Emergency</div>
-                  <div style={{ fontSize: '1rem', color: '#ffffff', fontWeight: '800' }}>112</div>
-                </div>
-                <div style={{
-                  padding: '0.6rem 0.75rem',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '8px'
-                }}>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Women Helpline</div>
-                  <div style={{ fontSize: '1rem', color: '#ffffff', fontWeight: '800' }}>1091</div>
-                </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <a
+                  href="tel:112"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '8px',
+                    padding: '0.6rem 0.75rem',
+                    textDecoration: 'none',
+                    color: '#ffffff',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.4)'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'}
+                >
+                  <PhoneCall size={14} color="#f87171" />
+                  <div>
+                    <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>National Emergency</div>
+                    <div style={{ fontSize: '0.9rem', fontWeight: '700', color: '#ffffff' }}>112</div>
+                  </div>
+                </a>
+
+                <a
+                  href="tel:1091"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '8px',
+                    padding: '0.6rem 0.75rem',
+                    textDecoration: 'none',
+                    color: '#ffffff',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.4)'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'}
+                >
+                  <PhoneCall size={14} color="#60a5fa" />
+                  <div>
+                    <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Women Helpline</div>
+                    <div style={{ fontSize: '0.9rem', fontWeight: '700', color: '#ffffff' }}>1091</div>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Live Telemetry Metrics Row */}
+      {/* Real-time Telemetry Metrics Bar */}
       <section style={{
         background: '#070b14',
         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-        padding: '1.75rem 1.5rem'
+        padding: '2rem 1.5rem'
       }}>
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '1.5rem'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '2rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <div style={{
@@ -187,11 +247,11 @@ const HomePage = () => {
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              <MapPin size={20} color="#14b8a6" />
+              <Activity size={20} color="#14b8a6" />
             </div>
             <div>
-              <div style={{ fontSize: '1.35rem', fontWeight: '800', color: '#ffffff', lineHeight: 1.1 }}>55+</div>
-              <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '600', textTransform: 'uppercase' }}>Clusters Tracked</div>
+              <div style={{ fontSize: '1.35rem', fontWeight: '800', color: '#ffffff', lineHeight: 1.1 }}>68+</div>
+              <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '600', textTransform: 'uppercase' }}>Audited Incidents</div>
             </div>
           </div>
 
@@ -209,8 +269,8 @@ const HomePage = () => {
               <CheckCircle2 size={20} color="#10b981" />
             </div>
             <div>
-              <div style={{ fontSize: '1.35rem', fontWeight: '800', color: '#ffffff', lineHeight: 1.1 }}>30+</div>
-              <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '600', textTransform: 'uppercase' }}>Verified Reports</div>
+              <div style={{ fontSize: '1.35rem', fontWeight: '800', color: '#ffffff', lineHeight: 1.1 }}>4 Clusters</div>
+              <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '600', textTransform: 'uppercase' }}>Hotspot Red-Zones</div>
             </div>
           </div>
 
@@ -270,7 +330,7 @@ const HomePage = () => {
               letterSpacing: '0.08em',
               marginBottom: '0.75rem'
             }}>
-              Technology Architecture
+              Autonomous Protection Engine
             </div>
             <h2 style={{
               fontSize: 'clamp(1.85rem, 3.5vw, 2.5rem)',
@@ -279,7 +339,7 @@ const HomePage = () => {
               letterSpacing: '-0.02em',
               marginBottom: '0.75rem'
             }}>
-              Engineered for Public Safety & Privacy
+              Next-Generation Citizen Defense Features
             </h2>
             <p style={{
               fontSize: '1rem',
@@ -288,97 +348,121 @@ const HomePage = () => {
               margin: '0 auto',
               lineHeight: '1.6'
             }}>
-              Built on modern full-stack standards to ensure zero data leakage, fast triage, and auditable geospatial intelligence.
+              Engineered with real routing networks and live GPS telemetry to protect pedestrians and commuters.
             </p>
           </div>
 
           <div className="grid md:grid-cols-4">
-            <div className="card">
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '10px',
-                background: 'rgba(13, 148, 136, 0.1)',
-                border: '1px solid rgba(13, 148, 136, 0.25)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '1.25rem'
-              }}>
-                <EyeOff size={18} color="#14b8a6" />
+            {/* Feature 1: Safest Route */}
+            <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '10px',
+                  background: 'rgba(13, 148, 136, 0.1)',
+                  border: '1px solid rgba(13, 148, 136, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '1.25rem'
+                }}>
+                  <Navigation size={18} color="#14b8a6" />
+                </div>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.5rem' }}>
+                  Safest Route Detection
+                </h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>
+                  Real-time OSRM pathfinding that compares alternatives against verified incident clusters and highlights the lowest-risk corridor.
+                </p>
               </div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.5rem' }}>
-                Zero-PII Protection
-              </h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>
-                Personal identity data is excluded from public feeds and map points. Coordinates are fuzzed to protect citizen confidentiality.
-              </p>
+              <Link to="/safe-route" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#14b8a6', fontSize: '0.85rem', fontWeight: '700', marginTop: '1rem', textDecoration: 'none' }}>
+                Plan Safe Route <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="card">
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '10px',
-                background: 'rgba(13, 148, 136, 0.1)',
-                border: '1px solid rgba(13, 148, 136, 0.25)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '1.25rem'
-              }}>
-                <Cpu size={18} color="#14b8a6" />
+            {/* Feature 2: Walk Buddy */}
+            <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '10px',
+                  background: 'rgba(13, 148, 136, 0.1)',
+                  border: '1px solid rgba(13, 148, 136, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '1.25rem'
+                }}>
+                  <Footprints size={18} color="#14b8a6" />
+                </div>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.5rem' }}>
+                  Virtual Walk With Me
+                </h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>
+                  GPS companion monitoring movement. Triggers safety prompts upon prolonged inactivity and auto-notifies your emergency contact.
+                </p>
               </div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.5rem' }}>
-                DistilBERT NLP Triage
-              </h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>
-                Natural Language Processing categorizes incident narratives, scores danger levels, and prevents manual triage bottlenecks.
-              </p>
+              <Link to="/walk-buddy" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#14b8a6', fontSize: '0.85rem', fontWeight: '700', marginTop: '1rem', textDecoration: 'none' }}>
+                Start Escort Session <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="card">
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '10px',
-                background: 'rgba(13, 148, 136, 0.1)',
-                border: '1px solid rgba(13, 148, 136, 0.25)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '1.25rem'
-              }}>
-                <Layers size={18} color="#14b8a6" />
+            {/* Feature 3: DBSCAN Clustering */}
+            <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '10px',
+                  background: 'rgba(13, 148, 136, 0.1)',
+                  border: '1px solid rgba(13, 148, 136, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '1.25rem'
+                }}>
+                  <Layers size={18} color="#14b8a6" />
+                </div>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.5rem' }}>
+                  DBSCAN Hotspots
+                </h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>
+                  Density-based spatial clustering identifies recurring risk corridors, unlit transit pathways, and municipal patrol zones.
+                </p>
               </div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.5rem' }}>
-                DBSCAN Hotspots
-              </h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>
-                Density-based spatial clustering identifies recurring risk corridors, unlit transit pathways, and municipal patrol zones.
-              </p>
+              <Link to="/map" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#14b8a6', fontSize: '0.85rem', fontWeight: '700', marginTop: '1rem', textDecoration: 'none' }}>
+                View Threat Hotspots <ArrowRight size={14} />
+              </Link>
             </div>
 
-            <div className="card">
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '10px',
-                background: 'rgba(13, 148, 136, 0.1)',
-                border: '1px solid rgba(13, 148, 136, 0.25)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '1.25rem'
-              }}>
-                <CheckCircle2 size={18} color="#14b8a6" />
+            {/* Feature 4: Zero-PII Anonymous Reporting */}
+            <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '10px',
+                  background: 'rgba(13, 148, 136, 0.1)',
+                  border: '1px solid rgba(13, 148, 136, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '1.25rem'
+                }}>
+                  <EyeOff size={18} color="#14b8a6" />
+                </div>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.5rem' }}>
+                  Zero-PII Protection
+                </h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>
+                  Personal identity data is excluded from public feeds and map points. Coordinates are fuzzed to protect citizen confidentiality.
+                </p>
               </div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.5rem' }}>
-                Human Verification
-              </h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>
-                Every public report is audited and verified by authorized safety moderators before publishing to prevent spam or false reports.
-              </p>
+              <Link to="/report" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#14b8a6', fontSize: '0.85rem', fontWeight: '700', marginTop: '1rem', textDecoration: 'none' }}>
+                Submit Report <ArrowRight size={14} />
+              </Link>
             </div>
           </div>
         </div>
@@ -388,22 +472,30 @@ const HomePage = () => {
       <section style={{
         background: '#070b14',
         borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-        padding: '3.5rem 1.5rem',
+        padding: '4rem 1.5rem',
         textAlign: 'center'
       }}>
-        <div style={{ maxWidth: '650px', margin: '0 auto' }}>
-          <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.5rem' }}>
-            Empower your community with verified safety data
-          </h3>
-          <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-            Your anonymous reports help map vulnerable transit areas and direct municipal safety resources where they are needed most.
+        <div style={{ maxWidth: '640px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: '800', color: '#ffffff', letterSpacing: '-0.02em', marginBottom: '1rem' }}>
+            Empowering safer cities together.
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '1rem', lineHeight: '1.6', marginBottom: '2rem' }}>
+            Every incident submitted or route navigated trains our spatial intelligence engine to protect more citizens across Bengaluru.
           </p>
-          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link to="/report" className="btn btn-primary">
-              Submit an Incident Report
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <Link
+              to="/safe-route"
+              className="btn btn-primary"
+              style={{ padding: '0.75rem 1.75rem', fontSize: '0.95rem' }}
+            >
+              Test Safest Route
             </Link>
-            <Link to="/feed" className="btn btn-outline">
-              View Community Safety Feed
+            <Link
+              to="/walk-buddy"
+              className="btn btn-outline"
+              style={{ padding: '0.75rem 1.5rem', fontSize: '0.95rem' }}
+            >
+              Start Walk Escort
             </Link>
           </div>
         </div>

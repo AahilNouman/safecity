@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getMe } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -23,6 +24,13 @@ export const AuthProvider = ({ children }) => {
           setToken(storedToken);
           setAdmin(decoded);
           setIsAuthenticated(true);
+
+          // Fetch full profile in background to get latest emergency contact
+          getMe().then(res => {
+            if (res && res.data) {
+              setAdmin(prev => ({ ...prev, ...res.data }));
+            }
+          }).catch(() => {});
         } else {
           localStorage.removeItem('safecity_admin_token');
         }
@@ -54,6 +62,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUserData = (updatedFields) => {
+    setAdmin(prev => ({ ...prev, ...updatedFields }));
+  };
+
   const continueAsGuest = () => {
     localStorage.setItem('safecity_guest', 'true');
     setIsGuest(true);
@@ -71,7 +83,19 @@ export const AuthProvider = ({ children }) => {
   const isAdmin = Boolean(admin && ['admin', 'moderator', 'SUPER_ADMIN'].includes(admin.role));
 
   return (
-    <AuthContext.Provider value={{ token, admin, user: admin, isAdmin, isAuthenticated, isGuest, continueAsGuest, login, logout, loading }}>
+    <AuthContext.Provider value={{
+      token,
+      admin,
+      user: admin,
+      isAdmin,
+      isAuthenticated,
+      isGuest,
+      continueAsGuest,
+      login,
+      logout,
+      updateUserData,
+      loading
+    }}>
       {children}
     </AuthContext.Provider>
   );
