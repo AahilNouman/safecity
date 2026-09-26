@@ -67,41 +67,68 @@ const createIncident = async (req, res, next) => {
 
 const getIncidents = async (req, res, next) => {
   try {
-    const { page = 1, limit = 10, category, status, date_from, date_to } = req.query;
+    const { page = 1, limit = 20, category, status, date_from, date_to } = req.query;
     const offset = (page - 1) * limit;
     
     let whereClauses = [];
     let values = [];
     let paramCounter = 1;
     
-    if (category) {
-      whereClauses.push(`category_id = $${paramCounter++}`);
-      values.push(category);
+    if (category && category !== 'ALL') {
+      if (!isNaN(category)) {
+        whereClauses.push(`i.category_id = $${paramCounter++}`);
+        values.push(parseInt(category, 10));
+      } else {
+        whereClauses.push(`(LOWER(c.name) = LOWER($${paramCounter}) OR LOWER(i.final_category) = LOWER($${paramCounter}))`);
+        values.push(category);
+        paramCounter++;
+      }
     }
-    if (status) {
-      whereClauses.push(`verification_status = $${paramCounter++}`);
+    if (status && status !== 'ALL') {
+      whereClauses.push(`i.verification_status = $${paramCounter++}`);
       values.push(status);
     }
     if (date_from) {
-      whereClauses.push(`incident_time >= $${paramCounter++}`);
+      whereClauses.push(`i.incident_time >= $${paramCounter++}`);
       values.push(date_from);
     }
     if (date_to) {
-      whereClauses.push(`incident_time <= $${paramCounter++}`);
+      whereClauses.push(`i.incident_time <= $${paramCounter++}`);
       values.push(date_to);
     }
     
     const whereString = whereClauses.length > 0 ? 'WHERE ' + whereClauses.join(' AND ') : '';
     
-    const countQuery = `SELECT COUNT(*) FROM incidents ${whereString}`;
+    const countQuery = `
+      SELECT COUNT(*) 
+      FROM incidents i
+      LEFT JOIN incident_categories c ON i.category_id = c.id
+      ${whereString}
+    `;
     const countResult = await db.query(countQuery, values);
     const totalCount = parseInt(countResult.rows[0].count, 10);
     
     const dataQuery = `
-      SELECT id, public_report_id, category_id, final_category, incident_time, verification_status as status, severity_level 
-      FROM incidents 
+      SELECT 
+        i.id,
+        i.public_report_id,
+        i.description,
+        i.category_id,
+        COALESCE(i.final_category, c.name, i.ai_category, 'Incident') as category,
+        c.name as category_name,
+        i.incident_time,
+        i.created_at,
+        i.verification_status,
+        i.verification_status as status,
+        i.severity_level,
+        i.severity_score,
+        i.ai_confidence,
+        ROUND(i.latitude::numeric, 2) as approx_lat,
+        ROUND(i.longitude::numeric, 2) as approx_lng
+      FROM incidents i
+      LEFT JOIN incident_categories c ON i.category_id = c.id
       ${whereString}
-      ORDER BY created_at DESC
+      ORDER BY i.created_at DESC
       LIMIT $${paramCounter++} OFFSET $${paramCounter++}
     `;
     
@@ -110,6 +137,7 @@ const getIncidents = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: dataResult.rows,
+      incidents: dataResult.rows,
       meta: {
         total: totalCount,
         page: parseInt(page, 10),
