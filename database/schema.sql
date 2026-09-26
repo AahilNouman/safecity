@@ -32,6 +32,19 @@ CREATE TABLE admins (
     last_login TIMESTAMPTZ
 );
 
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+    emergency_contact VARCHAR(20),
+    role VARCHAR(50) DEFAULT 'citizen',
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    last_login TIMESTAMPTZ
+);
+
 CREATE TABLE incidents (
     id SERIAL PRIMARY KEY,
     public_report_id VARCHAR(20) UNIQUE NOT NULL,

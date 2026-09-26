@@ -11,6 +11,7 @@ const { apiLimiter } = require('./middleware/rateLimiter');
 const incidentRoutes = require('./routes/incidents');
 const adminRoutes = require('./routes/admin');
 const aiRoutes = require('./routes/ai');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(morgan('dev'));
 app.use('/api', apiLimiter);
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/incidents', incidentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/ai', aiRoutes);

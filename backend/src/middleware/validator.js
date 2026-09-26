@@ -78,9 +78,43 @@ const validateOverrideCategory = [
   handleValidationErrors
 ];
 
+const validateRegister = [
+  body('full_name')
+    .trim()
+    .notEmpty().withMessage('Full name is required')
+    .isLength({ min: 2, max: 100 }).withMessage('Full name must be between 2 and 100 characters'),
+  body('email')
+    .trim()
+    .isEmail().withMessage('Must be a valid email'),
+  body('password')
+    .isString().withMessage('Password must be a string')
+    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+  body('phone')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ min: 7, max: 20 }).withMessage('Phone number must be valid'),
+  body('emergency_contact')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ min: 7, max: 20 }).withMessage('Emergency contact must be valid'),
+  handleValidationErrors
+];
+
+const validateLogin = [
+  body('email')
+    .trim()
+    .isEmail().withMessage('Must be a valid email'),
+  body('password')
+    .isString().withMessage('Password must be a string')
+    .notEmpty().withMessage('Password is required'),
+  handleValidationErrors
+];
+
 module.exports = {
   validateCreateIncident,
   validateAdminLogin,
+  validateRegister,
+  validateLogin,
   validateVerifyIncident,
   validateRejectIncident,
   validateOverrideCategory

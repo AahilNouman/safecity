@@ -10,6 +10,7 @@ import ReportPage from './pages/ReportPage';
 import ReportConfirmation from './pages/ReportConfirmation';
 import MapPage from './pages/MapPage';
 import SafetyFeed from './pages/SafetyFeed';
+import AuthPage from './pages/auth/AuthPage';
 
 // Admin Pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -27,7 +28,7 @@ function App() {
         <div className="app-container">
           <Routes>
             {/* Admin Routes with their own layout */}
-            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/login" element={<AuthPage initialMode="signin" />} />
             
             <Route path="/admin/*" element={
               <ProtectedRoute>
@@ -53,6 +54,10 @@ function App() {
                     <Route path="/report/confirm/:reportId" element={<ReportConfirmation />} />
                     <Route path="/map" element={<MapPage />} />
                     <Route path="/feed" element={<SafetyFeed />} />
+                    <Route path="/login" element={<AuthPage initialMode="signin" />} />
+                    <Route path="/signin" element={<AuthPage initialMode="signin" />} />
+                    <Route path="/register" element={<AuthPage initialMode="signup" />} />
+                    <Route path="/signup" element={<AuthPage initialMode="signup" />} />
                   </Routes>
                 </main>
                 <Footer />

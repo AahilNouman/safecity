@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Shield, Menu, X, ArrowRight } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Shield, Menu, X, ArrowRight, LogIn, LogOut, User } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import toast from 'react-hot-toast';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const { isAuthenticated, user, isAdmin, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    toast.success('Signed out successfully');
+    navigate('/');
+  };
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -17,7 +25,7 @@ const Navbar = () => {
     { name: 'Community Feed', path: '/feed' },
   ];
 
-  if (isAuthenticated) {
+  if (isAuthenticated && isAdmin) {
     navLinks.push({ name: 'Admin Dashboard', path: '/admin/dashboard' });
   }
 
@@ -97,11 +105,104 @@ const Navbar = () => {
               );
             })}
 
+            {/* Auth Button or User Profile Badge */}
+            {isAuthenticated ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '0.25rem' }}>
+                <div
+                  title={user?.email || 'Logged in user'}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    padding: '0.35rem 0.75rem',
+                    borderRadius: '9999px',
+                    color: '#ffffff',
+                    fontSize: '0.85rem',
+                    fontWeight: '600'
+                  }}
+                >
+                  <div style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    background: isAdmin ? 'linear-gradient(135deg, #e11d48, #be123c)' : 'linear-gradient(135deg, #0d9488, #2dd4bf)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#ffffff',
+                    fontSize: '0.75rem',
+                    fontWeight: '700'
+                  }}>
+                    {user?.name?.[0]?.toUpperCase() || user?.full_name?.[0]?.toUpperCase() || (isAdmin ? 'A' : 'U')}
+                  </div>
+                  <span style={{ maxWidth: '110px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {user?.name || user?.full_name || (isAdmin ? 'Admin' : 'User')}
+                  </span>
+                  {isAdmin && (
+                    <span style={{ fontSize: '0.625rem', background: 'rgba(225, 29, 72, 0.25)', color: '#fca5a5', padding: '0.1rem 0.35rem', borderRadius: '4px', border: '1px solid rgba(225, 29, 72, 0.4)' }}>
+                      ADMIN
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  title="Sign Out"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    color: '#94a3b8',
+                    padding: '0.45rem',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.color = '#f87171'; e.currentTarget.style.borderColor = 'rgba(248, 113, 113, 0.3)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)'; }}
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                style={{
+                  marginLeft: '0.25rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  color: '#ffffff',
+                  fontWeight: '600',
+                  fontSize: '0.875rem',
+                  textDecoration: 'none',
+                  padding: '0.45rem 0.95rem',
+                  borderRadius: '9999px',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.14)';
+                  e.currentTarget.style.borderColor = 'rgba(45, 212, 191, 0.4)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
+                }}
+              >
+                <LogIn size={15} color="#2dd4bf" /> Sign In
+              </Link>
+            )}
+
             {/* Quick Action Button */}
             <Link
               to="/report"
               style={{
-                marginLeft: '0.5rem',
+                marginLeft: '0.4rem',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.4rem',
@@ -177,11 +278,91 @@ const Navbar = () => {
                 </Link>
               );
             })}
+
+            {/* Mobile Auth action */}
+            {isAuthenticated ? (
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '0.75rem',
+                background: 'rgba(255, 255, 255, 0.05)',
+                borderRadius: '12px',
+                marginTop: '0.5rem'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div style={{
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    background: isAdmin ? '#e11d48' : '#0d9488',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#ffffff',
+                    fontSize: '0.8rem',
+                    fontWeight: '700'
+                  }}>
+                    {user?.name?.[0]?.toUpperCase() || user?.full_name?.[0]?.toUpperCase() || 'U'}
+                  </div>
+                  <div>
+                    <div style={{ color: '#ffffff', fontSize: '0.9rem', fontWeight: '600' }}>
+                      {user?.name || user?.full_name || 'User'}
+                    </div>
+                    <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>
+                      {isAdmin ? 'Administrator' : 'Community Member'}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => { setIsOpen(false); handleLogout(); }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    background: 'rgba(239, 68, 68, 0.15)',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    color: '#f87171',
+                    padding: '0.4rem 0.75rem',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontSize: '0.8rem',
+                    fontWeight: '600'
+                  }}
+                >
+                  <LogOut size={14} /> Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setIsOpen(false)}
+                style={{
+                  marginTop: '0.25rem',
+                  textAlign: 'center',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.16)',
+                  color: '#ffffff',
+                  fontWeight: '600',
+                  fontSize: '0.95rem',
+                  textDecoration: 'none',
+                  padding: '0.7rem',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                <LogIn size={16} color="#2dd4bf" /> Sign In / Sign Up
+              </Link>
+            )}
+
             <Link
               to="/report"
               onClick={() => setIsOpen(false)}
               style={{
-                marginTop: '0.5rem',
+                marginTop: '0.25rem',
                 textAlign: 'center',
                 background: 'linear-gradient(135deg, #2dd4bf 0%, #0d9488 100%)',
                 color: '#032128',

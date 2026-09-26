@@ -31,6 +31,11 @@ export const getMapIncidents = (params) => api.get('/incidents/map', { params })
 export const getHotspots = () => api.get('/incidents/hotspots').then(res => res.data);
 export const getIncidentById = (id) => api.get(`/incidents/${id}`).then(res => res.data);
 
+// Auth endpoints (Citizen & Admin)
+export const userRegister = (data) => api.post('/auth/register', data).then(res => res.data);
+export const userLogin = (email, password) => api.post('/auth/login', { email, password }).then(res => res.data);
+export const getMe = () => api.get('/auth/me').then(res => res.data);
+
 // Admin endpoints
 export const adminLogin = (email, password) => api.post('/admin/login', { email, password }).then(res => res.data);
 export const getDashboard = () => api.get('/admin/dashboard').then(res => res.data);

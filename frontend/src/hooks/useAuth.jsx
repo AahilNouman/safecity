@@ -32,15 +32,21 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = (newToken) => {
+  const login = (newToken, userData = null) => {
     localStorage.setItem('safecity_admin_token', newToken);
-    const payloadBase64 = newToken.split('.')[1];
-    const decodedJson = atob(payloadBase64);
-    const decoded = JSON.parse(decodedJson);
-    
-    setToken(newToken);
-    setAdmin(decoded);
-    setIsAuthenticated(true);
+    try {
+      const payloadBase64 = newToken.split('.')[1];
+      const decodedJson = atob(payloadBase64);
+      const decoded = JSON.parse(decodedJson);
+      const combined = userData ? { ...decoded, ...userData } : decoded;
+      setToken(newToken);
+      setAdmin(combined);
+      setIsAuthenticated(true);
+    } catch (e) {
+      setToken(newToken);
+      setAdmin(userData || { email: 'user' });
+      setIsAuthenticated(true);
+    }
   };
 
   const logout = () => {
@@ -50,8 +56,10 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
+  const isAdmin = Boolean(admin && ['admin', 'moderator', 'SUPER_ADMIN'].includes(admin.role));
+
   return (
-    <AuthContext.Provider value={{ token, admin, isAuthenticated, login, logout, loading }}>
+    <AuthContext.Provider value={{ token, admin, user: admin, isAdmin, isAuthenticated, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
