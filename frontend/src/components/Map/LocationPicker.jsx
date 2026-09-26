@@ -48,7 +48,7 @@ const LocationPicker = ({ onLocationSelect, defaultLocation, userLocation }) => 
   const center = userLocation || defaultCenter;
 
   return (
-    <div style={{ height: '300px', width: '100%', borderRadius: 'var(--radius)', overflow: 'hidden', border: '1px solid var(--border)', zIndex: 1 }}>
+    <div style={{ height: '320px', width: '100%', borderRadius: 'var(--radius-card, 12px)', overflow: 'hidden', border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.12))', zIndex: 1 }}>
       <MapContainer center={center} zoom={13} style={{ height: '100%', width: '100%' }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertCircle } from 'lucide-react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -12,26 +12,90 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("ErrorBoundary caught an error", error, errorInfo);
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '2rem', textAlign: 'center' }}>
-          <AlertCircle size={64} color="var(--rose)" style={{ marginBottom: '1rem' }} />
-          <h2>Something went wrong</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>We apologize for the inconvenience.</p>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '80vh',
+          padding: '2rem',
+          textAlign: 'center',
+          background: 'var(--bg-base, #070B14)',
+          color: 'var(--text-primary, #F8FAFC)'
+        }}>
+          <div style={{
+            width: '64px',
+            height: '64px',
+            borderRadius: '16px',
+            background: 'rgba(239, 68, 68, 0.12)',
+            border: '1px solid rgba(239, 68, 68, 0.25)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '1.5rem'
+          }}>
+            <AlertTriangle size={32} color="#f87171" />
+          </div>
+
+          <h2 style={{
+            fontSize: '1.75rem',
+            fontWeight: '800',
+            fontFamily: 'var(--font-heading)',
+            marginBottom: '0.5rem',
+            letterSpacing: '-0.02em'
+          }}>
+            SafeCity Telemetry Exception
+          </h2>
+          <p style={{
+            color: 'var(--text-secondary, #94A3B8)',
+            marginBottom: '1.5rem',
+            maxWidth: '480px',
+            fontSize: '0.95rem'
+          }}>
+            An unexpected client-side rendering exception was encountered. Your session security remains uncompromised.
+          </p>
+
           {this.state.error && (
-            <pre style={{ textAlign: 'left', background: '#f1f5f9', padding: '1rem', borderRadius: '8px', maxWidth: '800px', overflow: 'auto', fontSize: '0.85rem', color: '#e11d48', marginBottom: '1.5rem', whiteSpace: 'pre-wrap' }}>
+            <pre style={{
+              textAlign: 'left',
+              background: 'rgba(14, 23, 38, 0.95)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '1.25rem',
+              borderRadius: '12px',
+              maxWidth: '750px',
+              width: '100%',
+              overflow: 'auto',
+              fontSize: '0.8rem',
+              fontFamily: 'monospace',
+              color: '#f87171',
+              marginBottom: '2rem',
+              whiteSpace: 'pre-wrap'
+            }}>
               {this.state.error.toString()}
-              {'\n'}
-              {this.state.error.stack}
             </pre>
           )}
-          <button className="btn btn-primary" onClick={() => window.location.href = '/'}>
-            Return to Home
-          </button>
+
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button
+              className="btn btn-secondary"
+              onClick={() => window.location.reload()}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <RefreshCw size={16} /> Reload Page
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => window.location.href = '/'}
+            >
+              Return to Platform Home
+            </button>
+          </div>
         </div>
       );
     }

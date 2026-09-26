@@ -225,7 +225,7 @@ const AuthPage = ({ initialMode = 'signin' }) => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'radial-gradient(ellipse at top, #04252d 0%, #02171c 100%)',
+      background: 'radial-gradient(ellipse at top, #0d1b33 0%, #070b14 100%)',
       padding: '2rem 1rem',
       position: 'relative',
       overflow: 'hidden'
@@ -238,7 +238,7 @@ const AuthPage = ({ initialMode = 'signin' }) => {
         width: '600px',
         height: '600px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(45, 212, 191, 0.08) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(13, 148, 136, 0.08) 0%, transparent 70%)',
         pointerEvents: 'none'
       }} />
       <div style={{
@@ -248,7 +248,7 @@ const AuthPage = ({ initialMode = 'signin' }) => {
         width: '550px',
         height: '550px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(13, 148, 136, 0.08) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(30, 58, 138, 0.08) 0%, transparent 70%)',
         pointerEvents: 'none'
       }} />
 
@@ -259,19 +259,19 @@ const AuthPage = ({ initialMode = 'signin' }) => {
         minHeight: '680px',
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-        background: 'rgba(5, 38, 46, 0.85)',
+        background: 'rgba(14, 23, 38, 0.94)',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
-        borderRadius: '28px',
-        boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRadius: '24px',
+        boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04)',
         overflow: 'hidden',
         zIndex: 2
       }}>
         {/* ════════════════════ LEFT HERO BRANDING PANEL ════════════════════ */}
         <div style={{
           padding: '3rem 2.5rem',
-          background: 'linear-gradient(145deg, rgba(6, 47, 57, 0.95) 0%, rgba(3, 26, 32, 0.95) 100%)',
+          background: 'linear-gradient(145deg, rgba(16, 25, 45, 0.98) 0%, rgba(10, 15, 29, 0.98) 100%)',
           borderRight: '1px solid rgba(255, 255, 255, 0.08)',
           display: 'flex',
           flexDirection: 'column',
@@ -456,7 +456,7 @@ const AuthPage = ({ initialMode = 'signin' }) => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          background: 'rgba(4, 30, 37, 0.75)'
+          background: 'rgba(10, 15, 29, 0.88)'
         }}>
           <div>
             {/* Header info */}

@@ -5,13 +5,19 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.heat';
 
 const CATEGORY_COLORS = {
-  'THEFT': '#D97706',
-  'ASSAULT': '#E11D48',
-  'HARASSMENT': '#7C3AED',
-  'VANDALISM': '#2563EB',
-  'SUSPICIOUS_ACTIVITY': '#059669',
-  'ROAD_HAZARD': '#0D9488',
-  'OTHER': '#475569'
+  'harassment': '#f97316',
+  'stalking': '#f43f5e',
+  'threat': '#e11d48',
+  'unsafe area': '#eab308',
+  'poor lighting': '#06b6d4',
+  'suspicious activity': '#8b5cf6',
+  'other': '#64748b'
+};
+
+const getCategoryColor = (cat) => {
+  if (!cat) return '#0d9488';
+  const normalized = cat.toString().toLowerCase();
+  return CATEGORY_COLORS[normalized] || '#0d9488';
 };
 
 const HeatmapLayer = ({ data }) => {
@@ -26,7 +32,6 @@ const HeatmapLayer = ({ data }) => {
       return;
     }
 
-    // Remove existing layer if any
     if (layerRef.current) {
       map.removeLayer(layerRef.current);
     }
@@ -44,7 +49,7 @@ const HeatmapLayer = ({ data }) => {
       blur: 15,
       maxZoom: 15,
       max: 1.0,
-      gradient: { 0.4: 'blue', 0.6: 'cyan', 0.7: 'lime', 0.8: 'yellow', 1.0: 'red' }
+      gradient: { 0.4: '#0d9488', 0.6: '#06b6d4', 0.7: '#f59e0b', 0.8: '#f97316', 1.0: '#e11d48' }
     }).addTo(map);
 
     return () => {
@@ -62,7 +67,7 @@ const SafetyMap = ({ incidents = [], hotspots = [], viewMode = 'markers', center
   const hotspotsList = Array.isArray(hotspots) ? hotspots : (hotspots?.data || []);
 
   return (
-    <div style={{ height: '100%', width: '100%', zIndex: 1 }}>
+    <div style={{ height: '100%', width: '100%', zIndex: 1, position: 'relative' }}>
       <MapContainer center={center} zoom={zoom} style={{ height: '100%', width: '100%' }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -75,55 +80,74 @@ const SafetyMap = ({ incidents = [], hotspots = [], viewMode = 'markers', center
 
         {viewMode === 'markers' && incidentsList
           .filter(incident => (incident.approx_latitude || incident.latitude) && (incident.approx_longitude || incident.longitude))
-          .map((incident) => (
-          <CircleMarker
-            key={incident.public_report_id || incident.id}
-            center={[parseFloat(incident.approx_latitude || incident.latitude), parseFloat(incident.approx_longitude || incident.longitude)]}
-            radius={8}
-            pathOptions={{
-              color: CATEGORY_COLORS[incident.display_category || incident.category_id] || CATEGORY_COLORS.OTHER,
-              fillColor: CATEGORY_COLORS[incident.display_category || incident.category_id] || CATEGORY_COLORS.OTHER,
-              fillOpacity: 0.7,
-              weight: 2
-            }}
-          >
-            <Popup>
-              <div>
-                <strong>{incident.display_category || incident.category_id}</strong>
-                <p style={{ margin: '0.25rem 0' }}>Severity: {incident.severity_level}</p>
-                <p style={{ margin: '0', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                  {new Date(incident.incident_time || incident.created_at || Date.now()).toLocaleDateString()}
-                </p>
-              </div>
-            </Popup>
-          </CircleMarker>
-        ))}
+          .map((incident) => {
+            const catName = incident.display_category || incident.category || incident.category_name || 'Incident';
+            const color = getCategoryColor(catName);
+
+            return (
+              <CircleMarker
+                key={incident.public_report_id || incident.id}
+                center={[parseFloat(incident.approx_latitude || incident.latitude), parseFloat(incident.approx_longitude || incident.longitude)]}
+                radius={7}
+                pathOptions={{
+                  color: color,
+                  fillColor: color,
+                  fillOpacity: 0.85,
+                  weight: 2
+                }}
+              >
+                <Popup>
+                  <div style={{ padding: '0.25rem', minWidth: '160px', color: '#0f172a' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem' }}>
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: color }} />
+                      <strong style={{ fontSize: '0.9rem' }}>{catName}</strong>
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.35rem' }}>
+                      ID: <code>{incident.public_report_id || `SC-${incident.id}`}</code>
+                    </div>
+                    <div style={{ fontSize: '0.8rem', fontWeight: '600', color: incident.severity_level === 'HIGH' ? '#e11d48' : '#0d9488' }}>
+                      Severity: {incident.severity_level || 'MEDIUM'}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.35rem' }}>
+                      {new Date(incident.incident_time || incident.created_at || Date.now()).toLocaleDateString()}
+                    </div>
+                  </div>
+                </Popup>
+              </CircleMarker>
+            );
+          })}
 
         {viewMode === 'markers' && hotspotsList
           .filter(hotspot => hotspot.centroid_lat && hotspot.centroid_lng)
           .map((hotspot) => (
-          <Circle
-            key={hotspot.id}
-            center={[parseFloat(hotspot.centroid_lat), parseFloat(hotspot.centroid_lng)]}
-            radius={parseFloat(hotspot.radius_meters)}
-            pathOptions={{
-              color: '#E11D48',
-              fillColor: '#E11D48',
-              fillOpacity: 0.2,
-              weight: 2,
-              dashArray: '5, 5'
-            }}
-          >
-            <Popup>
-              <div>
-                <strong>Hotspot Cluster</strong>
-                <p>Incidents: {hotspot.incident_count}</p>
-                <p>Primary Type: {hotspot.primary_category}</p>
-                <p>Avg Severity: {parseFloat(hotspot.avg_severity || 0).toFixed(1)}</p>
-              </div>
-            </Popup>
-          </Circle>
-        ))}
+            <Circle
+              key={hotspot.id}
+              center={[parseFloat(hotspot.centroid_lat), parseFloat(hotspot.centroid_lng)]}
+              radius={parseFloat(hotspot.radius_meters || 450)}
+              pathOptions={{
+                color: '#e11d48',
+                fillColor: '#e11d48',
+                fillOpacity: 0.15,
+                weight: 1.5,
+                dashArray: '6, 6'
+              }}
+            >
+              <Popup>
+                <div style={{ padding: '0.25rem', minWidth: '170px', color: '#0f172a' }}>
+                  <strong style={{ color: '#e11d48', fontSize: '0.9rem' }}>DBSCAN Hotspot Cluster</strong>
+                  <div style={{ fontSize: '0.8rem', marginTop: '0.25rem' }}>
+                    <strong>Incidents:</strong> {hotspot.incident_count}
+                  </div>
+                  <div style={{ fontSize: '0.8rem' }}>
+                    <strong>Primary:</strong> {hotspot.primary_category || 'Harassment'}
+                  </div>
+                  <div style={{ fontSize: '0.8rem' }}>
+                    <strong>Avg Severity:</strong> {parseFloat(hotspot.avg_severity || 0.6).toFixed(2)}
+                  </div>
+                </div>
+              </Popup>
+            </Circle>
+          ))}
       </MapContainer>
     </div>
   );
