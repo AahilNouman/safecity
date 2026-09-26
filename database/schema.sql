@@ -40,6 +40,8 @@ CREATE TABLE users (
     phone VARCHAR(20),
     emergency_contact VARCHAR(20),
     role VARCHAR(50) DEFAULT 'citizen',
+    auth_provider VARCHAR(50) DEFAULT 'local',
+    avatar_url VARCHAR(500),
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     last_login TIMESTAMPTZ

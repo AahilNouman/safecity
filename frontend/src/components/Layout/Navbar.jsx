@@ -1,22 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Shield, Menu, X, ArrowRight, LogIn, LogOut, User } from 'lucide-react';
+import {
+  Shield,
+  Menu,
+  X,
+  ArrowRight,
+  LogIn,
+  LogOut,
+  User,
+  ChevronDown,
+  LayoutDashboard,
+  MapPin,
+  FileText,
+  ShieldCheck,
+  CheckCircle,
+  Sparkles
+} from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, user, isAdmin, logout } = useAuth();
+  const { isAuthenticated, isGuest, user, isAdmin, logout } = useAuth();
 
   const handleLogout = () => {
+    setIsProfileOpen(false);
     logout();
     toast.success('Signed out successfully');
-    navigate('/');
+    navigate('/login');
   };
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -28,6 +57,10 @@ const Navbar = () => {
   if (isAuthenticated && isAdmin) {
     navLinks.push({ name: 'Admin Dashboard', path: '/admin/dashboard' });
   }
+
+  const userInitial = user?.name?.[0]?.toUpperCase() || user?.full_name?.[0]?.toUpperCase() || (isAdmin ? 'A' : 'U');
+  const userDisplayName = user?.name || user?.full_name || (isAdmin ? 'Administrator' : 'Citizen');
+  const userEmail = user?.email || '';
 
   return (
     <nav style={{
@@ -105,67 +138,249 @@ const Navbar = () => {
               );
             })}
 
-            {/* Auth Button or User Profile Badge */}
+            {/* Auth / Profile Area */}
             {isAuthenticated ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '0.25rem' }}>
-                <div
-                  title={user?.email || 'Logged in user'}
+              <div style={{ position: 'relative', marginLeft: '0.25rem' }} ref={profileRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.45rem',
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    padding: '0.35rem 0.75rem',
+                    gap: '0.5rem',
+                    background: isProfileOpen ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                    padding: '0.35rem 0.75rem 0.35rem 0.45rem',
                     borderRadius: '9999px',
                     color: '#ffffff',
-                    fontSize: '0.85rem',
-                    fontWeight: '600'
-                  }}
-                >
-                  <div style={{
-                    width: '24px',
-                    height: '24px',
-                    borderRadius: '50%',
-                    background: isAdmin ? 'linear-gradient(135deg, #e11d48, #be123c)' : 'linear-gradient(135deg, #0d9488, #2dd4bf)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#ffffff',
-                    fontSize: '0.75rem',
-                    fontWeight: '700'
-                  }}>
-                    {user?.name?.[0]?.toUpperCase() || user?.full_name?.[0]?.toUpperCase() || (isAdmin ? 'A' : 'U')}
-                  </div>
-                  <span style={{ maxWidth: '110px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {user?.name || user?.full_name || (isAdmin ? 'Admin' : 'User')}
-                  </span>
-                  {isAdmin && (
-                    <span style={{ fontSize: '0.625rem', background: 'rgba(225, 29, 72, 0.25)', color: '#fca5a5', padding: '0.1rem 0.35rem', borderRadius: '4px', border: '1px solid rgba(225, 29, 72, 0.4)' }}>
-                      ADMIN
-                    </span>
-                  )}
-                </div>
-                <button
-                  onClick={handleLogout}
-                  title="Sign Out"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: 'rgba(255, 255, 255, 0.06)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    color: '#94a3b8',
-                    padding: '0.45rem',
-                    borderRadius: '50%',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.color = '#f87171'; e.currentTarget.style.borderColor = 'rgba(248, 113, 113, 0.3)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)'; }}
                 >
-                  <LogOut size={16} />
+                  {user?.avatar || user?.avatar_url ? (
+                    <img
+                      src={user?.avatar || user?.avatar_url}
+                      alt={userDisplayName}
+                      style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <div style={{
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '50%',
+                      background: isAdmin ? 'linear-gradient(135deg, #e11d48, #be123c)' : 'linear-gradient(135deg, #0d9488, #2dd4bf)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#ffffff',
+                      fontSize: '0.8rem',
+                      fontWeight: '700'
+                    }}>
+                      {userInitial}
+                    </div>
+                  )}
+                  <span style={{ maxWidth: '110px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.875rem', fontWeight: '600' }}>
+                    {userDisplayName}
+                  </span>
+                  <ChevronDown size={14} color="#94a3b8" style={{ transform: isProfileOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
                 </button>
+
+                {/* Profile Floating Dropdown Card */}
+                {isProfileOpen && (
+                  <div style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 0.6rem)',
+                    right: 0,
+                    width: '270px',
+                    background: '#042831',
+                    border: '1px solid rgba(255, 255, 255, 0.14)',
+                    borderRadius: '16px',
+                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05)',
+                    padding: '1rem',
+                    zIndex: 1010,
+                    animation: 'fadeIn 0.15s ease-out'
+                  }}>
+                    {/* User Info Header */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', paddingBottom: '0.85rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                      <div style={{
+                        width: '38px',
+                        height: '38px',
+                        borderRadius: '50%',
+                        background: isAdmin ? 'linear-gradient(135deg, #e11d48, #be123c)' : 'linear-gradient(135deg, #0d9488, #2dd4bf)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#ffffff',
+                        fontWeight: '700',
+                        fontSize: '1rem',
+                        flexShrink: 0
+                      }}>
+                        {userInitial}
+                      </div>
+                      <div style={{ overflow: 'hidden' }}>
+                        <div style={{ color: '#ffffff', fontWeight: '700', fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {userDisplayName}
+                        </div>
+                        <div style={{ color: '#94a3b8', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {userEmail}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Role Pill */}
+                    <div style={{ margin: '0.75rem 0' }}>
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                        padding: '0.2rem 0.6rem',
+                        borderRadius: '999px',
+                        fontSize: '0.72rem',
+                        fontWeight: '700',
+                        textTransform: 'uppercase',
+                        background: isAdmin ? 'rgba(225, 29, 72, 0.2)' : 'rgba(45, 212, 191, 0.2)',
+                        color: isAdmin ? '#fda4af' : '#5eead4',
+                        border: isAdmin ? '1px solid rgba(225, 29, 72, 0.4)' : '1px solid rgba(45, 212, 191, 0.4)'
+                      }}>
+                        <ShieldCheck size={12} />
+                        {isAdmin ? 'System Administrator' : 'Verified Citizen'}
+                      </span>
+                    </div>
+
+                    {/* Quick navigation links */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '0.75rem' }}>
+                      {isAdmin && (
+                        <Link
+                          to="/admin/dashboard"
+                          onClick={() => setIsProfileOpen(false)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.5rem 0.65rem',
+                            borderRadius: '8px',
+                            color: '#e2e8f0',
+                            fontSize: '0.85rem',
+                            textDecoration: 'none',
+                            transition: 'all 0.15s ease'
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
+                          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                        >
+                          <LayoutDashboard size={15} color="#2dd4bf" /> Admin Dashboard
+                        </Link>
+                      )}
+                      <Link
+                        to="/report"
+                        onClick={() => setIsProfileOpen(false)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          padding: '0.5rem 0.65rem',
+                          borderRadius: '8px',
+                          color: '#e2e8f0',
+                          fontSize: '0.85rem',
+                          textDecoration: 'none',
+                          transition: 'all 0.15s ease'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <FileText size={15} color="#2dd4bf" /> Submit New Report
+                      </Link>
+                      <Link
+                        to="/map"
+                        onClick={() => setIsProfileOpen(false)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          padding: '0.5rem 0.65rem',
+                          borderRadius: '8px',
+                          color: '#e2e8f0',
+                          fontSize: '0.85rem',
+                          textDecoration: 'none',
+                          transition: 'all 0.15s ease'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <MapPin size={15} color="#2dd4bf" /> Live Safety Map
+                      </Link>
+                    </div>
+
+                    {/* Sign Out Button */}
+                    <div style={{ paddingTop: '0.6rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                      <button
+                        onClick={handleLogout}
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          padding: '0.55rem 0.65rem',
+                          borderRadius: '8px',
+                          background: 'rgba(239, 68, 68, 0.12)',
+                          border: '1px solid rgba(239, 68, 68, 0.25)',
+                          color: '#f87171',
+                          fontSize: '0.85rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.12)'}
+                      >
+                        <LogOut size={15} /> Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : isGuest ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '0.25rem' }}>
+                <span style={{
+                  fontSize: '0.75rem',
+                  fontWeight: '600',
+                  color: '#2dd4bf',
+                  background: 'rgba(45, 212, 191, 0.1)',
+                  padding: '0.3rem 0.65rem',
+                  borderRadius: '999px',
+                  border: '1px solid rgba(45, 212, 191, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem'
+                }}>
+                  <Shield size={12} /> Guest Mode
+                </span>
+                <Link
+                  to="/login"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                    color: '#ffffff',
+                    fontWeight: '600',
+                    fontSize: '0.85rem',
+                    textDecoration: 'none',
+                    padding: '0.45rem 0.9rem',
+                    borderRadius: '9999px',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.14)';
+                    e.currentTarget.style.borderColor = 'rgba(45, 212, 191, 0.4)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
+                  }}
+                >
+                  <LogIn size={14} color="#2dd4bf" /> Sign In
+                </Link>
               </div>
             ) : (
               <Link
@@ -292,25 +507,25 @@ const Navbar = () => {
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <div style={{
-                    width: '28px',
-                    height: '28px',
+                    width: '32px',
+                    height: '32px',
                     borderRadius: '50%',
                     background: isAdmin ? '#e11d48' : '#0d9488',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#ffffff',
-                    fontSize: '0.8rem',
+                    fontSize: '0.85rem',
                     fontWeight: '700'
                   }}>
-                    {user?.name?.[0]?.toUpperCase() || user?.full_name?.[0]?.toUpperCase() || 'U'}
+                    {userInitial}
                   </div>
                   <div>
                     <div style={{ color: '#ffffff', fontSize: '0.9rem', fontWeight: '600' }}>
-                      {user?.name || user?.full_name || 'User'}
+                      {userDisplayName}
                     </div>
                     <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>
-                      {isAdmin ? 'Administrator' : 'Community Member'}
+                      {isAdmin ? 'Administrator' : 'Verified Citizen'}
                     </div>
                   </div>
                 </div>
@@ -332,6 +547,35 @@ const Navbar = () => {
                 >
                   <LogOut size={14} /> Sign Out
                 </button>
+              </div>
+            ) : isGuest ? (
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '0.75rem',
+                background: 'rgba(255, 255, 255, 0.05)',
+                borderRadius: '12px',
+                marginTop: '0.5rem'
+              }}>
+                <span style={{ color: '#2dd4bf', fontSize: '0.85rem', fontWeight: '600' }}>
+                  Guest Mode
+                </span>
+                <Link
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                  style={{
+                    color: '#ffffff',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    padding: '0.4rem 0.8rem',
+                    borderRadius: '8px',
+                    fontSize: '0.85rem',
+                    fontWeight: '600',
+                    textDecoration: 'none'
+                  }}
+                >
+                  Sign In
+                </Link>
               </div>
             ) : (
               <Link
@@ -380,6 +624,10 @@ const Navbar = () => {
       )}
 
       <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
         @media (min-width: 768px) {
           .md-flex { display: flex !important; }
           .md-none { display: none !important; }

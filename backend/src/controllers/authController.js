@@ -178,8 +178,108 @@ const getMe = async (req, res, next) => {
   }
 };
 
+const googleAuth = async (req, res, next) => {
+  try {
+    const { email, name, avatar, google_id } = req.body;
+    if (!email) {
+      return next(new AppError('Email is required for Google authentication', 400));
+    }
+    const normalizedEmail = email.toLowerCase().trim();
+    const fullName = (name || email.split('@')[0] || 'Google User').trim();
+
+    // 1. Check if user exists in users table
+    const userQuery = 'SELECT id, full_name, email, role, phone, emergency_contact, avatar_url, auth_provider FROM users WHERE LOWER(email) = $1';
+    const userRes = await db.query(userQuery, [normalizedEmail]).catch(() => ({ rows: [] }));
+    let user = userRes.rows[0];
+
+    if (!user) {
+      // 2. Check if it's an admin email
+      const adminQuery = 'SELECT id, full_name, email, role FROM admins WHERE LOWER(email) = $1';
+      const adminRes = await db.query(adminQuery, [normalizedEmail]).catch(() => ({ rows: [] }));
+      const admin = adminRes.rows[0];
+
+      if (admin) {
+        await db.query('UPDATE admins SET last_login = NOW() WHERE id = $1', [admin.id]).catch(() => {});
+        const token = jwt.sign(
+          {
+            id: admin.id,
+            email: admin.email,
+            name: admin.full_name,
+            role: admin.role || 'admin',
+            avatar: avatar || null
+          },
+          config.jwt.secret,
+          { expiresIn: config.jwt.expiresIn }
+        );
+        return res.status(200).json({
+          success: true,
+          data: {
+            token,
+            user: {
+              id: admin.id,
+              full_name: admin.full_name,
+              email: admin.email,
+              role: admin.role || 'admin',
+              avatar: avatar || null
+            }
+          },
+          message: 'Signed in successfully with Google (Admin)'
+        });
+      }
+
+      // 3. New user - create account with Google provider
+      const randomPassword = (Math.random().toString(36) + Math.random().toString(36)).slice(2);
+      const salt = await bcrypt.genSalt(10);
+      const password_hash = await bcrypt.hash(randomPassword, salt);
+
+      const insertQuery = `
+        INSERT INTO users (full_name, email, password_hash, role, auth_provider, avatar_url, last_login)
+        VALUES ($1, $2, $3, 'citizen', 'google', $4, NOW())
+        RETURNING id, full_name, email, role, phone, emergency_contact, avatar_url, auth_provider, created_at
+      `;
+      const insertRes = await db.query(insertQuery, [fullName, normalizedEmail, password_hash, avatar || null]);
+      user = insertRes.rows[0];
+    } else {
+      // Existing user - update last_login and avatar if provided
+      await db.query('UPDATE users SET last_login = NOW(), avatar_url = COALESCE($1, avatar_url) WHERE id = $2', [avatar || null, user.id]).catch(() => {});
+    }
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        name: user.full_name,
+        role: user.role || 'citizen',
+        avatar: user.avatar_url || avatar || null
+      },
+      config.jwt.secret,
+      { expiresIn: config.jwt.expiresIn }
+    );
+
+    res.status(200).json({
+      success: true,
+      data: {
+        token,
+        user: {
+          id: user.id,
+          full_name: user.full_name,
+          email: user.email,
+          role: user.role || 'citizen',
+          avatar: user.avatar_url || avatar || null,
+          phone: user.phone || null,
+          emergency_contact: user.emergency_contact || null
+        }
+      },
+      message: 'Signed in successfully with Google'
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   register,
   login,
+  googleAuth,
   getMe
 };

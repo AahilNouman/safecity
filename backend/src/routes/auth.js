@@ -10,6 +10,7 @@ router.post('/signup', authLimiter, validateRegister, authController.register);
 
 router.post('/login', authLimiter, validateLogin, authController.login);
 router.post('/signin', authLimiter, validateLogin, authController.login);
+router.post('/google', authLimiter, authController.googleAuth);
 
 router.get('/me', verifyToken, authController.getMe);
 

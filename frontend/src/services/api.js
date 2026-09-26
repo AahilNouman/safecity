@@ -34,6 +34,7 @@ export const getIncidentById = (id) => api.get(`/incidents/${id}`).then(res => r
 // Auth endpoints (Citizen & Admin)
 export const userRegister = (data) => api.post('/auth/register', data).then(res => res.data);
 export const userLogin = (email, password) => api.post('/auth/login', { email, password }).then(res => res.data);
+export const googleAuth = (data) => api.post('/auth/google', data).then(res => res.data);
 export const getMe = () => api.get('/auth/me').then(res => res.data);
 
 // Admin endpoints
