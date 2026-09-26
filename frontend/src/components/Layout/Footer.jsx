@@ -40,7 +40,7 @@ const Footer = () => {
 
         <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
           <Link
-            to="/admin/login"
+            to="/admin/dashboard"
             style={{
               color: '#94a3b8',
               fontSize: '0.875rem',

@@ -14,6 +14,7 @@ import SafetyFeed from './pages/SafetyFeed';
 import AuthPage from './pages/auth/AuthPage';
 
 // Admin Pages
+import AdminLogin from './pages/admin/AdminLogin';
 import Dashboard from './pages/admin/Dashboard';
 import IncidentQueue from './pages/admin/IncidentQueue';
 import IncidentDetail from './pages/admin/IncidentDetail';
@@ -53,32 +54,40 @@ function AppContent() {
     );
   }
 
-  // Pre-website Authentication Gate:
-  // If not authenticated and not a guest, non-auth paths are gated through AuthPage
-  const isAuthRoute = ['/login', '/signin', '/register', '/signup', '/admin/login'].includes(location.pathname);
-  const isAllowedWithoutAuth = isAuthenticated || isGuest || isAuthRoute;
+  // Routes that bypass citizen landing gate
+  const isAuthOrAdminRoute = [
+    '/login', '/signin', '/register', '/signup',
+    '/admin'
+  ].some(route => location.pathname === route || location.pathname.startsWith(route + '/'));
+
+  const isAllowedWithoutAuth = isAuthenticated || isGuest || isAuthOrAdminRoute;
 
   return (
     <div className="app-container">
       <Routes>
         {/* Dedicated Admin Login */}
-        <Route path="/admin/login" element={<AuthPage initialMode="signin" />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* Shortcut /admin -> /admin/dashboard */}
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
 
         {/* Protected Admin Routes */}
         <Route path="/admin/*" element={
           <ProtectedRoute>
             <AdminLayout>
               <Routes>
+                <Route index element={<Dashboard />} />
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="incidents" element={<IncidentQueue />} />
                 <Route path="incidents/:id" element={<IncidentDetail />} />
                 <Route path="hotspots" element={<HotspotAnalysis />} />
+                <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
               </Routes>
             </AdminLayout>
           </ProtectedRoute>
         } />
 
-        {/* Dedicated Auth Routes (no public navbar) */}
+        {/* Dedicated Citizen Auth Routes (no public navbar) */}
         <Route path="/login" element={<AuthPage initialMode="signin" />} />
         <Route path="/signin" element={<AuthPage initialMode="signin" />} />
         <Route path="/register" element={<AuthPage initialMode="signup" />} />

@@ -4,14 +4,15 @@ import { Navigate, useLocation } from 'react-router-dom';
 import LoadingSpinner from './LoadingSpinner';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, isAdmin, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
     return <LoadingSpinner />;
   }
 
-  if (!isAuthenticated) {
+  // Admin routes must require both authentication AND admin privileges
+  if (!isAuthenticated || !isAdmin) {
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 

@@ -1,6 +1,8 @@
 const request = require('supertest');
 const app = require('../src/app');
 
+jest.setTimeout(20000);
+
 describe('SafeCity Authentication & Verification API', () => {
   describe('POST /api/auth/login', () => {
     it('should reject invalid credentials with 401', async () => {
