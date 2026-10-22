@@ -172,12 +172,15 @@ app.get('/api/incidents', async (req, res) => {
   try {
     let sql = 'SELECT * FROM incidents WHERE 1=1';
     const params = [];
-    if (status) {
+    if (status && status.toUpperCase() === 'ALL') {
+      // Do not restrict status - return all incidents (pending, verified, rejected)
+    } else if (status) {
       sql += ' AND status = ?';
       params.push(status);
     } else {
       sql += ' AND status = "VERIFIED"';
     }
+
     if (category && category !== 'ALL') {
       sql += ' AND category = ?';
       params.push(category);
@@ -192,7 +195,7 @@ app.get('/api/incidents', async (req, res) => {
   } catch (err) {
     // Fallback to in-memory store if DB is offline / not configured
     let filtered = MEMORY_INCIDENTS.filter(i => {
-      const matchStatus = status ? i.status === status : i.status === 'VERIFIED';
+      const matchStatus = (!status) ? (i.status === 'VERIFIED') : (status.toUpperCase() === 'ALL' ? true : i.status === status);
       const matchCat = (!category || category === 'ALL') ? true : i.category === category;
       const matchSev = (!severity || severity === 'ALL') ? true : i.severity === severity;
       return matchStatus && matchCat && matchSev;
@@ -201,52 +204,96 @@ app.get('/api/incidents', async (req, res) => {
   }
 });
 
+// Dedicated Admin Incidents Endpoint (fetches all incidents including PENDING for moderators)
+app.get('/api/admin/incidents', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM incidents ORDER BY incident_time DESC');
+    return res.json({ success: true, incidents: rows });
+  } catch (err) {
+    return res.json({ success: true, incidents: MEMORY_INCIDENTS, fallback: true });
+  }
+});
+
 // 2. POST /api/incidents — Submit anonymous or user community safety report
 app.post('/api/incidents', async (req, res) => {
-  const { category, description, latitude, longitude, location_name, severity, incident_time, is_anonymous } = req.body;
-  if (!category || !description || description.length < 10 || description.length > 2000) {
-    return res.status(400).json({ success: false, error: 'Description must be 10-2000 characters.' });
+  const { report_id: clientReportId, category, description, latitude, longitude, location_name, severity, incident_time, is_anonymous } = req.body;
+  
+  if (!category || !description || description.trim().length < 10 || description.trim().length > 2000) {
+    return res.status(400).json({ success: false, error: 'Category and description (10-2000 characters) are required.' });
   }
-  const randomNum = Math.floor(10000 + Math.random() * 90000);
-  const report_id = `AS-2026-${randomNum}`;
+
+  const lat = parseFloat(latitude);
+  const lng = parseFloat(longitude);
+  if (isNaN(lat) || isNaN(lng)) {
+    return res.status(400).json({ success: false, error: 'Valid geographic coordinates (latitude and longitude) are required.' });
+  }
+
+  const report_id = clientReportId || `AS-2026-${Math.floor(10000 + Math.random() * 90000)}`;
+  const safeLocationName = (location_name || '').trim() || 'Bengaluru Street Pin';
+  const safeSeverity = ['High', 'Medium', 'Low'].includes(severity) ? severity : 'Medium';
+  const safeIncidentTime = incident_time || new Date().toISOString().slice(0, 19).replace('T', ' ');
+  const safeIsAnonymous = is_anonymous !== false;
 
   try {
     const [result] = await pool.query(
       `INSERT INTO incidents (report_id, category, description, latitude, longitude, location_name, severity, incident_time, status, is_anonymous)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?)`,
-      [report_id, category, description, latitude, longitude, location_name || 'Bengaluru Street Pin', severity || 'Medium', incident_time || new Date(), is_anonymous !== false]
+      [report_id, category, description.trim(), lat, lng, safeLocationName, safeSeverity, safeIncidentTime, safeIsAnonymous]
     );
-    return res.status(201).json({
-      success: true,
+
+    const newRecord = {
       id: result.insertId,
       report_id,
+      category,
+      description: description.trim(),
+      latitude: lat,
+      longitude: lng,
+      location_name: safeLocationName,
+      severity: safeSeverity,
+      incident_time: safeIncidentTime,
       status: 'PENDING',
-      message: 'Incident report submitted for moderator verification.'
+      rejection_reason: null,
+      is_anonymous: safeIsAnonymous ? 1 : 0
+    };
+
+    const existingIdx = MEMORY_INCIDENTS.findIndex(i => i.report_id === report_id);
+    if (existingIdx >= 0) {
+      MEMORY_INCIDENTS[existingIdx] = newRecord;
+    } else {
+      MEMORY_INCIDENTS.unshift(newRecord);
+    }
+
+    return res.status(201).json({
+      success: true,
+      incident: newRecord,
+      report_id,
+      status: 'PENDING',
+      message: 'Incident report submitted successfully for moderator verification.'
     });
   } catch (err) {
     // In-memory fallback
-    const newInc = {
+    const newRecord = {
       id: MEMORY_INCIDENTS.length + 1,
       report_id,
       category,
-      description,
-      latitude: Number(latitude),
-      longitude: Number(longitude),
-      location_name: location_name || 'Bengaluru Street Pin',
-      severity: severity || 'Medium',
-      incident_time: incident_time || new Date().toISOString(),
+      description: description.trim(),
+      latitude: lat,
+      longitude: lng,
+      location_name: safeLocationName,
+      severity: safeSeverity,
+      incident_time: safeIncidentTime,
       status: 'PENDING',
       rejection_reason: null,
-      is_anonymous: is_anonymous !== false ? 1 : 0,
+      is_anonymous: safeIsAnonymous ? 1 : 0,
       created_at: new Date().toISOString()
     };
-    MEMORY_INCIDENTS.unshift(newInc);
+    MEMORY_INCIDENTS.unshift(newRecord);
     return res.status(201).json({
       success: true,
-      id: newInc.id,
+      incident: newRecord,
       report_id,
       status: 'PENDING',
-      message: 'Incident report submitted for moderator verification.'
+      message: 'Incident report submitted successfully for moderator verification.'
     });
   }
 });

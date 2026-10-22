@@ -329,7 +329,7 @@
   </header>
 
   <!-- MAIN APPLICATION CONTENT CONTAINER -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 pb-28 sm:pb-8 space-y-6">
 
     <!-- ========================================================================= -->
     <!-- VIEW 0: DEDICATED PLATFORM HOMEPAGE (OVERVIEW) -->
@@ -703,27 +703,27 @@
           <div class="space-y-3">
             <label class="text-xs font-bold uppercase tracking-wider text-ivory-700">1. Select Incident Category &amp; Severity</label>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              <button type="button" data-category="Harassment" onclick="selectReportCategory('Harassment', this)" class="report-cat-btn px-3 py-2 rounded-xl border-2 border-plum-900 bg-plum-100 text-xs font-bold text-plum-950 shadow-sm ring-2 ring-plum-800/20 transition text-left flex items-center gap-2" aria-pressed="true">
+              <button type="button" data-category="Harassment" onclick="selectReportCategory('Harassment', this)" class="report-cat-btn min-h-[44px] px-3 py-2 rounded-xl border-2 border-plum-900 bg-plum-100 text-xs font-bold text-plum-950 shadow-sm ring-2 ring-plum-800/20 transition text-left flex items-center gap-2" aria-pressed="true">
                 <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600"></i>
                 <span>Harassment</span>
               </button>
-              <button type="button" data-category="Stalking" onclick="selectReportCategory('Stalking', this)" class="report-cat-btn px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2" aria-pressed="false">
+              <button type="button" data-category="Stalking" onclick="selectReportCategory('Stalking', this)" class="report-cat-btn min-h-[44px] px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2" aria-pressed="false">
                 <i data-lucide="eye" class="w-4 h-4 text-rose-600"></i>
                 <span>Stalking</span>
               </button>
-              <button type="button" data-category="Poor Lighting" onclick="selectReportCategory('Poor Lighting', this)" class="report-cat-btn px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2" aria-pressed="false">
+              <button type="button" data-category="Poor Lighting" onclick="selectReportCategory('Poor Lighting', this)" class="report-cat-btn min-h-[44px] px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2" aria-pressed="false">
                 <i data-lucide="sun-dim" class="w-4 h-4 text-amber-600"></i>
                 <span>Poor Lighting</span>
               </button>
-              <button type="button" data-category="Unsafe Area" onclick="selectReportCategory('Unsafe Area', this)" class="report-cat-btn px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2" aria-pressed="false">
+              <button type="button" data-category="Unsafe Area" onclick="selectReportCategory('Unsafe Area', this)" class="report-cat-btn min-h-[44px] px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2" aria-pressed="false">
                 <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i>
                 <span>Unsafe Area</span>
               </button>
-              <button type="button" data-category="Suspicious Activity" onclick="selectReportCategory('Suspicious Activity', this)" class="report-cat-btn px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2" aria-pressed="false">
+              <button type="button" data-category="Suspicious Activity" onclick="selectReportCategory('Suspicious Activity', this)" class="report-cat-btn min-h-[44px] px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2" aria-pressed="false">
                 <i data-lucide="user-x" class="w-4 h-4 text-plum-600"></i>
                 <span>Suspicious</span>
               </button>
-              <button type="button" data-category="Threat" onclick="selectReportCategory('Threat', this)" class="report-cat-btn px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2" aria-pressed="false">
+              <button type="button" data-category="Threat" onclick="selectReportCategory('Threat', this)" class="report-cat-btn min-h-[44px] px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2" aria-pressed="false">
                 <i data-lucide="shield-alert" class="w-4 h-4 text-rose-600"></i>
                 <span>Threat / Other</span>
               </button>
@@ -731,15 +731,15 @@
             <input type="hidden" id="report-category" value="Harassment" />
 
             <!-- Severity Pills -->
-            <div class="flex items-center gap-2 pt-1">
+            <div class="flex items-center gap-2 pt-1 flex-wrap">
               <span class="text-xs font-medium text-ivory-700">Severity:</span>
-              <button type="button" id="sev-btn-High" onclick="setReportSeverity('High')" class="px-3 py-1 rounded-lg text-xs font-bold bg-safety-crimson text-white transition">
+              <button type="button" id="sev-btn-High" onclick="setReportSeverity('High')" class="min-h-[38px] px-3.5 py-1.5 rounded-lg text-xs font-bold bg-safety-crimson text-white transition flex items-center justify-center">
                 High Risk
               </button>
-              <button type="button" id="sev-btn-Medium" onclick="setReportSeverity('Medium')" class="px-3 py-1 rounded-lg text-xs font-semibold bg-ivory-100 hover:bg-ivory-200 text-ivory-700 transition">
+              <button type="button" id="sev-btn-Medium" onclick="setReportSeverity('Medium')" class="min-h-[38px] px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-ivory-100 hover:bg-ivory-200 text-ivory-700 transition flex items-center justify-center">
                 Medium
               </button>
-              <button type="button" id="sev-btn-Low" onclick="setReportSeverity('Low')" class="px-3 py-1 rounded-lg text-xs font-semibold bg-ivory-100 hover:bg-ivory-200 text-ivory-700 transition">
+              <button type="button" id="sev-btn-Low" onclick="setReportSeverity('Low')" class="min-h-[38px] px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-ivory-100 hover:bg-ivory-200 text-ivory-700 transition flex items-center justify-center">
                 Low
               </button>
               <input type="hidden" id="report-severity" value="High" />
@@ -800,7 +800,7 @@
               <span>Submit 100% Anonymously (Identity protected)</span>
             </label>
 
-            <button type="button" id="submit-report-btn" onclick="submitIncidentReport()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-plum-900 hover:bg-plum-800 text-white font-semibold text-xs transition flex items-center justify-center gap-2 shadow-sm">
+            <button type="button" id="submit-report-btn" onclick="submitIncidentReport()" class="w-full sm:w-auto min-h-[44px] px-6 py-2.5 rounded-xl bg-plum-900 hover:bg-plum-800 text-white font-semibold text-xs transition flex items-center justify-center gap-2 shadow-sm">
               <i data-lucide="send" class="w-3.5 h-3.5"></i>
               <span>Submit Report for Verification</span>
             </button>
@@ -1454,13 +1454,35 @@
           
           <!-- Left: Pending Reports Queue -->
           <div class="lg:col-span-8 bg-surface-card rounded-2xl border border-surface-border p-5 space-y-4 shadow-sm">
-            <div class="flex items-center justify-between border-b border-surface-border pb-3">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-3">
               <div>
                 <h3 class="text-sm font-bold text-plum-950">Incident Moderation Queue</h3>
                 <p class="text-xs text-ivory-700">Approve or reject community-submitted safety reports before they display on the public map.</p>
               </div>
-              <button type="button" onclick="signOutAdmin()" class="text-xs text-rose-700 hover:underline font-semibold">
-                Sign Out Moderator
+              <div class="flex items-center gap-2">
+                <button type="button" id="admin-refresh-btn" onclick="fetchAdminIncidentsFromBackend(true)" class="min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-semibold bg-plum-100 hover:bg-plum-200 text-plum-900 border border-plum-200 transition flex items-center gap-1.5 shadow-sm">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                  <span>Refresh Queue</span>
+                </button>
+                <button type="button" onclick="signOutAdmin()" class="text-xs text-rose-700 hover:underline font-semibold ml-1">
+                  Sign Out Moderator
+                </button>
+              </div>
+            </div>
+
+            <!-- Queue Status Filter Pills -->
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <button type="button" id="admin-filter-PENDING" onclick="setAdminQueueFilter('PENDING')" class="min-h-[36px] px-3 py-1 rounded-lg text-xs font-bold bg-plum-900 text-white shadow-sm transition">
+                Pending (<span id="admin-filter-count-pending">0</span>)
+              </button>
+              <button type="button" id="admin-filter-VERIFIED" onclick="setAdminQueueFilter('VERIFIED')" class="min-h-[36px] px-3 py-1 rounded-lg text-xs font-semibold bg-ivory-100 hover:bg-ivory-200 text-ivory-700 transition">
+                Verified (<span id="admin-filter-count-verified">0</span>)
+              </button>
+              <button type="button" id="admin-filter-REJECTED" onclick="setAdminQueueFilter('REJECTED')" class="min-h-[36px] px-3 py-1 rounded-lg text-xs font-semibold bg-ivory-100 hover:bg-ivory-200 text-ivory-700 transition">
+                Rejected (<span id="admin-filter-count-rejected">0</span>)
+              </button>
+              <button type="button" id="admin-filter-ALL" onclick="setAdminQueueFilter('ALL')" class="min-h-[36px] px-3 py-1 rounded-lg text-xs font-semibold bg-ivory-100 hover:bg-ivory-200 text-ivory-700 transition">
+                All Reports (<span id="admin-filter-count-all">0</span>)
               </button>
             </div>
 
@@ -1607,7 +1629,7 @@
 
   <!-- 1. AUTHENTICATION MODAL (SPLIT-SCREEN SIGN IN & REGISTRATION) -->
   <div id="auth-modal" class="hidden fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-surface-card rounded-2xl border border-surface-border max-w-3xl w-full shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 relative animate-fade-in">
+    <div class="bg-surface-card rounded-2xl border border-surface-border max-w-3xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl grid grid-cols-1 md:grid-cols-12 relative animate-fade-in">
       
       <!-- Close Button -->
       <button type="button" onclick="closeAuthModal()" class="absolute top-3 right-3 z-10 p-1.5 rounded-full text-ivory-500 hover:text-plum-900 hover:bg-ivory-100 transition">
@@ -2578,25 +2600,46 @@
       }
     }
 
-    // API Base URL Resolver (works seamlessly in local development and production deployments such as Vercel)
-    const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-      ? (window.location.port === '5000' ? '' : 'http://localhost:5000')
+    // API Base URL Resolver (works seamlessly in local development, LAN mobile testing, and production deployments such as Vercel)
+    const isLocalNetwork = window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      /^192\.168\./.test(window.location.hostname) ||
+      /^10\./.test(window.location.hostname) ||
+      /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(window.location.hostname);
+
+    const API_BASE_URL = isLocalNetwork
+      ? (window.location.port === '5000' ? '' : `http://${window.location.hostname}:5000`)
       : '';
 
     // Attempt to load live backend data if API server is available
     async function tryLoadBackendData() {
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 1200);
-        const res = await fetch(`${API_BASE_URL}/api/incidents`, { signal: controller.signal });
+        const timeout = setTimeout(() => controller.abort(), 6000);
+        const res = await fetch(`${API_BASE_URL}/api/incidents?status=ALL`, { signal: controller.signal });
         clearTimeout(timeout);
         if (res.ok) {
           const data = await res.json();
           if (data && data.success && Array.isArray(data.incidents) && data.incidents.length > 0) {
-            // Merge with local state
-            const ids = new Set(data.incidents.map(i => i.report_id));
-            const merged = [...data.incidents, ...appState.incidents.filter(i => !ids.has(i.report_id))];
-            appState.incidents = merged;
+            // Server data takes precedence
+            const serverMap = new Map(data.incidents.map(i => [i.report_id, i]));
+            const localOnly = appState.incidents.filter(i => !serverMap.has(i.report_id));
+
+            // Sync any local offline submissions to the server
+            for (const draft of localOnly) {
+              if (draft.sync_pending) {
+                try {
+                  await fetch(`${API_BASE_URL}/api/incidents`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(draft)
+                  });
+                  draft.sync_pending = false;
+                } catch (e) {}
+              }
+            }
+
+            appState.incidents = [...data.incidents, ...localOnly];
             persistState();
             renderMainSafetyMap();
             updateAdminKPIsAndQueue();
@@ -2758,7 +2801,8 @@
         mainLeafletMap = L.map('BengaluruMainMap', {
           center: BENGALURU_CENTER,
           zoom: 12,
-          zoomControl: true
+          zoomControl: true,
+          scrollWheelZoom: false
         });
         addReliableTileLayer(mainLeafletMap);
         mainLeafletLayerGroup = L.layerGroup().addTo(mainLeafletMap);
@@ -3086,7 +3130,8 @@
         reportLeafletMap = L.map('ReportPinMap', {
           center: [lat, lng],
           zoom: 14,
-          zoomControl: true
+          zoomControl: true,
+          scrollWheelZoom: false
         });
         addReliableTileLayer(reportLeafletMap);
         attachMapResizeObserver('ReportPinMap', () => reportLeafletMap);
@@ -3158,10 +3203,10 @@
                         b.getAttribute('data-category') === catName ||
                         b.textContent.trim().toLowerCase().includes(catName.toLowerCase().slice(0, 5));
         if (isMatch) {
-          b.className = 'report-cat-btn px-3 py-2 rounded-xl border-2 border-plum-900 bg-plum-100 text-xs font-bold text-plum-950 shadow-sm ring-2 ring-plum-800/20 transition text-left flex items-center gap-2';
+          b.className = 'report-cat-btn min-h-[44px] px-3 py-2 rounded-xl border-2 border-plum-900 bg-plum-100 text-xs font-bold text-plum-950 shadow-sm ring-2 ring-plum-800/20 transition text-left flex items-center gap-2';
           b.setAttribute('aria-pressed', 'true');
         } else {
-          b.className = 'report-cat-btn px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2';
+          b.className = 'report-cat-btn min-h-[44px] px-3 py-2 rounded-xl border border-surface-border hover:border-plum-400 text-xs font-semibold text-plum-950 bg-white transition text-left flex items-center gap-2';
           b.setAttribute('aria-pressed', 'false');
         }
       });
@@ -3174,9 +3219,9 @@
         const btn = document.getElementById('sev-btn-' + lvl);
         if (btn) {
           if (lvl === level) {
-            btn.className = lvl === 'High' ? 'px-3 py-1 rounded-lg text-xs font-bold bg-safety-crimson text-white transition' : lvl === 'Medium' ? 'px-3 py-1 rounded-lg text-xs font-bold bg-amber-600 text-white transition' : 'px-3 py-1 rounded-lg text-xs font-bold bg-yellow-500 text-white transition';
+            btn.className = lvl === 'High' ? 'min-h-[38px] px-3.5 py-1.5 rounded-lg text-xs font-bold bg-safety-crimson text-white transition flex items-center justify-center' : lvl === 'Medium' ? 'min-h-[38px] px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-600 text-white transition flex items-center justify-center' : 'min-h-[38px] px-3.5 py-1.5 rounded-lg text-xs font-bold bg-yellow-500 text-white transition flex items-center justify-center';
           } else {
-            btn.className = 'px-3 py-1 rounded-lg text-xs font-semibold bg-ivory-100 hover:bg-ivory-200 text-ivory-700 transition';
+            btn.className = 'min-h-[38px] px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-ivory-100 hover:bg-ivory-200 text-ivory-700 transition flex items-center justify-center';
           }
         }
       });
@@ -3192,8 +3237,8 @@
       const cat = document.getElementById('report-category')?.value;
       const sev = document.getElementById('report-severity')?.value;
       const locName = document.getElementById('report-location-name')?.value.trim() || 'Bengaluru Street Pin';
-      const lat = parseFloat(document.getElementById('report-lat')?.value);
-      const lng = parseFloat(document.getElementById('report-lng')?.value);
+      const rawLat = parseFloat(document.getElementById('report-lat')?.value);
+      const rawLng = parseFloat(document.getElementById('report-lng')?.value);
       const desc = document.getElementById('report-description')?.value.trim();
       const isAnon = document.getElementById('report-anonymous-toggle')?.checked;
       const submitBtn = document.getElementById('submit-report-btn');
@@ -3207,60 +3252,97 @@
         return;
       }
 
+      // Safe coordinate fallbacks for mobile / unpinned reports
+      const safeLat = (!isNaN(rawLat) && rawLat !== 0) ? Number(rawLat.toFixed(4)) : 13.0235;
+      const safeLng = (!isNaN(rawLng) && rawLng !== 0) ? Number(rawLng.toFixed(4)) : 77.6142;
+
+      // Keep coordinate inputs consistent
+      updateReportCoordsUI(safeLat, safeLng);
+
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i><span>Submitting...</span>';
       if (typeof lucide !== 'undefined') lucide.createIcons();
 
       const randNum = Math.floor(10000 + Math.random() * 90000);
       const reportId = 'AS-2026-' + randNum;
+      const incidentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
       const newReport = {
         id: Date.now(),
         report_id: reportId,
         category: cat,
-        severity: sev,
-        latitude: lat,
-        longitude: lng,
+        severity: sev || 'Medium',
+        latitude: safeLat,
+        longitude: safeLng,
         location_name: locName,
         description: desc,
-        incident_time: new Date().toISOString().slice(0, 16),
+        incident_time: incidentTime,
         status: 'PENDING',
         rejection_reason: null,
-        is_anonymous: isAnon
+        is_anonymous: isAnon !== false,
+        sync_pending: false
       };
 
-      // Try backend POST first
+      // Try backend POST with robust 8s timeout for mobile/cellular connections
+      let serverConfirmed = false;
+      let confirmedRecord = newReport;
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 1500);
-        await fetch(`${API_BASE_URL}/api/incidents`, {
+        const timeout = setTimeout(() => controller.abort(), 8000);
+        const res = await fetch(`${API_BASE_URL}/api/incidents`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newReport),
           signal: controller.signal
         });
         clearTimeout(timeout);
+        if (res.ok) {
+          const resData = await res.json();
+          if (resData && resData.success) {
+            serverConfirmed = true;
+            if (resData.incident) confirmedRecord = resData.incident;
+          }
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          console.warn('Backend rejected report:', errData);
+        }
       } catch (e) {
-        // Fallback to client-side persistence
+        console.warn('Network timeout or error submitting report:', e);
       }
 
-      appState.incidents.unshift(newReport);
+      if (!serverConfirmed) {
+        confirmedRecord.sync_pending = true;
+      }
+
+      // Add report to local state (avoiding duplicates)
+      const existingIdx = appState.incidents.findIndex(i => i.report_id === confirmedRecord.report_id);
+      if (existingIdx >= 0) {
+        appState.incidents[existingIdx] = confirmedRecord;
+      } else {
+        appState.incidents.unshift(confirmedRecord);
+      }
       persistState();
       updateAdminKPIsAndQueue();
+      renderMainSafetyMap();
 
       submitBtn.disabled = false;
       submitBtn.innerHTML = '<i data-lucide="send" class="w-3.5 h-3.5"></i><span>Submit Report for Verification</span>';
       if (typeof lucide !== 'undefined') lucide.createIcons();
-
-      document.getElementById('report-description').value = '';
-      updateReportCharCount();
 
       // Show result in tracking box
       const trackInput = document.getElementById('track-lookup-input');
       if (trackInput) trackInput.value = reportId;
       lookupReportByTrackingId();
 
-      showToast('Incident report submitted! Tracking ID: ' + reportId, 'success');
+      if (serverConfirmed) {
+        document.getElementById('report-description').value = '';
+        updateReportCharCount();
+        SoundController.play('sos_send');
+        showToast('Incident report submitted and queued for moderation! Tracking ID: ' + reportId, 'success');
+      } else {
+        // Do NOT clear description so the user does not lose their written text on connection drop
+        showToast('Server response delayed. Report saved locally (ID: ' + reportId + ') and queued for background sync.', 'warning');
+      }
     }
 
     function lookupReportByTrackingId() {
@@ -3669,7 +3751,8 @@
         routeLeafletMap = L.map('SafestRouteMap', {
           center: [startPt.lat, startPt.lng],
           zoom: 13,
-          zoomControl: true
+          zoomControl: true,
+          scrollWheelZoom: false
         });
         addReliableTileLayer(routeLeafletMap);
         routeLeafletLayerGroup = L.layerGroup().addTo(routeLeafletMap);
@@ -4073,7 +4156,8 @@
         walkLeafletMap = L.map('WalkBuddyMap', {
           center: initCenter,
           zoom: 15,
-          zoomControl: true
+          zoomControl: true,
+          scrollWheelZoom: false
         });
         addReliableTileLayer(walkLeafletMap);
         walkLeafletLayerGroup = L.layerGroup().addTo(walkLeafletMap);
@@ -5053,6 +5137,7 @@
           updateUserSessionUI();
           SoundController.play('login');
           showToast('Authenticated as Bengaluru Safety Moderator.', 'success');
+          fetchAdminIncidentsFromBackend(false);
           return;
         } else {
           showToast(data.error || 'Invalid moderator credentials.', 'danger');
@@ -5066,6 +5151,7 @@
           updateUserSessionUI();
           SoundController.play('login');
           showToast('Authenticated as Bengaluru Safety Moderator.', 'success');
+          fetchAdminIncidentsFromBackend(false);
         } else {
           showToast('Invalid moderator credentials.', 'danger');
         }
@@ -5082,26 +5168,116 @@
       showToast('Moderator signed out. Session closed.', 'info');
     }
 
+    let currentAdminFilter = 'PENDING';
+    function setAdminQueueFilter(status) {
+      currentAdminFilter = status;
+      ['PENDING', 'VERIFIED', 'REJECTED', 'ALL'].forEach(s => {
+        const btn = document.getElementById('admin-filter-' + s);
+        if (!btn) return;
+        if (s === status) {
+          btn.className = 'min-h-[36px] px-3 py-1 rounded-lg text-xs font-bold bg-plum-900 text-white shadow-sm transition';
+        } else {
+          btn.className = 'min-h-[36px] px-3 py-1 rounded-lg text-xs font-semibold bg-ivory-100 hover:bg-ivory-200 text-ivory-700 transition';
+        }
+      });
+      renderAdminQueue();
+    }
+
+    async function fetchAdminIncidentsFromBackend(showToastOnManual = false) {
+      const refreshBtn = document.getElementById('admin-refresh-btn');
+      if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.innerHTML = '<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i><span>Syncing...</span>';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }
+
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 6000);
+        const res = await fetch(`${API_BASE_URL}/api/admin/incidents`, { signal: controller.signal });
+        clearTimeout(timeout);
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.success && Array.isArray(data.incidents)) {
+            const serverMap = new Map();
+            data.incidents.forEach(inc => {
+              serverMap.set(inc.report_id, inc);
+            });
+
+            // Local only records
+            const localOnly = appState.incidents.filter(i => !serverMap.has(i.report_id));
+
+            // Sync any local offline submissions to the server
+            for (const draft of localOnly) {
+              if (draft.sync_pending) {
+                try {
+                  await fetch(`${API_BASE_URL}/api/incidents`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(draft)
+                  });
+                  draft.sync_pending = false;
+                } catch (e) {}
+              }
+            }
+
+            appState.incidents = [...data.incidents, ...localOnly];
+            persistState();
+            updateAdminKPIsAndQueue();
+            renderMainSafetyMap();
+            if (showToastOnManual) {
+              showToast(`Moderation queue refreshed: ${data.incidents.length} reports retrieved from server.`, 'success');
+            }
+          }
+        } else {
+          if (showToastOnManual) showToast('Could not fetch latest reports from server.', 'warning');
+        }
+      } catch (err) {
+        console.warn('Backend sync failed:', err);
+        if (showToastOnManual) showToast('Server connection timeout. Displaying locally stored reports.', 'warning');
+      } finally {
+        const refreshBtn = document.getElementById('admin-refresh-btn');
+        if (refreshBtn) {
+          refreshBtn.disabled = false;
+          refreshBtn.innerHTML = '<i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i><span>Refresh Queue</span>';
+          if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+      }
+    }
+
     function updateAdminKPIsAndQueue() {
       const loginCard = document.getElementById('admin-login-card');
       const dashView = document.getElementById('admin-dashboard-view');
       const pendingBadge = document.getElementById('nav-badge-pending');
 
-      const pending = appState.incidents.filter(i => i.status === 'PENDING');
-      const verified = appState.incidents.filter(i => i.status === 'VERIFIED');
-      const rejected = appState.incidents.filter(i => i.status === 'REJECTED');
+      const pending = appState.incidents.filter(i => (i.status || 'PENDING').toUpperCase() === 'PENDING');
+      const verified = appState.incidents.filter(i => (i.status || '').toUpperCase() === 'VERIFIED');
+      const rejected = appState.incidents.filter(i => (i.status || '').toUpperCase() === 'REJECTED');
 
       if (pendingBadge) pendingBadge.textContent = String(pending.length);
+
+      const pCount = document.getElementById('admin-filter-count-pending');
+      if (pCount) pCount.textContent = String(pending.length);
+      const vCount = document.getElementById('admin-filter-count-verified');
+      if (vCount) vCount.textContent = String(verified.length);
+      const rCount = document.getElementById('admin-filter-count-rejected');
+      if (rCount) rCount.textContent = String(rejected.length);
+      const aCount = document.getElementById('admin-filter-count-all');
+      if (aCount) aCount.textContent = String(appState.incidents.length);
 
       if (appState.adminLoggedIn) {
         loginCard?.classList.add('hidden');
         dashView?.classList.remove('hidden');
 
-        document.getElementById('admin-kpi-pending').textContent = String(pending.length);
-        document.getElementById('admin-kpi-verified').textContent = String(verified.length);
-        document.getElementById('admin-kpi-rejected').textContent = String(rejected.length);
+        const kpiPending = document.getElementById('admin-kpi-pending');
+        if (kpiPending) kpiPending.textContent = String(pending.length);
+        const kpiVerified = document.getElementById('admin-kpi-verified');
+        if (kpiVerified) kpiVerified.textContent = String(verified.length);
+        const kpiRejected = document.getElementById('admin-kpi-rejected');
+        if (kpiRejected) kpiRejected.textContent = String(rejected.length);
 
-        renderAdminQueue(pending);
+        renderAdminQueue();
         renderAdminChart();
       } else {
         loginCard?.classList.remove('hidden');
@@ -5109,42 +5285,106 @@
       }
     }
 
-    function renderAdminQueue(pending) {
+    function renderAdminQueue() {
       const container = document.getElementById('admin-reports-queue');
       if (!container) return;
 
-      if (pending.length === 0) {
-        container.innerHTML = '<div class="p-6 text-center text-xs text-ivory-600 bg-ivory-50 rounded-xl">All community reports have been verified. No pending reviews in the queue.</div>';
+      let filtered = appState.incidents;
+      if (currentAdminFilter !== 'ALL') {
+        filtered = appState.incidents.filter(i => (i.status || 'PENDING').toUpperCase() === currentAdminFilter);
+      }
+
+      if (filtered.length === 0) {
+        let msg = 'All community reports have been verified. No pending reviews in the queue.';
+        if (currentAdminFilter === 'VERIFIED') msg = 'No verified reports found.';
+        else if (currentAdminFilter === 'REJECTED') msg = 'No rejected reports found.';
+        else if (currentAdminFilter === 'ALL') msg = 'No incident reports found in database.';
+        container.innerHTML = `<div class="p-6 text-center text-xs text-ivory-600 bg-ivory-50 rounded-xl">${msg}</div>`;
         return;
       }
 
-      container.innerHTML = pending.map(item => {
-        return '<div class="p-4 rounded-xl border border-surface-border bg-white space-y-2.5 shadow-sm">' +
-          '<div class="flex items-center justify-between">' +
-            '<span class="font-mono font-bold text-plum-950 text-xs">' + item.report_id + '</span>' +
-            '<span class="px-2 py-0.5 rounded font-bold text-[10px] bg-amber-100 text-amber-800">' + item.severity + ' RISK • ' + item.category + '</span>' +
-          '</div>' +
-          '<div class="text-xs font-bold text-plum-900">' + item.location_name + ' (' + item.latitude + ', ' + item.longitude + ')</div>' +
-          '<p class="text-xs text-ivory-700 leading-relaxed">' + item.description + '</p>' +
-          '<div class="flex items-center justify-between pt-2 border-t border-surface-border">' +
-            '<span class="text-[10px] text-ivory-500">' + item.incident_time.replace('T', ' ') + '</span>' +
-            '<div class="flex gap-2">' +
-              '<button type="button" onclick="moderateReport(&apos;' + item.report_id + '&apos;, &apos;REJECTED&apos;)" class="px-3 py-1 rounded bg-ivory-100 hover:bg-rose-50 text-rose-700 text-xs font-semibold border border-surface-border transition">Reject</button>' +
-              '<button type="button" onclick="moderateReport(&apos;' + item.report_id + '&apos;, &apos;VERIFIED&apos;)" class="px-3 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition">Verify &amp; Publish</button>' +
-            '</div>' +
-          '</div>' +
-        '</div>';
+      container.innerHTML = filtered.map(item => {
+        const isPending = (item.status || 'PENDING').toUpperCase() === 'PENDING';
+        const isVerified = (item.status || '').toUpperCase() === 'VERIFIED';
+        const isRejected = (item.status || '').toUpperCase() === 'REJECTED';
+
+        let badgeClass = 'bg-amber-100 text-amber-800';
+        if (isVerified) badgeClass = 'bg-emerald-100 text-emerald-800';
+        if (isRejected) badgeClass = 'bg-rose-100 text-rose-800';
+
+        const safeTime = (item.incident_time || '').replace('T', ' ').slice(0, 19);
+
+        let actionButtons = '';
+        if (isPending) {
+          actionButtons = `
+            <button type="button" onclick="moderateReport('${item.report_id}', 'REJECTED')" class="min-h-[36px] px-3 py-1.5 rounded-lg bg-ivory-100 hover:bg-rose-50 text-rose-700 text-xs font-semibold border border-surface-border transition">Reject</button>
+            <button type="button" onclick="moderateReport('${item.report_id}', 'VERIFIED')" class="min-h-[36px] px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition">Verify &amp; Publish</button>
+          `;
+        } else if (isVerified) {
+          actionButtons = `
+            <span class="text-[11px] font-bold text-emerald-700 flex items-center gap-1"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Published</span>
+            <button type="button" onclick="moderateReport('${item.report_id}', 'REJECTED')" class="ml-2 min-h-[32px] px-2.5 py-1 rounded-lg bg-ivory-100 hover:bg-rose-50 text-rose-700 text-[11px] font-semibold border border-surface-border transition">Unpublish</button>
+          `;
+        } else {
+          actionButtons = `
+            <span class="text-[11px] font-bold text-rose-600 flex items-center gap-1"><i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Rejected</span>
+            <button type="button" onclick="moderateReport('${item.report_id}', 'VERIFIED')" class="ml-2 min-h-[32px] px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-bold border border-emerald-200 transition">Restore &amp; Publish</button>
+          `;
+        }
+
+        const safeLat = (!isNaN(Number(item.latitude))) ? Number(item.latitude).toFixed(4) : '13.0235';
+        const safeLng = (!isNaN(Number(item.longitude))) ? Number(item.longitude).toFixed(4) : '77.6142';
+
+        return `
+          <div class="p-4 rounded-xl border border-surface-border bg-white space-y-2.5 shadow-sm transition hover:border-plum-300">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-bold text-plum-950 text-xs">${item.report_id}</span>
+                <span class="px-2 py-0.5 rounded font-bold text-[10px] ${badgeClass}">${item.status || 'PENDING'}</span>
+              </div>
+              <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-plum-100 text-plum-900">${item.severity} RISK • ${item.category}</span>
+            </div>
+            <div class="text-xs font-bold text-plum-900 flex items-center gap-1">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-600 shrink-0"></i>
+              <span>${item.location_name || 'Bengaluru Street Pin'} (${safeLat}, ${safeLng})</span>
+            </div>
+            <p class="text-xs text-ivory-700 leading-relaxed">${item.description}</p>
+            <div class="flex items-center justify-between pt-2 border-t border-surface-border flex-wrap gap-2">
+              <span class="text-[10px] text-ivory-500 font-mono">${safeTime}</span>
+              <div class="flex items-center gap-2">
+                ${actionButtons}
+              </div>
+            </div>
+          </div>
+        `;
       }).join('');
+
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
-    function moderateReport(reportId, status) {
+    async function moderateReport(reportId, status) {
       const inc = appState.incidents.find(x => x.report_id === reportId);
       if (!inc) return;
       inc.status = status;
       persistState();
       updateAdminKPIsAndQueue();
       renderMainSafetyMap();
+      SoundController.play('click');
       showToast('Report ' + reportId + ' marked as ' + status + '.', 'info');
+
+      // Sync moderation status to backend API
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/admin/incidents/${encodeURIComponent(reportId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        if (!res.ok) {
+          console.warn('Backend moderation update response:', res.status);
+        }
+      } catch (err) {
+        console.warn('Network error syncing report moderation status:', err);
+      }
     }
 
     let adminChartInstance = null;
@@ -5647,6 +5887,9 @@ app.listen(5000, () => console.log('SafeCity API running on port 5000'));`
           initWalkBuddyMap();
         } else if (tab === 'admin') {
           updateAdminKPIsAndQueue();
+          if (appState.adminLoggedIn) {
+            fetchAdminIncidentsFromBackend(false);
+          }
         } else if (tab === 'code') {
           showCodeTab('mysql');
         }
@@ -5679,6 +5922,21 @@ app.listen(5000, () => console.log('SafeCity API running on port 5000'));`
 
       // Attempt live backend synchronization in the background
       tryLoadBackendData();
+
+      // Periodic background sync if moderator is viewing the admin tab
+      setInterval(() => {
+        if (appState.currentTab === 'admin' && appState.adminLoggedIn) {
+          fetchAdminIncidentsFromBackend(false);
+        }
+      }, 15000);
+
+      // Listen for reconnect / online event
+      window.addEventListener('online', () => {
+        tryLoadBackendData();
+        if (appState.adminLoggedIn) {
+          fetchAdminIncidentsFromBackend(false);
+        }
+      });
 
       // Initialize default values
       const ecName = document.getElementById('ec-name');
