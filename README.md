@@ -90,3 +90,8 @@ The backend will listen on `http://localhost:5000`. The frontend automatically d
 ### 3. Demo Credentials
 - **Moderator Portal**: `admin@safecity.bengaluru.in` / `SafeCity@2026`
 - **Sample Verified Tracking ID**: `AS-2026-10492` or `AS-2026-10834`
+
+### 4. Live Deployments
+- **GitHub Pages**: Live at [https://aahilnouman.github.io/safecity-platform/](https://aahilnouman.github.io/safecity-platform/)
+- **Vercel**: Live at [https://safecity-platform.vercel.app](https://safecity-platform.vercel.app)
+  *(Pre-configured with `vercel.json` routing, static frontend serving, and in-memory fallback API data)*
