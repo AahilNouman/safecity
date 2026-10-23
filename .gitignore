@@ -4,16 +4,21 @@ dist/
 build/
 .next/
 
-# Python
+# Python & Virtual Environments
 __pycache__/
 *.py[cod]
 *.egg-info/
 .eggs/
 venv/
 .venv/
-*.pth
-*.pt
-*.bin
+.venv*
+
+# Android & Gradle
+.gradle/
+local.properties
+*.apk
+*.aar
+*.aab
 
 # Environment
 .env
