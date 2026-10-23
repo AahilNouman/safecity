@@ -1,25 +1,22 @@
 const { Pool } = require('pg');
+const config = require('./index');
 
-// Prevent pg from automatically picking up broken or unescaped DATABASE_URL
-delete process.env.DATABASE_URL;
-delete process.env.PGUSER;
-delete process.env.PGHOST;
-delete process.env.PGPORT;
-delete process.env.PGDATABASE;
-delete process.env.PGPASSWORD;
-
-// Hardened connection config for Supabase Pooler (IPv4 compatible for Vercel/serverless)
-const pool = new Pool({
-  host: 'aws-0-ap-south-1.pooler.supabase.com',
-  port: 6543,
-  database: 'postgres',
-  user: 'postgres.zdnrrzgwstnpbadgpbtq',
-  password: '%7jS4JHq-u.!z?W',
-  ssl: { rejectUnauthorized: false },
-  max: 10,
+const poolConfig = {
+  host: process.env.DB_HOST || config.db.host || 'localhost',
+  port: parseInt(process.env.DB_PORT || config.db.port || '5432', 10),
+  database: process.env.DB_NAME || config.db.name || 'safecity_db',
+  user: process.env.DB_USER || config.db.user || 'safecity_user',
+  password: process.env.DB_PASSWORD || config.db.password || 'safecity_pass',
+  max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 15000,
-});
+};
+
+if (process.env.DB_SSL === 'true') {
+  poolConfig.ssl = { rejectUnauthorized: false };
+}
+
+const pool = new Pool(poolConfig);
 
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err.message);
