@@ -32,67 +32,62 @@ def set_cell_margins(cell, top=100, bottom=100, left=140, right=140):
     tcMar = parse_xml(f'<w:tcMar {nsdecls("w")}><w:top w:w="{top}" w:type="dxa"/><w:bottom w:w="{bottom}" w:type="dxa"/><w:left w:w="{left}" w:type="dxa"/><w:right w:w="{right}" w:type="dxa"/></w:tcMar>')
     tcPr.append(tcMar)
 
-def add_title(text):
+def add_title():
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_before = Pt(0)
     p.paragraph_format.space_after = Pt(6)
-    run = p.add_run(text)
-    run.font.name = 'Times New Roman'
-    run.font.size = Pt(17)
-    run.font.bold = True
-    run.font.color.rgb = RGBColor(15, 23, 42)
+    run1 = p.add_run("SafeCity: SMART COMMUNITY-BASED WOMEN PROTECTION AND")
+    run1.font.name = 'Times New Roman'
+    run1.font.size = Pt(16.5)
+    run1.font.bold = True
+    run1.font.color.rgb = RGBColor(15, 23, 42)
+    run1.add_break()
+    run2 = p.add_run("INCIDENT REPORTING PLATFORM")
+    run2.font.name = 'Times New Roman'
+    run2.font.size = Pt(16.5)
+    run2.font.bold = True
+    run2.font.color.rgb = RGBColor(15, 23, 42)
 
-def add_deduplicated_header():
-    # Authors line with superscripts
+def add_header():
+    # Authors line
     p_auth = doc.add_paragraph()
     p_auth.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_auth.paragraph_format.space_before = Pt(0)
-    p_auth.paragraph_format.space_after = Pt(2)
-    
-    r1 = p_auth.add_run("Akshat Singh")
-    r1.font.name = 'Times New Roman'; r1.font.size = Pt(11); r1.font.bold = True
-    r1_sup = p_auth.add_run("1")
-    r1_sup.font.name = 'Times New Roman'; r1_sup.font.size = Pt(11); r1_sup.font.bold = True; r1_sup.font.superscript = True
-    
-    r_sep1 = p_auth.add_run(", Mohammed Aahil Nouman")
-    r_sep1.font.name = 'Times New Roman'; r_sep1.font.size = Pt(11); r_sep1.font.bold = True
-    r2_sup = p_auth.add_run("1")
-    r2_sup.font.name = 'Times New Roman'; r2_sup.font.size = Pt(11); r2_sup.font.bold = True; r2_sup.font.superscript = True
-    
-    r_sep2 = p_auth.add_run(", Siddiq")
-    r_sep2.font.name = 'Times New Roman'; r_sep2.font.size = Pt(11); r_sep2.font.bold = True
-    r3_sup = p_auth.add_run("1")
-    r3_sup.font.name = 'Times New Roman'; r3_sup.font.size = Pt(11); r3_sup.font.bold = True; r3_sup.font.superscript = True
+    p_auth.paragraph_format.space_before = Pt(2)
+    p_auth.paragraph_format.space_after = Pt(4)
+    r_auth = p_auth.add_run("Akshat Singh, Mohammed Aahil Nouman, Siddiq")
+    r_auth.font.name = 'Times New Roman'
+    r_auth.font.size = Pt(11)
+    r_auth.font.bold = True
+    r_auth.font.color.rgb = RGBColor(15, 23, 42)
 
-    # Supervisor line with superscript
+    # Supervisor line
     p_sup = doc.add_paragraph()
     p_sup.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_sup.paragraph_format.space_before = Pt(0)
-    p_sup.paragraph_format.space_after = Pt(2)
-    r_sup_lead = p_sup.add_run("Under the Supervision of: Mr. Muthuraju V")
-    r_sup_lead.font.name = 'Times New Roman'; r_sup_lead.font.size = Pt(10); r_sup_lead.font.bold = True
-    r_sup_mark = p_sup.add_run("2")
-    r_sup_mark.font.name = 'Times New Roman'; r_sup_mark.font.size = Pt(10); r_sup_mark.font.bold = True; r_sup_mark.font.superscript = True
+    p_sup.paragraph_format.space_before = Pt(4)
+    p_sup.paragraph_format.space_after = Pt(1)
+    r_sup = p_sup.add_run("Under the Supervision of: Mr. Muthuraju V.")
+    r_sup.font.name = 'Times New Roman'
+    r_sup.font.size = Pt(10)
+    r_sup.font.bold = True
+    r_sup.font.color.rgb = RGBColor(15, 23, 42)
 
-    # Single unified affiliation line (Deduplicated)
+    # Single unified affiliation block
     p_aff = doc.add_paragraph()
     p_aff.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_aff.paragraph_format.space_before = Pt(0)
     p_aff.paragraph_format.space_after = Pt(12)
-    
-    r_aff_num1 = p_aff.add_run("1")
-    r_aff_num1.font.name = 'Times New Roman'; r_aff_num1.font.size = Pt(9.5); r_aff_num1.font.superscript = True
-    r_aff_text1 = p_aff.add_run("Student Authors, ")
-    r_aff_text1.font.name = 'Times New Roman'; r_aff_text1.font.size = Pt(9.5); r_aff_text1.font.italic = True
-    
-    r_aff_num2 = p_aff.add_run("2")
-    r_aff_num2.font.name = 'Times New Roman'; r_aff_num2.font.size = Pt(9.5); r_aff_num2.font.superscript = True
-    r_aff_text2 = p_aff.add_run("Assistant Professor, Department of Computer Science and Engineering")
-    r_aff_text2.font.name = 'Times New Roman'; r_aff_text2.font.size = Pt(9.5); r_aff_text2.font.italic = True
-    r_aff_text2.add_break()
-    r_aff_text3 = p_aff.add_run("School of Computer Science and Engineering, Presidency University, Bengaluru, India")
-    r_aff_text3.font.name = 'Times New Roman'; r_aff_text3.font.size = Pt(9.5); r_aff_text3.font.italic = True
+    r_aff1 = p_aff.add_run("Assistant Professor, School of Computer Science and Engineering")
+    r_aff1.font.name = 'Times New Roman'
+    r_aff1.font.size = Pt(9.5)
+    r_aff1.font.italic = True
+    r_aff1.font.color.rgb = RGBColor(71, 85, 105)
+    r_aff1.add_break()
+    r_aff2 = p_aff.add_run("Presidency University, Bengaluru, India")
+    r_aff2.font.name = 'Times New Roman'
+    r_aff2.font.size = Pt(9.5)
+    r_aff2.font.italic = True
+    r_aff2.font.color.rgb = RGBColor(71, 85, 105)
 
 def add_abstract_keywords(abstract_text, keywords_text):
     p = doc.add_paragraph()
@@ -219,8 +214,8 @@ def add_table_row(table, row_data, col_widths, is_even=False):
 # =============================================================================
 # 1. TITLE & DEDUPLICATED AUTHOR BLOCK
 # =============================================================================
-add_title("SafeCity: Smart Community Based Women Protection and Incident Reporting Platform")
-add_deduplicated_header()
+add_title()
+add_header()
 
 # =============================================================================
 # 2. ABSTRACT (HUMANIZED & N-GRAM OPTIMIZED)
@@ -612,7 +607,7 @@ add_body(
 add_heading1("ACKNOWLEDGMENT")
 
 add_body(
-    "The authors are deeply grateful to Mr. Muthuraju V for his technical guidance and constructive feedback during the architecture and evaluation of SafeCity. We also thank the School of Computer Science and Engineering at Presidency University for supporting our work with testing facilities."
+    "The authors are deeply grateful to Mr. Muthuraju V. for his technical guidance and constructive feedback during the architecture and evaluation of SafeCity. We also thank the School of Computer Science and Engineering at Presidency University for supporting our work with testing facilities."
 )
 
 # =============================================================================

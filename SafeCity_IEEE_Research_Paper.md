@@ -1,9 +1,10 @@
-# SafeCity: Smart Community Based Women Protection and Incident Reporting Platform
+# SafeCity: SMART COMMUNITY-BASED WOMEN PROTECTION AND INCIDENT REPORTING PLATFORM
 
-**Akshat Singh¹**, **Mohammed Aahil Nouman¹**, **Siddiq¹**  
-**Under the Supervision of: Mr. Muthuraju V²**  
-*¹Student Authors, ²Assistant Professor, Department of Computer Science and Engineering*  
-*School of Computer Science and Engineering, Presidency University, Bengaluru, India*  
+**Akshat Singh, Mohammed Aahil Nouman, Siddiq**  
+
+**Under the Supervision of: Mr. Muthuraju V.**  
+*Assistant Professor, School of Computer Science and Engineering*  
+*Presidency University, Bengaluru, India*  
 
 ---
 
