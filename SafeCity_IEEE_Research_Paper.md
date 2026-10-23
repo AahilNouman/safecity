@@ -1,12 +1,11 @@
-# Smart Community-Based Women Protection and Proactive Incident Reporting Platform: An Integrated Geospatial Safety Framework for Urban Mobility
+# SafeCity: Smart Community Based Women Protection and Incident Reporting Platform
 
 **Akshat Singh, Mohammed Aahil Nouman, Siddiq**  
 *Department of Computer Science and Engineering, School of Computer Science and Engineering*  
 *Presidency University, Bengaluru, India*  
 
-**Under the Supervision of: Mr. Muthuraju V.**  
-*Assistant Professor, Department of Computer Science and Engineering*  
-*School of Computer Science and Engineering, Presidency University, Bengaluru, India*  
+**Under the Supervision of: Mr. Muthuraju V, Assistant Professor**  
+*Department of Computer Science and Engineering, Presidency University, Bengaluru, India*  
 
 ---
 

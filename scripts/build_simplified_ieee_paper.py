@@ -211,12 +211,12 @@ def add_table_row(table, row_data, col_widths, is_even=False):
 # =============================================================================
 # TITLE & AUTHORSHIP
 # =============================================================================
-add_title("Smart Community-Based Women Protection and Proactive Incident Reporting Platform: An Integrated Geospatial Safety Framework for Urban Mobility")
+add_title("SafeCity: Smart Community Based Women Protection and Incident Reporting Platform")
 
 add_authors(
     "Akshat Singh, Mohammed Aahil Nouman, Siddiq",
-    "School of Computer Science and Engineering, Presidency University, Bengaluru, India\\nDepartment of Computer Science and Engineering",
-    "Under the Supervision of: Mr. Muthuraju V., Assistant Professor\\nDepartment of Computer Science and Engineering, Presidency University, Bengaluru, India"
+    "Department of Computer Science and Engineering, School of Computer Science and Engineering\\nPresidency University, Bengaluru, India",
+    "Under the Supervision of: Mr. Muthuraju V, Assistant Professor\\nDepartment of Computer Science and Engineering, Presidency University, Bengaluru, India"
 )
 
 # =============================================================================
