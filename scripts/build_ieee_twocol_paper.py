@@ -1,5 +1,6 @@
 # scripts/build_ieee_twocol_paper.py
-# Compiles the SafeCity paper into authentic two-column IEEE format matching Presidency University's conference template.
+# Compiles the SafeCity paper into authentic two-column IEEE format matching Presidency University standard template.
+# Upgraded with 10pt standard body font, readable table/reference typography, and full-width Figure 1 architecture diagram.
 
 import os
 import docx
@@ -15,17 +16,17 @@ doc = docx.Document()
 # SECTION 1: HEADER BANNER (SINGLE FULL-WIDTH COLUMN)
 # =============================================================================
 sec1 = doc.sections[0]
-sec1.top_margin = Inches(0.68)
-sec1.bottom_margin = Inches(0.68)
-sec1.left_margin = Inches(0.68)
-sec1.right_margin = Inches(0.68)
+sec1.top_margin = Inches(0.75)
+sec1.bottom_margin = Inches(0.75)
+sec1.left_margin = Inches(0.70)
+sec1.right_margin = Inches(0.70)
 
 def set_cell_background(cell, hex_color):
     tcPr = cell._tc.get_or_add_tcPr()
     shd = parse_xml(f'<w:shd {nsdecls("w")} w:fill="{hex_color}"/>')
     tcPr.append(shd)
 
-def set_cell_margins(cell, top=30, bottom=30, left=45, right=45):
+def set_cell_margins(cell, top=35, bottom=35, left=50, right=50):
     tcPr = cell._tc.get_or_add_tcPr()
     tcMar = parse_xml(f'<w:tcMar {nsdecls("w")}><w:top w:w="{top}" w:type="dxa"/><w:bottom w:w="{bottom}" w:type="dxa"/><w:left w:w="{left}" w:type="dxa"/><w:right w:w="{right}" w:type="dxa"/></w:tcMar>')
     tcPr.append(tcMar)
@@ -46,16 +47,16 @@ def add_title():
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_before = Pt(0)
-    p.paragraph_format.space_after = Pt(4)
+    p.paragraph_format.space_after = Pt(5)
     run1 = p.add_run("SafeCity: SMART COMMUNITY-BASED WOMEN PROTECTION AND")
     run1.font.name = 'Times New Roman'
-    run1.font.size = Pt(17)
+    run1.font.size = Pt(17.5)
     run1.font.bold = True
     run1.font.color.rgb = RGBColor(0, 0, 0)
     run1.add_break()
     run2 = p.add_run("INCIDENT REPORTING PLATFORM")
     run2.font.name = 'Times New Roman'
-    run2.font.size = Pt(17)
+    run2.font.size = Pt(17.5)
     run2.font.bold = True
     run2.font.color.rgb = RGBColor(0, 0, 0)
 
@@ -64,10 +65,10 @@ def add_header():
     p_auth = doc.add_paragraph()
     p_auth.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_auth.paragraph_format.space_before = Pt(2)
-    p_auth.paragraph_format.space_after = Pt(2)
+    p_auth.paragraph_format.space_after = Pt(3)
     r_auth = p_auth.add_run("Akshat Singh, Mohammed Aahil Nouman, Siddiq")
     r_auth.font.name = 'Times New Roman'
-    r_auth.font.size = Pt(10.5)
+    r_auth.font.size = Pt(11)
     r_auth.font.bold = True
     r_auth.font.color.rgb = RGBColor(0, 0, 0)
 
@@ -78,7 +79,7 @@ def add_header():
     p_sup.paragraph_format.space_after = Pt(1)
     r_sup = p_sup.add_run("Under the Supervision of: Mr. Muthuraju V.")
     r_sup.font.name = 'Times New Roman'
-    r_sup.font.size = Pt(9.5)
+    r_sup.font.size = Pt(10)
     r_sup.font.bold = True
     r_sup.font.color.rgb = RGBColor(0, 0, 0)
 
@@ -86,27 +87,27 @@ def add_header():
     p_aff = doc.add_paragraph()
     p_aff.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_aff.paragraph_format.space_before = Pt(0)
-    p_aff.paragraph_format.space_after = Pt(7)
+    p_aff.paragraph_format.space_after = Pt(10)
     r_aff1 = p_aff.add_run("Assistant Professor, School of Computer Science and Engineering")
     r_aff1.font.name = 'Times New Roman'
-    r_aff1.font.size = Pt(9)
+    r_aff1.font.size = Pt(9.5)
     r_aff1.font.italic = True
     r_aff1.font.color.rgb = RGBColor(30, 41, 59)
     r_aff1.add_break()
     r_aff2 = p_aff.add_run("Presidency University, Bengaluru, India")
     r_aff2.font.name = 'Times New Roman'
-    r_aff2.font.size = Pt(9)
+    r_aff2.font.size = Pt(9.5)
     r_aff2.font.italic = True
     r_aff2.font.color.rgb = RGBColor(30, 41, 59)
 
 def add_abstract_keywords():
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    p.paragraph_format.space_after = Pt(3)
-    p.paragraph_format.line_spacing = 1.03
+    p.paragraph_format.space_after = Pt(4)
+    p.paragraph_format.line_spacing = 1.05
 
     r_lbl = p.add_run("Abstract — ")
-    r_lbl.font.name = 'Times New Roman'; r_lbl.font.size = Pt(9); r_lbl.font.bold = True; r_lbl.font.italic = True
+    r_lbl.font.name = 'Times New Roman'; r_lbl.font.size = Pt(9.5); r_lbl.font.bold = True; r_lbl.font.italic = True
     r_txt = p.add_run(
         "Personal mobility and physical security in expanding metropolitan transit environments remain severely constrained by street harassment, stalking, and isolated transit corridors. "
         "Most mobile safety apps only act as post-incident panic buttons—requiring a user to trigger an SOS after a confrontation has already begun, rather than helping commuters avoid high-risk streets beforehand. "
@@ -117,17 +118,17 @@ def add_abstract_keywords():
         "Field evaluations across Bengaluru transit corridors confirm sub-second routing response (median 310 ms), reliable 12-meter GPS tracking accuracy, a high-precision inactivity state machine, and sharp safety discrimination (scoring well-lit arterials at 94/100 versus unlit shortcuts at 48/100). "
         "Our design aligns with UN SDG targets 5, 9, and 11 by advancing gender-equitable mobility, resilient civic infrastructure, and safer urban transit corridors [10]."
     )
-    r_txt.font.name = 'Times New Roman'; r_txt.font.size = Pt(9)
+    r_txt.font.name = 'Times New Roman'; r_txt.font.size = Pt(9.5)
 
     p_kw = doc.add_paragraph()
     p_kw.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    p_kw.paragraph_format.space_after = Pt(8)
-    p_kw.paragraph_format.line_spacing = 1.03
+    p_kw.paragraph_format.space_after = Pt(12)
+    p_kw.paragraph_format.line_spacing = 1.05
 
     r_kw_lbl = p_kw.add_run("Keywords — ")
-    r_kw_lbl.font.name = 'Times New Roman'; r_kw_lbl.font.size = Pt(9); r_kw_lbl.font.bold = True; r_kw_lbl.font.italic = True
+    r_kw_lbl.font.name = 'Times New Roman'; r_kw_lbl.font.size = Pt(9.5); r_kw_lbl.font.bold = True; r_kw_lbl.font.italic = True
     r_kw_txt = p_kw.add_run("Women's Safety, Crowdsourced Incident Reporting, Geographic Information Systems (GIS), Multi-Objective Route Optimization, Haversine Telemetry, Spatial Clustering, Geolocation API, Civic Computing.")
-    r_kw_txt.font.name = 'Times New Roman'; r_kw_txt.font.size = Pt(9)
+    r_kw_txt.font.name = 'Times New Roman'; r_kw_txt.font.size = Pt(9.5)
 
 # Render Banner
 add_title()
@@ -135,48 +136,48 @@ add_header()
 add_abstract_keywords()
 
 # =============================================================================
-# SECTION 2: TWO-COLUMN BODY
+# SECTION 2: TWO-COLUMN BODY (PART 1: INTRO & RELATED WORK)
 # =============================================================================
 sec2 = doc.add_section(docx.enum.section.WD_SECTION_START.CONTINUOUS)
-sec2.top_margin = Inches(0.68)
-sec2.bottom_margin = Inches(0.68)
-sec2.left_margin = Inches(0.68)
-sec2.right_margin = Inches(0.68)
+sec2.top_margin = Inches(0.75)
+sec2.bottom_margin = Inches(0.75)
+sec2.left_margin = Inches(0.70)
+sec2.right_margin = Inches(0.70)
 
-sectPr = sec2._sectPr
-cols = sectPr.xpath('./w:cols')
-if cols:
-    cols[0].set(qn('w:num'), '2')
-    cols[0].set(qn('w:space'), '360')
-    cols[0].set(qn('w:equalWidth'), '1')
+sectPr2 = sec2._sectPr
+cols2 = sectPr2.xpath('./w:cols')
+if cols2:
+    cols2[0].set(qn('w:num'), '2')
+    cols2[0].set(qn('w:space'), '360')
+    cols2[0].set(qn('w:equalWidth'), '1')
 else:
     cols_el = OxmlElement('w:cols')
     cols_el.set(qn('w:num'), '2')
     cols_el.set(qn('w:space'), '360')
     cols_el.set(qn('w:equalWidth'), '1')
-    sectPr.append(cols_el)
+    sectPr2.append(cols_el)
 
 def add_sec_heading(title):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_before = Pt(6)
-    p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.space_before = Pt(8)
+    p.paragraph_format.space_after = Pt(2.5)
     p.paragraph_format.keep_with_next = True
     r = p.add_run(title)
     r.font.name = 'Times New Roman'
-    r.font.size = Pt(9.5)
+    r.font.size = Pt(10)
     r.font.bold = True
     r.font.color.rgb = RGBColor(0, 0, 0)
 
 def add_subsec_heading(title):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.paragraph_format.space_before = Pt(4)
-    p.paragraph_format.space_after = Pt(1)
+    p.paragraph_format.space_before = Pt(5)
+    p.paragraph_format.space_after = Pt(1.5)
     p.paragraph_format.keep_with_next = True
     r = p.add_run(title)
     r.font.name = 'Times New Roman'
-    r.font.size = Pt(9)
+    r.font.size = Pt(9.5)
     r.font.bold = True
     r.font.italic = True
     r.font.color.rgb = RGBColor(0, 0, 0)
@@ -184,53 +185,53 @@ def add_subsec_heading(title):
 def add_p(text):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    p.paragraph_format.space_after = Pt(2)
-    p.paragraph_format.line_spacing = 1.03
+    p.paragraph_format.space_after = Pt(3)
+    p.paragraph_format.line_spacing = 1.05
     r = p.add_run(text)
     r.font.name = 'Times New Roman'
-    r.font.size = Pt(9)
+    r.font.size = Pt(9.5)
     r.font.color.rgb = RGBColor(0, 0, 0)
 
 def add_bullet_item(lead, text):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    p.paragraph_format.left_indent = Inches(0.16)
-    p.paragraph_format.first_line_indent = Inches(-0.16)
-    p.paragraph_format.space_after = Pt(1.5)
-    p.paragraph_format.line_spacing = 1.03
+    p.paragraph_format.left_indent = Inches(0.18)
+    p.paragraph_format.first_line_indent = Inches(-0.18)
+    p.paragraph_format.space_after = Pt(2.5)
+    p.paragraph_format.line_spacing = 1.05
     
     r_dot = p.add_run("• ")
-    r_dot.font.name = 'Times New Roman'; r_dot.font.size = Pt(9); r_dot.font.bold = True
+    r_dot.font.name = 'Times New Roman'; r_dot.font.size = Pt(9.5); r_dot.font.bold = True
     
     if lead:
         r_lead = p.add_run(lead + " ")
-        r_lead.font.name = 'Times New Roman'; r_lead.font.size = Pt(9); r_lead.font.bold = True
+        r_lead.font.name = 'Times New Roman'; r_lead.font.size = Pt(9.5); r_lead.font.bold = True
     
     r_txt = p.add_run(text)
-    r_txt.font.name = 'Times New Roman'; r_txt.font.size = Pt(9)
+    r_txt.font.name = 'Times New Roman'; r_txt.font.size = Pt(9.5)
 
 def add_equation(eq_text, eq_num=None):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_before = Pt(2.5)
-    p.paragraph_format.space_after = Pt(2.5)
+    p.paragraph_format.space_before = Pt(3.5)
+    p.paragraph_format.space_after = Pt(3.5)
     p.paragraph_format.keep_with_next = True
     r = p.add_run(eq_text)
-    r.font.name = 'Times New Roman'; r.font.size = Pt(8.5); r.font.italic = True
+    r.font.name = 'Times New Roman'; r.font.size = Pt(9); r.font.italic = True
     if eq_num:
         r_num = p.add_run(f"    ({eq_num})")
-        r_num.font.name = 'Times New Roman'; r_num.font.size = Pt(8.5); r_num.font.italic = False
+        r_num.font.name = 'Times New Roman'; r_num.font.size = Pt(9); r_num.font.italic = False
 
 def add_table_header(table, headers, col_widths, bg_color='1E293B'):
     hdr = table.rows[0].cells
     for i, h in enumerate(headers):
         hdr[i].text = h
         set_cell_background(hdr[i], bg_color)
-        set_cell_margins(hdr[i], top=28, bottom=28, left=40, right=40)
+        set_cell_margins(hdr[i], top=35, bottom=35, left=45, right=45)
         p = hdr[i].paragraphs[0]
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         for run in p.runs:
-            run.font.name = 'Times New Roman'; run.font.size = Pt(7.5); run.font.bold = True
+            run.font.name = 'Times New Roman'; run.font.size = Pt(8); run.font.bold = True
             run.font.color.rgb = RGBColor(255, 255, 255)
         hdr[i].width = col_widths[i]
 
@@ -241,11 +242,11 @@ def add_table_row(table, data, col_widths, is_even=False):
     for i, txt in enumerate(data):
         row_cells[i].text = txt
         set_cell_background(row_cells[i], bg)
-        set_cell_margins(row_cells[i], top=22, bottom=22, left=35, right=35)
+        set_cell_margins(row_cells[i], top=28, bottom=28, left=40, right=40)
         p = row_cells[i].paragraphs[0]
         p.alignment = WD_ALIGN_PARAGRAPH.LEFT if i > 0 else WD_ALIGN_PARAGRAPH.CENTER
         for run in p.runs:
-            run.font.name = 'Times New Roman'; run.font.size = Pt(7)
+            run.font.name = 'Times New Roman'; run.font.size = Pt(7.5)
             run.font.color.rgb = RGBColor(15, 23, 42)
         row_cells[i].width = col_widths[i]
 
@@ -315,8 +316,8 @@ add_p(
 # Table I (fits single column 3.4 in)
 p_t1 = doc.add_paragraph()
 p_t1.alignment = WD_ALIGN_PARAGRAPH.CENTER
-p_t1.paragraph_format.space_before = Pt(4)
-p_t1.paragraph_format.space_after = Pt(1.5)
+p_t1.paragraph_format.space_before = Pt(5)
+p_t1.paragraph_format.space_after = Pt(2)
 p_t1.paragraph_format.keep_with_next = True
 r_t1 = p_t1.add_run("TABLE I. POSITIONING RELATIVE TO RELATED WORK")
 r_t1.font.name = 'Times New Roman'; r_t1.font.size = Pt(8); r_t1.font.bold = True
@@ -344,26 +345,63 @@ add_sec_heading("III. PROPOSED METHODOLOGY AND SYSTEM ARCHITECTURE")
 add_subsec_heading("A. Architecture Overview")
 add_p(
     "SafeCity employs a four-tier architecture designed for rapid field operation across varied mobile network environments: (i) Client PWA / Mobile Tier, (ii) Geospatial Application API Tier, (iii) Administrative Verification Engine, and (iv) High-Availability Persistence Tier. "
-    "Fig. 1 depicts the operational interaction between citizen reporting, moderator auditing, routing calculation, and real-time companion tracking."
+    "Fig. 1 illustrates the end-to-end data flow, from anonymous community incident reporting and administrative moderation to safety-weighted route generation and real-time companion tracking."
 )
 
-# Figure 1 (Single column width ~3.3 in)
+# =============================================================================
+# SECTION 3: FULL-WIDTH DOUBLE-COLUMN FIGURE (SPANNING BOTH COLUMNS)
+# =============================================================================
+sec3 = doc.add_section(docx.enum.section.WD_SECTION_START.CONTINUOUS)
+sec3.top_margin = Inches(0.75)
+sec3.bottom_margin = Inches(0.75)
+sec3.left_margin = Inches(0.70)
+sec3.right_margin = Inches(0.70)
+
+sectPr3 = sec3._sectPr
+cols3 = sectPr3.xpath('./w:cols')
+if cols3:
+    cols3[0].set(qn('w:num'), '1')
+else:
+    cols_el3 = OxmlElement('w:cols')
+    cols_el3.set(qn('w:num'), '1')
+    sectPr3.append(cols_el3)
+
 fig_path = "C:/Users/AAHIL/OneDrive/Pictures/DOCUMENTS/astrasafe-fullstack/docs/fig1_system_architecture.png"
 if os.path.exists(fig_path):
     p_img = doc.add_paragraph()
     p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_img.paragraph_format.space_before = Pt(4)
-    p_img.paragraph_format.space_after = Pt(1)
-    p_img.paragraph_format.keep_with_next = True
-    doc.add_picture(fig_path, width=Inches(3.3))
+    p_img.paragraph_format.space_before = Pt(6)
+    p_img.paragraph_format.space_after = Pt(2)
+    doc.add_picture(fig_path, width=Inches(6.85))
     
     p_cap = doc.add_paragraph()
     p_cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_cap.paragraph_format.space_before = Pt(1)
-    p_cap.paragraph_format.space_after = Pt(4)
-    p_cap.paragraph_format.keep_with_next = True
+    p_cap.paragraph_format.space_before = Pt(2)
+    p_cap.paragraph_format.space_after = Pt(8)
     r_cap = p_cap.add_run("Fig. 1. Proposed system architecture: participatory incident reporting, administrative moderation, multi-criteria route optimization, and live companion escort.")
-    r_cap.font.name = 'Times New Roman'; r_cap.font.size = Pt(7.5); r_cap.font.italic = True
+    r_cap.font.name = 'Times New Roman'; r_cap.font.size = Pt(8.5); r_cap.font.italic = True
+
+# =============================================================================
+# SECTION 4: TWO-COLUMN BODY (PART 2: METHODOLOGY CONT., IMPL, EVAL, CONCL)
+# =============================================================================
+sec4 = doc.add_section(docx.enum.section.WD_SECTION_START.CONTINUOUS)
+sec4.top_margin = Inches(0.75)
+sec4.bottom_margin = Inches(0.75)
+sec4.left_margin = Inches(0.70)
+sec4.right_margin = Inches(0.70)
+
+sectPr4 = sec4._sectPr
+cols4 = sectPr4.xpath('./w:cols')
+if cols4:
+    cols4[0].set(qn('w:num'), '2')
+    cols4[0].set(qn('w:space'), '360')
+    cols4[0].set(qn('w:equalWidth'), '1')
+else:
+    cols_el4 = OxmlElement('w:cols')
+    cols_el4.set(qn('w:num'), '2')
+    cols_el4.set(qn('w:space'), '360')
+    cols_el4.set(qn('w:equalWidth'), '1')
+    sectPr4.append(cols_el4)
 
 add_subsec_heading("B. Geospatial Incident Ingestion and Verification")
 add_p(
@@ -415,8 +453,8 @@ add_p(
 # Table II (fits single column 3.4 in)
 p_t2 = doc.add_paragraph()
 p_t2.alignment = WD_ALIGN_PARAGRAPH.CENTER
-p_t2.paragraph_format.space_before = Pt(4)
-p_t2.paragraph_format.space_after = Pt(1.5)
+p_t2.paragraph_format.space_before = Pt(5)
+p_t2.paragraph_format.space_after = Pt(2)
 p_t2.paragraph_format.keep_with_next = True
 r_t2 = p_t2.add_run("TABLE II. TECHNOLOGY STACK BY SYSTEM LAYER")
 r_t2.font.name = 'Times New Roman'; r_t2.font.size = Pt(8); r_t2.font.bold = True
@@ -468,23 +506,23 @@ p_box = doc.add_table(rows=1, cols=1)
 p_box.alignment = WD_TABLE_ALIGNMENT.CENTER
 cell_box = p_box.cell(0, 0)
 set_cell_background(cell_box, 'F8FAFC')
-set_cell_margins(cell_box, top=25, bottom=25, left=45, right=45)
+set_cell_margins(cell_box, top=30, bottom=30, left=50, right=50)
 p_code = cell_box.paragraphs[0]
 p_code.paragraph_format.space_before = Pt(0)
 p_code.paragraph_format.space_after = Pt(0)
 p_code.paragraph_format.line_spacing = 1.01
 p_code.paragraph_format.keep_together = True
 r_code = p_code.add_run(listing_text)
-r_code.font.name = 'Consolas'; r_code.font.size = Pt(6.4); r_code.font.color.rgb = RGBColor(15, 23, 42)
+r_code.font.name = 'Consolas'; r_code.font.size = Pt(6.8); r_code.font.color.rgb = RGBColor(15, 23, 42)
 make_table_unbreakable(p_box)
 
 p_lcap = doc.add_paragraph()
 p_lcap.alignment = WD_ALIGN_PARAGRAPH.CENTER
-p_lcap.paragraph_format.space_before = Pt(1)
-p_lcap.paragraph_format.space_after = Pt(3.5)
+p_lcap.paragraph_format.space_before = Pt(1.5)
+p_lcap.paragraph_format.space_after = Pt(4)
 p_lcap.paragraph_format.keep_with_next = True
 r_lcap = p_lcap.add_run("Listing 1. Multi-criteria route safety evaluation routine.")
-r_lcap.font.name = 'Times New Roman'; r_lcap.font.size = Pt(7.5); r_lcap.font.italic = True
+r_lcap.font.name = 'Times New Roman'; r_lcap.font.size = Pt(8); r_lcap.font.italic = True
 
 add_subsec_heading("B. Deployment and Testing Methodology")
 add_p(
@@ -552,8 +590,8 @@ add_p(
 # Table III (fits single column 3.4 in)
 p_t3 = doc.add_paragraph()
 p_t3.alignment = WD_ALIGN_PARAGRAPH.CENTER
-p_t3.paragraph_format.space_before = Pt(4)
-p_t3.paragraph_format.space_after = Pt(1.5)
+p_t3.paragraph_format.space_before = Pt(5)
+p_t3.paragraph_format.space_after = Pt(2)
 p_t3.paragraph_format.keep_with_next = True
 r_t3 = p_t3.add_run("TABLE III. TRADITIONAL NAVIGATION / PANIC APPS VS. SAFECITY")
 r_t3.font.name = 'Times New Roman'; r_t3.font.size = Pt(8); r_t3.font.bold = True
@@ -629,19 +667,19 @@ references = [
 for ref in references:
     p_ref = doc.add_paragraph()
     p_ref.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    p_ref.paragraph_format.left_indent = Inches(0.22)
-    p_ref.paragraph_format.first_line_indent = Inches(-0.22)
-    p_ref.paragraph_format.space_after = Pt(2)
-    p_ref.paragraph_format.line_spacing = 1.02
+    p_ref.paragraph_format.left_indent = Inches(0.24)
+    p_ref.paragraph_format.first_line_indent = Inches(-0.24)
+    p_ref.paragraph_format.space_after = Pt(2.5)
+    p_ref.paragraph_format.line_spacing = 1.04
     p_ref.paragraph_format.keep_together = True
     r_ref = p_ref.add_run(ref)
     r_ref.font.name = 'Times New Roman'
-    r_ref.font.size = Pt(7.5)
+    r_ref.font.size = Pt(8.5)
     r_ref.font.color.rgb = RGBColor(0, 0, 0)
 
-# Continuous break at end to balance columns on final page
-sec3 = doc.add_section(docx.enum.section.WD_SECTION_START.CONTINUOUS)
+# Balance columns on final page
+sec5 = doc.add_section(docx.enum.section.WD_SECTION_START.CONTINUOUS)
 
 out_docx = "C:/Users/AAHIL/OneDrive/Pictures/DOCUMENTS/astrasafe-fullstack/SafeCity_Research_Paper.docx"
 doc.save(out_docx)
-print(f"Refined IEEE Two-Column Manuscript compiled successfully at: {out_docx}")
+print(f"Upgraded IEEE Two-Column Manuscript compiled successfully at: {out_docx}")
