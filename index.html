@@ -1198,200 +1198,165 @@
     </section>
 
     <!-- ========================================================================= -->
-    <!-- VIEW 4: COMPANION WALK ESCORT & INACTIVITY WATCHDOG (/walk) -->
+    <!-- VIEW 4: VIRTUAL WALK WITH ME (/walk) -->
     <!-- ========================================================================= -->
     <section id="view-walk" class="hidden space-y-5">
       
-      <!-- 30-SECOND INTERACTIVE COMPANION DEMO BANNER -->
-      <div id="companion-demo-container" class="bg-gradient-to-r from-plum-900 via-plum-850 to-plum-900 border border-plum-700/80 rounded-2xl p-4 text-white shadow-sm transition">
-        <!-- Default State: Promo & Start Button -->
-        <div id="companion-demo-promo" class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-400/30 flex items-center justify-center text-rose-300 shrink-0">
-              <i data-lucide="sparkles" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-bold uppercase tracking-wider text-rose-300">Interactive Walkthrough</span>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">30-Second Demo</span>
-              </div>
-              <p class="text-xs text-ivory-300 mt-0.5">Experience live GPS positioning at your exact current location, escort trails, trusted contact notification, and watchdog check-in without taking a step.</p>
-            </div>
-          </div>
-          <button type="button" id="btn-start-companion-demo" onclick="startCompanionDemo()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs transition flex items-center justify-center gap-2 shadow shrink-0">
-            <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
-            <span>Try 30-Second Demo</span>
-          </button>
+      <!-- Top Header & Protocol Pill -->
+      <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#0D2838] text-[#38BDF8] border border-[#0284C7]/40 shadow-sm">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+          <span>ACTIVE CITIZEN ESCORT PROTOCOL</span>
         </div>
-
-        <!-- Active Demo Console (Hidden until started) -->
-        <div id="companion-demo-active" class="hidden space-y-3 pt-1">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-              <span class="text-xs font-bold text-white uppercase tracking-wider">30s Location-Aware Companion Demo</span>
-              <span id="demo-step-badge" class="px-2 py-0.5 rounded text-[10px] font-mono bg-plum-800 text-rose-200 border border-plum-700">Step 1/6</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span id="demo-timer-countdown" class="text-xs font-mono font-bold text-amber-300 bg-plum-950/80 px-2 py-1 rounded border border-plum-800">30s remaining</span>
-              <button type="button" onclick="stopCompanionDemo()" class="px-2.5 py-1 rounded-lg bg-plum-800 hover:bg-plum-700 text-ivory-300 hover:text-white text-xs transition">Exit Demo</button>
-            </div>
-          </div>
-
-          <!-- Progress Bar -->
-          <div class="w-full bg-plum-950 rounded-full h-2 overflow-hidden border border-plum-800">
-            <div id="demo-progress-bar" class="h-full bg-gradient-to-r from-rose-500 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
-          </div>
-
-          <!-- Current Narrative Description -->
-          <div class="p-3 rounded-xl bg-plum-950/70 border border-plum-800 flex flex-col gap-2">
-            <div class="flex items-start gap-3">
-              <div id="demo-step-icon" class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-300 flex items-center justify-center shrink-0 mt-0.5">
-                <i data-lucide="compass" class="w-4 h-4"></i>
-              </div>
-              <div class="flex-1">
-                <div id="demo-step-title" class="text-xs font-bold text-white">1. Real-Time GPS Acquisition &amp; Lock</div>
-                <p id="demo-step-narrative" class="text-xs text-ivory-300 mt-0.5">Acquiring live device GPS position to calibrate Companion escort to your actual location...</p>
-              </div>
-            </div>
-            <!-- Fallback Actions Container (Shown if GPS denied or unavailable) -->
-            <div id="demo-fallback-actions" class="hidden pt-1 flex flex-wrap gap-2"></div>
-          </div>
-
-          <!-- Finished State Actions (Hidden until step 6 completes) -->
-          <div id="demo-complete-actions" class="hidden pt-2 border-t border-plum-800 flex flex-wrap items-center justify-between gap-2">
-            <span class="text-xs text-emerald-300 flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Simulation completed successfully!</span>
-            <div class="flex items-center gap-2">
-              <button type="button" onclick="startCompanionDemo()" class="px-3 py-1.5 rounded-lg bg-plum-800 hover:bg-plum-700 text-white text-xs font-semibold flex items-center gap-1.5">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Replay
-              </button>
-              <button type="button" onclick="stopCompanionDemo(); toggleWalkBuddySession();" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-1.5">
-                <i data-lucide="shield" class="w-3.5 h-3.5"></i> Start Real Walk Escort
-              </button>
-            </div>
-          </div>
-        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Virtual Walk With Me</h2>
+        <p class="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
+          Real-time GPS travel guardian. Continuously monitors movement, detects prolonged stationary inactivity, and initiates automated emergency protocols if you remain unresponsive.
+        </p>
       </div>
 
+      <!-- Registered Emergency Guardian Bar -->
+      <div class="bg-[#111827] border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-md">
+        <div class="flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-teal-950/60 border border-teal-500/40 text-teal-400 flex items-center justify-center shrink-0">
+            <i data-lucide="phone" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-bold text-white">Registered Emergency Guardian</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Active &amp; Verified</span>
+            </div>
+            <p id="walk-guardian-display" class="text-xs text-slate-400 mt-0.5 font-medium">
+              Aahil (Guardian) • 7892548253
+            </p>
+          </div>
+        </div>
+        <button type="button" onclick="openGuardianEditModal()" class="px-3.5 py-2 rounded-xl bg-[#1E293B] hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition shadow-sm">
+          <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+          <span>Change Contact</span>
+        </button>
+      </div>
+
+      <!-- Main 2-Column Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <!-- Left: Companion Controls & Emergency Contact -->
-        <div class="lg:col-span-5 space-y-4">
-          
-          <!-- Emergency Contact Setup Card -->
-          <div class="bg-surface-card rounded-2xl border border-surface-border p-5 space-y-3 shadow-sm">
-            <div class="flex items-center justify-between">
-              <h3 class="text-sm font-bold text-plum-950 flex items-center gap-2">
-                <i data-lucide="user-check" class="w-4 h-4 text-emerald-600"></i>
-                <span>Trusted Emergency Contact</span>
-              </h3>
-              <span id="contact-status-badge" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                Active
-              </span>
-            </div>
-            <p class="text-xs text-ivory-700">This contact receives automated WhatsApp &amp; SMS alerts with your live GPS location if an alert is triggered.</p>
-
-            <div class="space-y-2.5 pt-1">
-              <div>
-                <label for="ec-name" class="text-xs font-medium text-ivory-700">Contact Name:</label>
-                <input type="text" id="ec-name" value="Ananya Rao" class="mt-1 w-full text-xs rounded-lg border border-surface-border px-3 py-2 bg-white text-plum-950 font-medium focus:outline-none focus:ring-2 focus:ring-plum-400" />
+        <!-- Left Column: Map Card (lg:col-span-7) -->
+        <div class="lg:col-span-7 bg-[#111827] border border-slate-800 rounded-2xl overflow-hidden shadow-md flex flex-col">
+          <div class="relative w-full h-[480px]" id="walk-buddy-map-wrapper">
+            <div id="WalkBuddyMap" class="w-full h-full"></div>
+            
+            <!-- Map Overlay Status Badge (Top-Right) -->
+            <div class="absolute top-3 right-3 z-[1000] pointer-events-none">
+              <div id="map-movement-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-black/85 backdrop-blur-md text-emerald-400 border border-emerald-500/40 flex items-center gap-2 shadow-lg">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="map-movement-status-text">STATIONARY • SAFE</span>
               </div>
-              <div>
-                <label for="ec-phone" class="text-xs font-medium text-ivory-700">Phone Number (with country code):</label>
-                <input type="text" id="ec-phone" value="+91 98450 77210" class="mt-1 w-full text-xs font-mono rounded-lg border border-surface-border px-3 py-2 bg-white text-plum-950 focus:outline-none focus:ring-2 focus:ring-plum-400" />
-              </div>
-              <div>
-                <label for="ec-relation" class="text-xs font-medium text-ivory-700">Relationship:</label>
-                <select id="ec-relation" class="mt-1 w-full text-xs rounded-lg border border-surface-border px-3 py-2 bg-white text-plum-950 focus:outline-none focus:ring-2 focus:ring-plum-400">
-                  <option value="Mother">Mother</option>
-                  <option value="Father">Father</option>
-                  <option value="Sister">Sister</option>
-                  <option value="Friend">Friend</option>
-                  <option value="Partner">Partner</option>
-                  <option value="Guardian">Guardian</option>
-                </select>
-              </div>
-              <button type="button" onclick="saveEmergencyContact()" class="w-full py-2 rounded-lg bg-plum-850 hover:bg-plum-800 text-white text-xs font-semibold transition">
-                Save Emergency Contact
-              </button>
             </div>
           </div>
 
-          <!-- Walk Buddy Live Escort Control Card -->
-          <div class="bg-plum-900 text-white rounded-2xl border border-plum-800 p-5 space-y-4 shadow-sm">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <i data-lucide="compass" class="w-5 h-5 text-rose-300"></i>
-                <h3 class="text-sm font-bold text-white">Walk Companion Escort</h3>
-              </div>
-              <span id="walk-escort-status" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-plum-800 text-rose-200 border border-plum-700">
-                Standby
-              </span>
+          <!-- Bottom Map Status Bar -->
+          <div class="px-4 py-3 bg-[#0B0F17] border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+            <div id="map-gps-lock-accuracy">
+              GPS Satellite Lock: ±15m accuracy
             </div>
-
-            <!-- Inactivity Watchdog Timer Display -->
-            <div class="bg-plum-950/80 p-4 rounded-xl border border-plum-800 flex items-center justify-between">
-              <div>
-                <div class="text-[11px] text-ivory-300 uppercase tracking-wider">Inactivity Watchdog</div>
-                <div id="walk-countdown-label" class="text-2xl font-bold font-mono text-emerald-400 mt-0.5">03:00</div>
-              </div>
-              <button type="button" onclick="handleUserSafeCheckin()" class="px-3 py-1.5 rounded-lg bg-plum-800 hover:bg-plum-700 text-ivory-200 text-xs font-semibold border border-plum-700 transition">
-                I'm Safe (Reset)
-              </button>
-            </div>
-
-            <!-- Action Controls -->
-            <div class="space-y-2">
-              <button type="button" id="start-walk-btn" onclick="toggleWalkBuddySession()" class="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow">
-                <i data-lucide="play" class="w-4 h-4"></i>
-                <span id="start-walk-label">Start Live Escort Session</span>
-              </button>
-              
-              <button type="button" onclick="sendWalkSOS()" class="w-full py-2.5 rounded-xl bg-safety-crimson hover:bg-safety-crimsonHover text-white font-bold text-xs transition flex items-center justify-center gap-2 shadow sos-pulse">
-                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-                <span>TRIGGER IMMEDIATE SOS TO CONTACT</span>
-              </button>
-            </div>
-
-            <!-- Simulation Controls for Testing -->
-            <div class="pt-3 border-t border-plum-800 flex items-center justify-between text-xs text-ivory-300">
-              <span>Demo Walk Step Simulation:</span>
-              <button type="button" onclick="simulateWalkStep()" class="px-2.5 py-1 rounded bg-plum-800 hover:bg-plum-700 text-ivory-100 text-[11px] font-mono transition">
-                Next GPS Step &rarr;
-              </button>
+            <div id="map-trail-points-count">
+              Live Trail: 0 waypoint fixes
             </div>
           </div>
-
         </div>
 
-        <!-- Right: Companion Trail Map -->
-        <div class="lg:col-span-7 bg-surface-card rounded-2xl shadow-sm border border-surface-border overflow-hidden flex flex-col">
-          <div class="p-4 border-b border-surface-border flex items-center justify-between">
-            <div>
-              <h3 class="text-sm font-bold text-plum-950 flex items-center gap-2">
-                <i data-lucide="map-pin" class="w-4 h-4 text-rose-600"></i>
-                <span>Live Companion GPS Corridor</span>
-              </h3>
-              <p id="companion-location-subtitle" class="text-xs text-ivory-700">Real-time device GPS positioning and automated watchdog safety escort.</p>
+        <!-- Right Column: Controls & Telemetry (lg:col-span-5) -->
+        <div class="lg:col-span-5 space-y-4">
+          
+          <!-- Card 1: SAFETY SESSION TIMER -->
+          <div class="bg-[#111827] border border-slate-800 rounded-2xl p-5 space-y-4 shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Safety Session Timer</span>
+              <span id="escort-active-pill" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="escort-pill-text">ESCORT ACTIVE</span>
+              </span>
             </div>
-            <span id="companion-gps-status-badge" class="text-xs font-mono px-2 py-0.5 rounded bg-plum-800 text-rose-200 border border-plum-700">
-              Standby
-            </span>
+
+            <!-- Big Session Clock (e.g. 00:41) -->
+            <div id="safety-session-clock" class="text-4xl sm:text-5xl font-extrabold font-mono text-white tracking-wider">
+              00:00
+            </div>
+
+            <!-- Primary Action Button: Toggle Journey -->
+            <button type="button" id="btn-toggle-journey" onclick="toggleVirtualWalkSession()" class="w-full py-3 rounded-xl bg-[#F43F5E] hover:bg-rose-600 text-white font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg">
+              <i data-lucide="square" class="w-4 h-4 fill-current"></i>
+              <span id="btn-toggle-journey-text">End Journey Safely</span>
+            </button>
+
+            <!-- Demo Inactivity Mode (15s) Checkbox Container -->
+            <div class="bg-[#0B0F17] border border-slate-800 rounded-xl p-3.5 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white">Demo Inactivity Mode (15s)</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Triggers check in 15 seconds</div>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="demo-inactivity-mode-toggle" checked onchange="toggleInactivityDemoMode(this.checked)" class="w-4 h-4 text-emerald-500 rounded border-slate-700 bg-slate-800 focus:ring-emerald-500 cursor-pointer" />
+              </label>
+            </div>
+
+            <!-- Trigger Safety Confirmation Now (Test Demo) Button -->
+            <button type="button" onclick="triggerSafetyConfirmationTest()" class="w-full py-2.5 rounded-xl bg-[#161F30] hover:bg-slate-800 text-amber-400 font-semibold text-xs border border-amber-500/30 transition flex items-center justify-center gap-2 shadow-sm">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400 fill-amber-400"></i>
+              <span>Trigger Safety Confirmation Now (Test Demo)</span>
+            </button>
           </div>
 
-          <div id="walk-buddy-map-wrapper" class="relative isolate w-full h-[440px]" class="relative isolate w-full h-[440px]">
-            <div id="WalkBuddyMap" class="w-full h-full"></div>
-          </div>
+          <!-- Card 2: Live Motion Telemetry -->
+          <div class="bg-[#111827] border border-slate-800 rounded-2xl p-5 space-y-4 shadow-md">
+            <h3 class="text-sm font-bold text-white">Live Motion Telemetry</h3>
 
-          <!-- Telemetry Log -->
-          <div class="p-3 bg-ivory-50 border-t border-surface-border">
-            <div class="text-[11px] font-mono text-ivory-700 space-y-1" id="walk-telemetry-log">
-              <div>SafeCity Companion Engine initialized. Trusted contact: Ananya Rao.</div>
+            <div class="grid grid-cols-2 gap-3">
+              <!-- Box 1: Velocity -->
+              <div class="bg-[#0B0F17] border border-slate-800 rounded-xl p-3">
+                <div class="text-[11px] text-slate-400 font-medium">Current Velocity</div>
+                <div id="telemetry-velocity" class="text-lg font-bold font-mono text-emerald-400 mt-0.5">0.0 km/h</div>
+              </div>
+
+              <!-- Box 2: Distance Walked -->
+              <div class="bg-[#0B0F17] border border-slate-800 rounded-xl p-3">
+                <div class="text-[11px] text-slate-400 font-medium">Distance Walked</div>
+                <div id="telemetry-distance" class="text-lg font-bold font-mono text-white mt-0.5">0.00 km</div>
+              </div>
+
+              <!-- Box 3: Motion State -->
+              <div class="bg-[#0B0F17] border border-slate-800 rounded-xl p-3">
+                <div class="text-[11px] text-slate-400 font-medium">Motion State</div>
+                <div id="telemetry-motion-state" class="text-xs sm:text-sm font-bold text-emerald-400 mt-1 truncate">Stationary (Safe)</div>
+              </div>
+
+              <!-- Box 4: Stationary Timer -->
+              <div class="bg-[#0B0F17] border border-slate-800 rounded-xl p-3">
+                <div class="text-[11px] text-slate-400 font-medium">Stationary Timer</div>
+                <div id="telemetry-stationary-timer" class="text-lg font-bold font-mono text-white mt-0.5">0s</div>
+              </div>
+            </div>
+
+            <!-- Bullet list beneath stats -->
+            <div class="space-y-1.5 text-[11px] text-slate-400 leading-relaxed pt-1">
+              <p class="flex items-start gap-1.5">
+                <span class="text-slate-500">•</span>
+                <span>Inactivity detection triggers after <strong class="text-slate-300" id="inactivity-trigger-label">15 seconds</strong> of stationary tracking.</span>
+              </p>
+              <p class="flex items-start gap-1.5">
+                <span class="text-slate-500">•</span>
+                <span>A 45-second confirmation dialog asks <em>&ldquo;Are you safe?&rdquo;</em> before contacting your guardian.</span>
+              </p>
+              <p class="flex items-start gap-1.5">
+                <span class="text-slate-500">•</span>
+                <span>Zero false alarms: you can cancel or reset at any time with one tap.</span>
+              </p>
             </div>
           </div>
+
         </div>
 
       </div>
+
     </section>
 
     <!-- ========================================================================= -->
@@ -1912,24 +1877,80 @@
     </div>
   </div>
 
-  <!-- 4. INACTIVITY WARNING & SOS MODAL -->
+  <!-- 4. INACTIVITY WARNING & CONFIRMATION MODAL -->
   <div id="inactivity-modal" class="hidden fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-surface-card rounded-2xl border-2 border-safety-crimson max-w-sm w-full p-6 space-y-4 shadow-2xl text-center">
-      <div class="w-14 h-14 rounded-full bg-rose-100 text-safety-crimson mx-auto flex items-center justify-center sos-pulse">
+    <div class="bg-[#111827] border border-slate-800 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center text-white">
+      <div class="w-14 h-14 rounded-full bg-rose-500/20 text-rose-400 mx-auto flex items-center justify-center border border-rose-500/30">
         <i data-lucide="alert-triangle" class="w-7 h-7"></i>
       </div>
       <div>
-        <h3 class="text-lg font-bold text-plum-950">Inactivity Check-In</h3>
-        <p class="text-xs text-ivory-700 mt-1">We detected no movement for over 3 minutes on your walk companion trail.</p>
+        <h3 class="text-xl font-bold text-white tracking-tight">Are you safe?</h3>
+        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+          Prolonged stationary inactivity detected along your active escort corridor. Please confirm your status before emergency escalation.
+        </p>
       </div>
-      <div class="text-3xl font-mono font-bold text-safety-crimson" id="inactivity-modal-seconds">30s</div>
-      <p class="text-xs text-ivory-600">If you do not confirm safety, an emergency alert with your live GPS location will be dispatched to your trusted contact.</p>
+      <div class="text-4xl font-mono font-extrabold text-[#F43F5E]" id="inactivity-modal-seconds">45s</div>
+      <p class="text-[11px] text-slate-400">
+        If you remain unresponsive, an automated SOS with your live coordinates will be dispatched to your registered guardian.
+      </p>
       <div class="space-y-2 pt-2">
-        <button type="button" onclick="confirmUserSafe()" class="w-full py-3 rounded-xl bg-safety-green hover:bg-emerald-700 text-white font-bold text-xs transition">
-          I Am Safe &amp; Okay
+        <button type="button" onclick="confirmUserSafe()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md flex items-center justify-center gap-1.5">
+          <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+          <span>I Am Safe &amp; Okay</span>
         </button>
-        <button type="button" onclick="sendWalkSOS()" class="w-full py-2.5 rounded-xl bg-safety-crimson hover:bg-safety-crimsonHover text-white font-bold text-xs transition">
-          Dispatch Emergency SOS Now
+        <button type="button" onclick="sendWalkSOS()" class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition shadow flex items-center justify-center gap-1.5">
+          <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          <span>Dispatch Emergency SOS Now</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4B. REGISTERED GUARDIAN EDIT MODAL -->
+  <div id="guardian-edit-modal" class="hidden fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#111827] border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative text-white">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="phone-call" class="w-5 h-5 text-teal-400"></i>
+          <h3 class="text-base font-bold text-white">Registered Emergency Guardian</h3>
+        </div>
+        <button type="button" onclick="closeGuardianEditModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Update the verified guardian who receives automated live GPS coordinates and telemetry if prolonged inactivity or distress is flagged.
+      </p>
+
+      <div class="space-y-3 pt-1">
+        <div>
+          <label for="guardian-name-input" class="text-xs font-medium text-slate-300">Guardian Name:</label>
+          <input type="text" id="guardian-name-input" value="Aahil" class="mt-1 w-full text-xs rounded-xl border border-slate-700 px-3 py-2.5 bg-[#0B0F17] text-white focus:outline-none focus:ring-2 focus:ring-teal-500" />
+        </div>
+        <div>
+          <label for="guardian-phone-input" class="text-xs font-medium text-slate-300">Phone Number:</label>
+          <input type="text" id="guardian-phone-input" value="7892548253" class="mt-1 w-full text-xs font-mono rounded-xl border border-slate-700 px-3 py-2.5 bg-[#0B0F17] text-white focus:outline-none focus:ring-2 focus:ring-teal-500" />
+        </div>
+        <div>
+          <label for="guardian-relation-input" class="text-xs font-medium text-slate-300">Relationship:</label>
+          <select id="guardian-relation-input" class="mt-1 w-full text-xs rounded-xl border border-slate-700 px-3 py-2.5 bg-[#0B0F17] text-white focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <option value="Guardian" selected>Guardian</option>
+            <option value="Mother">Mother</option>
+            <option value="Father">Father</option>
+            <option value="Sister">Sister</option>
+            <option value="Friend">Friend</option>
+            <option value="Partner">Partner</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-800">
+        <button type="button" onclick="closeGuardianEditModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
+          Cancel
+        </button>
+        <button type="button" onclick="saveGuardianContactFromModal()" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold transition shadow-md">
+          Save Guardian
         </button>
       </div>
     </div>
@@ -2540,9 +2561,9 @@
       adminLoggedIn: false,
       currentUser: null, // Logged in user session
       emergencyContact: {
-        name: 'Ananya Rao',
-        phone: '+91 98450 77210',
-        relation: 'Mother'
+        name: 'Aahil',
+        phone: '7892548253',
+        relation: 'Guardian'
       },
       walkSessionActive: false,
       inactivitySecondsRemaining: 180,
@@ -2575,7 +2596,12 @@
         }
         const savedContact = localStorage.getItem('safecity_contact_v3') || localStorage.getItem('astrasafe_contact_v3');
         if (savedContact) {
-          appState.emergencyContact = JSON.parse(savedContact);
+          try {
+            const parsedContact = JSON.parse(savedContact);
+            if (parsedContact && parsedContact.name && parsedContact.name !== 'Ananya Rao') {
+              appState.emergencyContact = parsedContact;
+            }
+          } catch (e) {}
         }
         const savedUser = localStorage.getItem('safecity_user_v3') || localStorage.getItem('astrasafe_user_v3');
         if (savedUser) {
@@ -4150,16 +4176,473 @@
       return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
+    // =========================================================================
+    // VIRTUAL WALK WITH ME — REAL-TIME GPS TRAVEL GUARDIAN & WATCHDOG
+    // =========================================================================
+    const virtualWalkState = {
+      active: false,
+      sessionSeconds: 0,
+      sessionInterval: null,
+      stationarySeconds: 0,
+      inactivityThreshold: 15, // Default 15s because demo mode is checked
+      demoMode: true,
+      
+      // Telemetry
+      velocityKmh: 0.0,
+      distanceWalkedKm: 0.00,
+      motionState: 'Stationary (Safe)', // or 'Walking / Moving'
+      
+      // GPS & Movement Tracking (Anti-Jitter)
+      anchorCoords: null, // [lat, lng] for displacement reference
+      currentCoords: null,
+      accuracy: 15,
+      watchId: null,
+      waypointCount: 0,
+      breadcrumbs: [],
+      
+      // 45-Second Safety Confirmation Dialog
+      confirmationActive: false,
+      confirmationCountdown: 45,
+      confirmationInterval: null
+    };
+
+    let walkCustomPinMarker = null;
+    let walkCorridorCircle = null;
+    let walkTrailPolyline = null;
+
+    function updateGuardianDisplayUI() {
+      const el = document.getElementById('walk-guardian-display');
+      const c = appState.emergencyContact || { name: 'Aahil', phone: '7892548253', relation: 'Guardian' };
+      if (el) {
+        el.textContent = `${c.name} (${c.relation || 'Guardian'}) • ${c.phone}`;
+      }
+      const ecName = document.getElementById('ec-name');
+      const ecPhone = document.getElementById('ec-phone');
+      const ecRel = document.getElementById('ec-relation');
+      if (ecName) ecName.value = c.name;
+      if (ecPhone) ecPhone.value = c.phone;
+      if (ecRel) ecRel.value = c.relation || 'Guardian';
+    }
+
+    function openGuardianEditModal() {
+      const modal = document.getElementById('guardian-edit-modal');
+      if (!modal) return;
+      const c = appState.emergencyContact || { name: 'Aahil', phone: '7892548253', relation: 'Guardian' };
+      const nameInput = document.getElementById('guardian-name-input');
+      const phoneInput = document.getElementById('guardian-phone-input');
+      const relInput = document.getElementById('guardian-relation-input');
+      if (nameInput) nameInput.value = c.name;
+      if (phoneInput) phoneInput.value = c.phone;
+      if (relInput) relInput.value = c.relation || 'Guardian';
+      modal.classList.remove('hidden');
+    }
+
+    function closeGuardianEditModal() {
+      const modal = document.getElementById('guardian-edit-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function saveGuardianContactFromModal() {
+      const name = document.getElementById('guardian-name-input')?.value.trim();
+      const phone = document.getElementById('guardian-phone-input')?.value.trim();
+      const relation = document.getElementById('guardian-relation-input')?.value || 'Guardian';
+      if (!name || !phone) {
+        showToast('Please provide both guardian name and phone number.', 'warning');
+        return;
+      }
+      appState.emergencyContact = { name, phone, relation };
+      persistState();
+      updateGuardianDisplayUI();
+      closeGuardianEditModal();
+      SoundController.play('success');
+      showToast('Emergency guardian contact updated successfully.', 'success');
+    }
+
+    function saveEmergencyContact() {
+      saveGuardianContactFromModal();
+    }
+
+    function toggleInactivityDemoMode(isChecked) {
+      virtualWalkState.demoMode = isChecked;
+      virtualWalkState.inactivityThreshold = isChecked ? 15 : 180;
+      const label = document.getElementById('inactivity-trigger-label');
+      if (label) {
+        label.textContent = isChecked ? '15 seconds' : '3 minutes';
+      }
+      showToast(
+        isChecked
+          ? 'Demo Inactivity Mode active: triggers check in 15 seconds.'
+          : 'Standard Inactivity Watchdog armed: triggers check in 3 minutes.',
+        'info'
+      );
+    }
+
+    function triggerSafetyConfirmationTest() {
+      SoundController.play('warning');
+      showSafetyConfirmationDialog();
+    }
+
+    function showSafetyConfirmationDialog() {
+      if (virtualWalkState.confirmationActive) return;
+      virtualWalkState.confirmationActive = true;
+      virtualWalkState.confirmationCountdown = 45;
+
+      const modal = document.getElementById('inactivity-modal');
+      const countEl = document.getElementById('inactivity-modal-seconds');
+      if (modal) modal.classList.remove('hidden');
+      if (countEl) countEl.textContent = '45s';
+
+      if (virtualWalkState.confirmationInterval) {
+        clearInterval(virtualWalkState.confirmationInterval);
+      }
+
+      virtualWalkState.confirmationInterval = setInterval(() => {
+        virtualWalkState.confirmationCountdown--;
+        if (countEl) countEl.textContent = virtualWalkState.confirmationCountdown + 's';
+
+        if (virtualWalkState.confirmationCountdown <= 0) {
+          clearInterval(virtualWalkState.confirmationInterval);
+          virtualWalkState.confirmationInterval = null;
+          virtualWalkState.confirmationActive = false;
+          if (modal) modal.classList.add('hidden');
+          // Dispatch emergency alert
+          sendWalkSOS();
+        }
+      }, 1000);
+    }
+
+    function confirmUserSafe() {
+      if (virtualWalkState.confirmationInterval) {
+        clearInterval(virtualWalkState.confirmationInterval);
+        virtualWalkState.confirmationInterval = null;
+      }
+      virtualWalkState.confirmationActive = false;
+      virtualWalkState.stationarySeconds = 0;
+
+      const statTimerEl = document.getElementById('telemetry-stationary-timer');
+      if (statTimerEl) statTimerEl.textContent = '0s';
+
+      const modal = document.getElementById('inactivity-modal');
+      if (modal) modal.classList.add('hidden');
+
+      SoundController.play('success');
+      showToast('Confirmed safe and okay! Escort resumed.', 'success');
+    }
+
+    function handleUserSafeCheckin() {
+      confirmUserSafe();
+    }
+
+    function handleVirtualWalkTick() {
+      if (!virtualWalkState.active) return;
+
+      // 1. Session Duration Clock (e.g. 00:41)
+      virtualWalkState.sessionSeconds++;
+      const mins = Math.floor(virtualWalkState.sessionSeconds / 60);
+      const secs = virtualWalkState.sessionSeconds % 60;
+      const clockEl = document.getElementById('safety-session-clock');
+      if (clockEl) {
+        clockEl.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+      }
+
+      // 2. Stationary Tracking Logic
+      if (virtualWalkState.motionState === 'Stationary (Safe)') {
+        virtualWalkState.stationarySeconds++;
+        const statTimerEl = document.getElementById('telemetry-stationary-timer');
+        if (statTimerEl) {
+          statTimerEl.textContent = virtualWalkState.stationarySeconds + 's';
+        }
+
+        // Trigger safety check dialog if inactivity threshold reached
+        if (
+          virtualWalkState.stationarySeconds >= virtualWalkState.inactivityThreshold &&
+          !virtualWalkState.confirmationActive
+        ) {
+          showSafetyConfirmationDialog();
+        }
+      } else {
+        virtualWalkState.stationarySeconds = 0;
+        const statTimerEl = document.getElementById('telemetry-stationary-timer');
+        if (statTimerEl) statTimerEl.textContent = '0s';
+      }
+    }
+
+    function updateWalkTelemetryUI() {
+      // Current Velocity
+      const velEl = document.getElementById('telemetry-velocity');
+      if (velEl) velEl.textContent = virtualWalkState.velocityKmh.toFixed(1) + ' km/h';
+
+      // Distance Walked
+      const distEl = document.getElementById('telemetry-distance');
+      if (distEl) distEl.textContent = virtualWalkState.distanceWalkedKm.toFixed(2) + ' km';
+
+      // Motion State
+      const motionEl = document.getElementById('telemetry-motion-state');
+      if (motionEl) {
+        motionEl.textContent = virtualWalkState.motionState;
+        if (virtualWalkState.motionState === 'Stationary (Safe)') {
+          motionEl.className = 'text-xs sm:text-sm font-bold text-emerald-400 mt-1 truncate';
+        } else {
+          motionEl.className = 'text-xs sm:text-sm font-bold text-sky-400 mt-1 truncate animate-pulse';
+        }
+      }
+
+      // Stationary Timer
+      const statTimerEl = document.getElementById('telemetry-stationary-timer');
+      if (statTimerEl) {
+        statTimerEl.textContent = virtualWalkState.stationarySeconds + 's';
+      }
+
+      // Top-Right Movement Badge on Map
+      const badgeText = document.getElementById('map-movement-status-text');
+      const badgeEl = document.getElementById('map-movement-badge');
+      if (badgeText && badgeEl) {
+        if (virtualWalkState.motionState === 'Walking / Moving') {
+          badgeText.textContent = 'MOVING ON CORRIDOR';
+          badgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-black/85 backdrop-blur-md text-emerald-400 border border-emerald-500/40 flex items-center gap-2 shadow-lg';
+        } else {
+          badgeText.textContent = 'STATIONARY • SAFE';
+          badgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-black/85 backdrop-blur-md text-emerald-400 border border-emerald-500/40 flex items-center gap-2 shadow-lg';
+        }
+      }
+
+      // Map Footer Trail Fixes
+      const trailEl = document.getElementById('map-trail-points-count');
+      if (trailEl) {
+        trailEl.textContent = `Live Trail: ${virtualWalkState.waypointCount} waypoint fixes`;
+      }
+    }
+
+    function toggleVirtualWalkSession() {
+      virtualWalkState.active = !virtualWalkState.active;
+      appState.walkSessionActive = virtualWalkState.active;
+
+      const btn = document.getElementById('btn-toggle-journey');
+      const btnText = document.getElementById('btn-toggle-journey-text');
+      const pill = document.getElementById('escort-active-pill');
+
+      if (virtualWalkState.active) {
+        SoundController.play('login');
+        if (btn) {
+          btn.className = 'w-full py-3 rounded-xl bg-[#F43F5E] hover:bg-rose-600 text-white font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg';
+        }
+        if (btnText) btnText.textContent = 'End Journey Safely';
+        if (pill) {
+          pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5';
+          pill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span id="escort-pill-text">ESCORT ACTIVE</span>';
+        }
+
+        // Start session ticking
+        if (virtualWalkState.sessionInterval) clearInterval(virtualWalkState.sessionInterval);
+        virtualWalkState.sessionInterval = setInterval(handleVirtualWalkTick, 1000);
+
+        // Start GPS tracking watch
+        startVirtualWalkGpsWatch();
+
+        showToast('Virtual Walk escort protocol activated. Registered guardian active.', 'success');
+      } else {
+        SoundController.play('logout');
+        if (btn) {
+          btn.className = 'w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg';
+        }
+        if (btnText) btnText.textContent = 'Start Live Walk Escort';
+        if (pill) {
+          pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-slate-800 text-slate-400 border border-slate-700 flex items-center gap-1.5';
+          pill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span><span id="escort-pill-text">ESCORT STANDBY</span>';
+        }
+
+        // Stop session ticking
+        if (virtualWalkState.sessionInterval) {
+          clearInterval(virtualWalkState.sessionInterval);
+          virtualWalkState.sessionInterval = null;
+        }
+
+        // Stop GPS watch
+        stopVirtualWalkGpsWatch();
+
+        // Close confirmation if open
+        if (virtualWalkState.confirmationActive) {
+          confirmUserSafe();
+        }
+
+        virtualWalkState.velocityKmh = 0.0;
+        virtualWalkState.motionState = 'Stationary (Safe)';
+        updateWalkTelemetryUI();
+
+        showToast('Virtual Walk escort journey ended safely.', 'info');
+      }
+    }
+
+    function toggleWalkBuddySession() {
+      toggleVirtualWalkSession();
+    }
+
+    function startCompanionDemo(opts = {}) {
+      if (!virtualWalkState.active) {
+        toggleVirtualWalkSession();
+      }
+      showToast('Virtual Walk escort active. Demo watchdog check armed (15s).', 'info');
+    }
+
+    function stopCompanionDemo() {
+      if (virtualWalkState.active) {
+        toggleVirtualWalkSession();
+      }
+    }
+
+    function appendCompanionTelemetry(msg) {
+      console.log('[SafeCity Escort Telemetry]', msg);
+    }
+
+    function startVirtualWalkGpsWatch() {
+      if (!navigator.geolocation) return;
+
+      if (virtualWalkState.watchId !== null) {
+        navigator.geolocation.clearWatch(virtualWalkState.watchId);
+        virtualWalkState.watchId = null;
+      }
+
+      virtualWalkState.watchId = navigator.geolocation.watchPosition(
+        (pos) => {
+          const lat = Number(pos.coords.latitude.toFixed(5));
+          const lng = Number(pos.coords.longitude.toFixed(5));
+          const acc = Math.round(pos.coords.accuracy || 15);
+          virtualWalkState.accuracy = acc;
+          virtualWalkState.currentCoords = [lat, lng];
+
+          // Map footer accuracy display
+          const accEl = document.getElementById('map-gps-lock-accuracy');
+          if (accEl) accEl.textContent = `GPS Satellite Lock: ±${acc}m accuracy`;
+
+          if (!virtualWalkState.anchorCoords) {
+            virtualWalkState.anchorCoords = [lat, lng];
+            renderVirtualWalkMarker([lat, lng]);
+            return;
+          }
+
+          // Anti-Jitter threshold: must move >= 20m (or accuracy) from anchor to be moving
+          const dist = calcDistanceMeters(
+            virtualWalkState.anchorCoords[0],
+            virtualWalkState.anchorCoords[1],
+            lat,
+            lng
+          );
+          const movementThreshold = Math.max(20, acc * 1.0);
+
+          if (dist >= movementThreshold) {
+            // Actual movement detected
+            virtualWalkState.motionState = 'Walking / Moving';
+            const speedKmh = pos.coords.speed && pos.coords.speed > 0.5 
+              ? Number((pos.coords.speed * 3.6).toFixed(1)) 
+              : 3.6;
+            virtualWalkState.velocityKmh = speedKmh;
+            virtualWalkState.distanceWalkedKm += Number((dist / 1000).toFixed(3));
+            virtualWalkState.anchorCoords = [lat, lng];
+            virtualWalkState.stationarySeconds = 0;
+            virtualWalkState.waypointCount++;
+
+            virtualWalkState.breadcrumbs.push([lat, lng]);
+            drawVirtualWalkBreadcrumbs();
+
+            if (walkLeafletMap) walkLeafletMap.panTo([lat, lng]);
+          } else {
+            // Stationary: GPS jitter discarded, user is still in same safe zone
+            virtualWalkState.motionState = 'Stationary (Safe)';
+            virtualWalkState.velocityKmh = 0.0;
+          }
+
+          renderVirtualWalkMarker([lat, lng]);
+          updateWalkTelemetryUI();
+        },
+        (err) => {
+          console.warn('Virtual walk GPS watch warning:', err);
+        },
+        { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 }
+      );
+    }
+
+    function stopVirtualWalkGpsWatch() {
+      if (virtualWalkState.watchId !== null && navigator.geolocation) {
+        navigator.geolocation.clearWatch(virtualWalkState.watchId);
+        virtualWalkState.watchId = null;
+      }
+    }
+
+    function renderVirtualWalkMarker(coords) {
+      if (!walkLeafletMap || !walkLeafletLayerGroup) return;
+
+      const escortPinHtml = `
+        <div style="position:relative;width:32px;height:42px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6));cursor:pointer;">
+          <svg width="32" height="42" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0C5.37258 0 0 5.37258 0 12C0 21 12 32 12 32C12 32 24 21 24 12C24 5.37258 18.6274 0 12 0Z" fill="#0284C7"/>
+            <circle cx="12" cy="12" r="5.5" fill="#FFFFFF"/>
+            <circle cx="12" cy="12" r="3.5" fill="#10B981"/>
+          </svg>
+        </div>
+      `;
+
+      const escortIcon = L.divIcon({
+        className: 'walk-escort-pin-icon',
+        html: escortPinHtml,
+        iconSize: [32, 42],
+        iconAnchor: [16, 40],
+        popupAnchor: [0, -36]
+      });
+
+      if (!walkCustomPinMarker) {
+        walkCustomPinMarker = L.marker(coords, { icon: escortIcon }).addTo(walkLeafletLayerGroup);
+        walkCustomPinMarker.bindPopup(`
+          <div style="font-family:sans-serif;font-size:12px;color:#0F172A;line-height:1.4;">
+            <strong style="color:#0284C7;">Live Citizen Escort Active</strong><br>
+            <span style="font-size:11px;color:#64748B;">Safe corridor radius active (±${virtualWalkState.accuracy}m)</span><br>
+            <span style="font-family:monospace;font-size:10px;color:#334155;">${coords[0].toFixed(5)}° N, ${coords[1].toFixed(5)}° E</span>
+          </div>
+        `);
+      } else {
+        walkCustomPinMarker.setLatLng(coords);
+      }
+
+      // Safe Corridor Circle (Cyan/Teal radius circle matching screenshot)
+      const corridorRadius = 35;
+      if (!walkCorridorCircle) {
+        walkCorridorCircle = L.circle(coords, {
+          radius: corridorRadius,
+          color: '#0D9488',
+          fillColor: '#14B8A6',
+          fillOpacity: 0.22,
+          weight: 2
+        }).addTo(walkLeafletLayerGroup);
+      } else {
+        walkCorridorCircle.setLatLng(coords);
+        walkCorridorCircle.setRadius(corridorRadius);
+      }
+    }
+
+    function drawVirtualWalkBreadcrumbs() {
+      if (!walkLeafletLayerGroup || virtualWalkState.breadcrumbs.length < 2) return;
+      if (walkTrailPolyline) {
+        walkTrailPolyline.setLatLngs(virtualWalkState.breadcrumbs);
+      } else {
+        walkTrailPolyline = L.polyline(virtualWalkState.breadcrumbs, {
+          color: '#0284C7',
+          weight: 4,
+          opacity: 0.85,
+          dashArray: '2, 4'
+        }).addTo(walkLeafletLayerGroup);
+      }
+    }
+
     function initWalkBuddyMap() {
       const container = document.getElementById('WalkBuddyMap');
       if (!container || !hasLeaflet()) return;
 
-      // Initialize map container if not yet created
+      updateGuardianDisplayUI();
+
       if (!walkLeafletMap) {
-        const initCenter = appState.companionCoords || appState.userCoords || BENGALURU_CENTER;
+        const initCenter = virtualWalkState.currentCoords || appState.userCoords || BENGALURU_CENTER;
         walkLeafletMap = L.map('WalkBuddyMap', {
           center: initCenter,
-          zoom: 15,
+          zoom: 16,
           zoomControl: true,
           scrollWheelZoom: false
         });
@@ -4167,319 +4650,84 @@
         walkLeafletLayerGroup = L.layerGroup().addTo(walkLeafletMap);
         attachMapResizeObserver('walk-buddy-map-wrapper', () => walkLeafletMap);
 
-        // Allow manual pin placement fallback if GPS is unavailable
+        // Click to set pin
         walkLeafletMap.on('click', (e) => {
           const lat = Number(e.latlng.lat.toFixed(5));
           const lng = Number(e.latlng.lng.toFixed(5));
-          appState.companionCoords = [lat, lng];
-          renderCompanionUserMarker([lat, lng], 'Manual Companion Pin (Map Click)');
-          renderCompanionAccuracyCircle([lat, lng], 15);
-          updateCompanionStatusBadge('Manual Pin Active', 'emerald');
-          appendCompanionTelemetry('Manual companion start pin dropped at ' + lat + '° N, ' + lng + '° E.');
-          showToast('Companion pin set to selected map location.', 'success');
+          virtualWalkState.currentCoords = [lat, lng];
+          virtualWalkState.anchorCoords = [lat, lng];
+          renderVirtualWalkMarker([lat, lng]);
+          showToast('Escort pin set to selected map location.', 'success');
         });
       } else {
         walkLeafletMap.invalidateSize();
       }
 
-      // If already have coordinates, render marker
-      if (appState.companionCoords) {
-        renderCompanionUserMarker(appState.companionCoords, 'Current Companion Location');
-        if (appState.companionAccuracy) {
-          renderCompanionAccuracyCircle(appState.companionCoords, appState.companionAccuracy);
-        }
-        walkLeafletMap.setView(appState.companionCoords, 15);
+      // Initial GPS acquisition
+      if (virtualWalkState.currentCoords) {
+        renderVirtualWalkMarker(virtualWalkState.currentCoords);
+        walkLeafletMap.setView(virtualWalkState.currentCoords, 16);
       } else if (navigator.geolocation) {
-        // Request actual device GPS position
-        updateCompanionStatusBadge('Acquiring GPS...', 'amber');
-        appendCompanionTelemetry('Requesting high-accuracy device GPS position for Companion escort...');
-
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             const lat = Number(pos.coords.latitude.toFixed(5));
             const lng = Number(pos.coords.longitude.toFixed(5));
-            const acc = Math.round(pos.coords.accuracy);
+            const acc = Math.round(pos.coords.accuracy || 15);
+            virtualWalkState.accuracy = acc;
+            virtualWalkState.currentCoords = [lat, lng];
+            virtualWalkState.anchorCoords = [lat, lng];
+            virtualWalkState.breadcrumbs = [[lat, lng]];
 
-            appState.companionCoords = [lat, lng];
-            appState.companionAccuracy = acc;
-            appState.lastMotionCoords = [lat, lng];
-            if (!appState.companionBreadcrumbs || appState.companionBreadcrumbs.length === 0) {
-              appState.companionBreadcrumbs = [[lat, lng]];
-            }
+            const accEl = document.getElementById('map-gps-lock-accuracy');
+            if (accEl) accEl.textContent = `GPS Satellite Lock: ±${acc}m accuracy`;
 
-            renderCompanionUserMarker([lat, lng], 'Live Device Location (±' + acc + 'm)');
-            renderCompanionAccuracyCircle([lat, lng], acc);
+            renderVirtualWalkMarker([lat, lng]);
             walkLeafletMap.setView([lat, lng], 16);
-            updateCompanionStatusBadge('GPS Active (±' + acc + 'm)', 'emerald');
-            appendCompanionTelemetry('GPS Lock acquired at ' + lat + '° N, ' + lng + '° E (±' + acc + 'm accuracy circle). Ready.');
-            showToast('Companion centered on your real GPS location.', 'success');
+
+            // Auto-start escort session if not yet active to match screenshot
+            if (!virtualWalkState.active) {
+              toggleVirtualWalkSession();
+            }
           },
           (err) => {
-            console.warn('Companion GPS acquisition warning:', err);
-            updateCompanionStatusBadge('GPS Unavailable', 'rose');
-            appendCompanionTelemetry('GPS unavailable (' + (err.message || 'code ' + err.code) + '). Click on the map to set companion location manually.');
-            showToast('Device location unavailable. Click on map to place companion start pin.', 'warning');
+            console.warn('GPS position error:', err);
+            const fallback = BENGALURU_CENTER;
+            virtualWalkState.currentCoords = fallback;
+            virtualWalkState.anchorCoords = fallback;
+            renderVirtualWalkMarker(fallback);
+            walkLeafletMap.setView(fallback, 15);
+
+            if (!virtualWalkState.active) {
+              toggleVirtualWalkSession();
+            }
           },
           { enableHighAccuracy: true, timeout: 8000 }
         );
       } else {
-        updateCompanionStatusBadge('GPS Unsupported', 'rose');
-        appendCompanionTelemetry('Browser does not support geolocation. Click map to set pin.');
-      }
-    }
+        const fallback = BENGALURU_CENTER;
+        virtualWalkState.currentCoords = fallback;
+        virtualWalkState.anchorCoords = fallback;
+        renderVirtualWalkMarker(fallback);
+        walkLeafletMap.setView(fallback, 15);
 
-    function renderCompanionUserMarker(coords, label) {
-      if (!walkLeafletLayerGroup) return;
-
-      if (!walkCompanionMarker) {
-        const walkerIcon = L.divIcon({
-          className: 'walker-pin',
-          html: '<div style="width:32px;height:32px;border-radius:9999px;background:#15803D;border:3px solid #FFFFFF;box-shadow:0 0 14px rgba(21,128,61,0.8);display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:16px;">🚶‍♀️</div>',
-          iconSize: [32, 32],
-          iconAnchor: [16, 16]
-        });
-        walkCompanionMarker = L.marker(coords, { icon: walkerIcon }).addTo(walkLeafletLayerGroup);
-      } else {
-        walkCompanionMarker.setLatLng(coords);
-      }
-
-      walkCompanionMarker.bindPopup('<b>' + label + '</b><br><span class="font-mono text-xs">' + coords[0].toFixed(5) + '° N, ' + coords[1].toFixed(5) + '° E</span>');
-    }
-
-    function renderCompanionAccuracyCircle(coords, accuracyMeters) {
-      if (!walkLeafletLayerGroup) return;
-      const radius = Math.max(accuracyMeters || 15, 10);
-      if (!walkAccuracyCircle) {
-        walkAccuracyCircle = L.circle(coords, {
-          radius: radius,
-          color: '#15803D',
-          fillColor: '#22C55E',
-          fillOpacity: 0.15,
-          weight: 1.5,
-          dashArray: '3, 4'
-        }).addTo(walkLeafletLayerGroup);
-      } else {
-        walkAccuracyCircle.setLatLng(coords);
-        walkAccuracyCircle.setRadius(radius);
-      }
-    }
-
-    function drawCompanionBreadcrumbs() {
-      if (!walkLeafletLayerGroup || !appState.companionBreadcrumbs || appState.companionBreadcrumbs.length < 2) return;
-
-      if (walkBreadcrumbsPolyline) {
-        walkBreadcrumbsPolyline.setLatLngs(appState.companionBreadcrumbs);
-      } else {
-        walkBreadcrumbsPolyline = L.polyline(appState.companionBreadcrumbs, {
-          color: '#15803D',
-          weight: 5,
-          opacity: 0.9
-        }).addTo(walkLeafletLayerGroup);
-      }
-    }
-
-    function updateCompanionStatusBadge(text, color) {
-      const badge = document.getElementById('companion-gps-status-badge');
-      if (!badge) return;
-      badge.textContent = text;
-      if (color === 'emerald') {
-        badge.className = 'text-xs font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200';
-      } else if (color === 'amber') {
-        badge.className = 'text-xs font-mono px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200';
-      } else {
-        badge.className = 'text-xs font-mono px-2 py-0.5 rounded bg-rose-50 text-rose-800 border border-rose-200';
-      }
-    }
-
-    function appendCompanionTelemetry(msg) {
-      const log = document.getElementById('walk-telemetry-log');
-      if (!log) return;
-      const item = document.createElement('div');
-      item.textContent = new Date().toLocaleTimeString() + ' — ' + msg;
-      log.appendChild(item);
-      log.scrollTop = log.scrollHeight;
-    }
-
-    // Toggle Live Escort Session with real watchPosition
-    function toggleWalkBuddySession() {
-      appState.walkSessionActive = !appState.walkSessionActive;
-      const btn = document.getElementById('start-walk-btn');
-      const statusBadge = document.getElementById('walk-escort-status');
-
-      if (appState.walkSessionActive) {
-        SoundController.play('login');
-        btn.className = 'w-full py-3 rounded-xl bg-safety-crimson hover:bg-safety-crimsonHover text-white font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow';
-        document.getElementById('start-walk-label').textContent = 'End Live Escort Session';
-        if (statusBadge) {
-          statusBadge.textContent = 'Active Guard';
-          statusBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500 text-white font-bold';
+        if (!virtualWalkState.active) {
+          toggleVirtualWalkSession();
         }
-
-        // Start real GPS watch tracking
-        if (navigator.geolocation) {
-          appState.companionWatchId = navigator.geolocation.watchPosition(
-            (pos) => {
-              const lat = Number(pos.coords.latitude.toFixed(5));
-              const lng = Number(pos.coords.longitude.toFixed(5));
-              const acc = Math.round(pos.coords.accuracy);
-
-              appState.companionCoords = [lat, lng];
-              appState.companionAccuracy = acc;
-              if (!appState.companionBreadcrumbs) appState.companionBreadcrumbs = [];
-              appState.companionBreadcrumbs.push([lat, lng]);
-
-              renderCompanionUserMarker([lat, lng], 'Live Companion Escort (±' + acc + 'm)');
-              renderCompanionAccuracyCircle([lat, lng], acc);
-              drawCompanionBreadcrumbs();
-              if (walkLeafletMap) walkLeafletMap.panTo([lat, lng]);
-
-              // Inactivity Watchdog Movement Displacement Check (>15m)
-              let displacement = 0;
-              if (appState.lastMotionCoords) {
-                displacement = calcDistanceMeters(appState.lastMotionCoords[0], appState.lastMotionCoords[1], lat, lng);
-              } else {
-                appState.lastMotionCoords = [lat, lng];
-              }
-
-              if (displacement >= 15) {
-                appState.lastMotionCoords = [lat, lng];
-                resetInactivityTimer();
-                appendCompanionTelemetry('Significant displacement detected (' + Math.round(displacement) + 'm). Inactivity timer reset to 3:00.');
-                SoundController.play('step');
-              } else {
-                appendCompanionTelemetry('GPS Lock: ' + lat + '° N, ' + lng + '° E (±' + acc + 'm). Stationary drift (' + Math.round(displacement) + 'm < 15m threshold).');
-              }
-            },
-            (err) => {
-              console.warn('Companion watch error:', err);
-              appendCompanionTelemetry('GPS signal warning: ' + err.message);
-            },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 3000 }
-          );
-        }
-
-        // Start inactivity watchdog timer (180s)
-        appState.inactivitySecondsRemaining = 180;
-        clearInterval(appState.inactivityInterval);
-        appState.inactivityInterval = setInterval(handleWalkTimerTick, 1000);
-        appendCompanionTelemetry('Live Companion Escort active with trusted contact ' + appState.emergencyContact.name + '. Watchdog armed.');
-        showToast('Walk companion session started with trusted contact ' + appState.emergencyContact.name, 'success');
-      } else {
-        SoundController.play('logout');
-        btn.className = 'w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow';
-        document.getElementById('start-walk-label').textContent = 'Start Live Escort Session';
-        if (statusBadge) {
-          statusBadge.textContent = 'Standby';
-          statusBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-plum-800 text-rose-200 border border-plum-700';
-        }
-
-        // Stop GPS watch tracking cleanly
-        if (appState.companionWatchId !== null && navigator.geolocation) {
-          navigator.geolocation.clearWatch(appState.companionWatchId);
-          appState.companionWatchId = null;
-        }
-
-        if (walkAccuracyCircle && walkLeafletLayerGroup) {
-          walkLeafletLayerGroup.removeLayer(walkAccuracyCircle);
-          walkAccuracyCircle = null;
-        }
-
-        clearInterval(appState.inactivityInterval);
-        appState.inactivitySecondsRemaining = 180;
-        updateWalkTimerUI();
-        appendCompanionTelemetry('Live Companion Escort session ended. Watchdog disarmed.');
-        showToast('Walk companion session ended.', 'info');
-      }
-    }
-
-    function handleWalkTimerTick() {
-      if (!appState.walkSessionActive) return;
-      appState.inactivitySecondsRemaining--;
-      updateWalkTimerUI();
-
-      // Warning tone at 30 seconds
-      if (appState.inactivitySecondsRemaining === 30) {
-        SoundController.play('warning');
-        appendCompanionTelemetry('WARNING: 30 seconds of commuter inactivity. Please confirm you are safe.');
-        showToast('Watchdog check-in: 30 seconds remaining! Tap "I\'m Safe" to verify.', 'warning');
       }
 
-      if (appState.inactivitySecondsRemaining <= 0) {
-        clearInterval(appState.inactivityInterval);
-        document.getElementById('inactivity-modal')?.classList.remove('hidden');
-        const secEl = document.getElementById('inactivity-modal-seconds');
-        if (secEl) secEl.textContent = '30s';
-        SoundController.play('warning');
-      }
-    }
-
-    function updateWalkTimerUI() {
-      const mins = Math.floor(appState.inactivitySecondsRemaining / 60);
-      const secs = appState.inactivitySecondsRemaining % 60;
-      const el = document.getElementById('walk-countdown-label');
-      if (el) el.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
-    }
-
-    function resetInactivityTimer() {
-      appState.inactivitySecondsRemaining = 180;
-      updateWalkTimerUI();
-    }
-
-    function handleUserSafeCheckin() {
-      resetInactivityTimer();
-      SoundController.play('step');
-      appendCompanionTelemetry('Commuter confirmed "I\'m Safe". Watchdog timer reset to 3:00.');
-      showToast('Checked in safe! Watchdog timer reset to 3:00.', 'success');
-    }
-
-    function confirmUserSafe() {
-      document.getElementById('inactivity-modal')?.classList.add('hidden');
-      resetInactivityTimer();
-      appState.inactivityInterval = setInterval(handleWalkTimerTick, 1000);
-      SoundController.play('success');
-      showToast("Checked in safe! Watchdog timer reset to 3:00.", 'success');
-    }
-
-    function saveEmergencyContact() {
-      const name = document.getElementById('ec-name')?.value.trim();
-      const phone = document.getElementById('ec-phone')?.value.trim();
-      const relation = document.getElementById('ec-relation')?.value;
-      if (!name || !phone) {
-        showToast('Please provide both contact name and phone number.', 'warning');
-        return;
-      }
-      appState.emergencyContact = { name, phone, relation };
-      persistState();
-      showToast('Emergency contact saved successfully.', 'success');
+      updateWalkTelemetryUI();
     }
 
     async function sendWalkSOS() {
-      const contact = appState.emergencyContact;
-      const coords = appState.companionCoords || appState.userCoords;
-
-      if (!coords) {
-        showToast('Acquiring your location for distress alert...', 'warning');
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (pos) => {
-              appState.companionCoords = [pos.coords.latitude, pos.coords.longitude];
-              sendWalkSOS();
-            },
-            () => {
-              showToast('Location permission needed to append GPS link to distress message.', 'danger');
-            }
-          );
-        }
-        return;
-      }
+      const contact = appState.emergencyContact || { name: 'Aahil', phone: '7892548253', relation: 'Guardian' };
+      const coords = virtualWalkState.currentCoords || appState.userCoords || BENGALURU_CENTER;
 
       SoundController.play('warning');
       const mapsUrl = 'https://maps.google.com/?q=' + coords[0].toFixed(5) + ',' + coords[1].toFixed(5);
-      const msg = 'EMERGENCY ALERT from SafeCity Walk Companion: I need immediate assistance. My live GPS location is ' + mapsUrl;
+      const msg = 'EMERGENCY ALERT from SafeCity Virtual Walk Escort: I need immediate assistance. My live GPS location is ' + mapsUrl;
       const cleanPhone = String(contact.phone).replace(/[^0-9]/g, '');
       const waUrl = 'https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(msg);
 
-      // Async backend logging
       try {
         fetch(`${API_BASE_URL}/api/walk/sos`, {
           method: 'POST',
@@ -4489,7 +4737,7 @@
             user_name: appState.currentUser ? appState.currentUser.name : 'SafeCity Commuter',
             latitude: coords[0],
             longitude: coords[1],
-            reason: 'Emergency Companion SOS',
+            reason: 'Virtual Walk Inactivity Alert',
             contact_name: contact.name,
             contact_phone: contact.phone
           })
@@ -4497,559 +4745,11 @@
       } catch (e) {}
 
       window.open(waUrl, '_blank');
-      appendCompanionTelemetry('EMERGENCY SOS triggered to trusted contact ' + contact.name + ' (' + contact.phone + '). Live GPS shared.');
       showToast('Emergency distress alert prepared for ' + contact.name + ' (' + contact.phone + ')', 'danger');
     }
 
     function triggerGlobalSOS() {
       openEmergencyModal('112');
-    }
-
-    // -------------------------------------------------------------------------
-    // 30-SECOND INTERACTIVE COMPANION DEMO (LOCATION-AWARE & REALISTIC)
-    // -------------------------------------------------------------------------
-    const DEMO_SIMULATED_WAYPOINTS = [
-      { lat: 12.9738, lng: 77.6074, name: 'Church Street & Brigade Rd Entrance', acc: 14 },
-      { lat: 12.9745, lng: 77.6080, name: 'Church Street Pedestrian Walkway (Well Lit)', acc: 11 },
-      { lat: 12.9754, lng: 77.6088, name: 'Passing Safe Haven: 24/7 Pharmacy Hub', acc: 9 },
-      { lat: 12.9763, lng: 77.6096, name: 'Museum Road Crossing / Commercial Corridor', acc: 10 },
-      { lat: 12.9772, lng: 77.6104, name: 'Cubbon Park Metro Approach (Safe Corridor)', acc: 8 },
-      { lat: 12.9780, lng: 77.6112, name: 'Destination Reached: Cubbon Park Station', acc: 7 }
-    ];
-
-    const demoSessionState = {
-      active: false,
-      interval: null,
-      watchId: null,
-      secondsLeft: 30,
-      isLiveGps: false,
-      mode: 'live', // 'live', 'manual', or 'simulated'
-      startCoords: null,
-      currentCoords: null,
-      accuracy: 15,
-      resolvedAddress: null,
-      breadcrumbs: [],
-      realDistanceMoved: 0,
-      originalCompanionState: null
-    };
-
-    function maskContactDetails(name, phone) {
-      let maskedName = 'Trusted Contact';
-      if (name && name.trim()) {
-        const parts = name.trim().split(/\s+/);
-        if (parts.length > 1) {
-          maskedName = parts[0] + ' ' + parts[1][0] + '***';
-        } else if (name.length > 2) {
-          maskedName = name.slice(0, 2) + '***';
-        } else {
-          maskedName = name + '***';
-        }
-      }
-
-      let maskedPhone = '+91 ***** *****';
-      if (phone && phone.trim()) {
-        const clean = phone.trim();
-        if (clean.length > 4) {
-          const lastDigits = clean.slice(-3);
-          maskedPhone = clean.slice(0, 3) + ' ***** **' + lastDigits;
-        }
-      }
-
-      return { maskedName, maskedPhone };
-    }
-
-    async function fetchReverseGeocode(lat, lng) {
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 2800);
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`, {
-          signal: controller.signal,
-          headers: { 'Accept': 'application/json' }
-        });
-        clearTimeout(timeout);
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.address) {
-            const parts = [
-              data.address.road || data.address.pedestrian || data.address.suburb || data.address.residential,
-              data.address.neighbourhood || data.address.suburb || data.address.city_district || data.address.city || data.address.town
-            ].filter(Boolean);
-            const unique = [...new Set(parts)];
-            if (unique.length > 0) return unique.join(', ');
-            if (data.display_name) return data.display_name.split(',').slice(0, 2).join(', ');
-          }
-        }
-      } catch (e) {
-        // Non-blocking fallback
-      }
-      return null;
-    }
-
-    function promptManualPinForDemo() {
-      showToast('Click anywhere on the Walk Companion map to set your demo start point.', 'info');
-      const fallbackActions = document.getElementById('demo-fallback-actions');
-      if (fallbackActions) fallbackActions.classList.add('hidden');
-
-      const narrative = document.getElementById('demo-step-narrative');
-      if (narrative) narrative.textContent = 'Please tap anywhere on the map to pin your custom location for this demonstration...';
-
-      const onMapClickForDemo = (e) => {
-        walkLeafletMap.off('click', onMapClickForDemo);
-        const lat = Number(e.latlng.lat.toFixed(5));
-        const lng = Number(e.latlng.lng.toFixed(5));
-        startCompanionDemo({ manualCoords: [lat, lng] });
-      };
-      walkLeafletMap.once('click', onMapClickForDemo);
-    }
-
-    function startCompanionDemo(options = {}) {
-      // If a real walk escort session is active, stop it cleanly first
-      if (appState.walkSessionActive) {
-        toggleWalkBuddySession();
-      }
-
-      // Clear any prior demo timers or location watchers
-      if (demoSessionState.interval) {
-        clearInterval(demoSessionState.interval);
-        demoSessionState.interval = null;
-      }
-      if (appState.companionDemoInterval) {
-        clearInterval(appState.companionDemoInterval);
-        appState.companionDemoInterval = null;
-      }
-      if (demoSessionState.watchId && navigator.geolocation) {
-        navigator.geolocation.clearWatch(demoSessionState.watchId);
-        demoSessionState.watchId = null;
-      }
-
-      // Preserve original companion state so normal escort mode is restored on exit
-      demoSessionState.originalCompanionState = {
-        coords: appState.companionCoords ? [...appState.companionCoords] : null,
-        accuracy: appState.companionAccuracy,
-        breadcrumbs: appState.companionBreadcrumbs ? [...appState.companionBreadcrumbs] : [],
-        timer: appState.inactivitySecondsRemaining
-      };
-
-      initWalkBuddyMap();
-      if (!walkLeafletMap) {
-        showToast('Initializing map engine...', 'info');
-        return;
-      }
-
-      document.getElementById('companion-demo-promo')?.classList.add('hidden');
-      document.getElementById('companion-demo-active')?.classList.remove('hidden');
-      document.getElementById('demo-complete-actions')?.classList.add('hidden');
-      document.getElementById('demo-fallback-actions')?.classList.add('hidden');
-
-      // 1. Check if user explicitly selected manual coords
-      if (options.manualCoords && Array.isArray(options.manualCoords)) {
-        initializeDemoWithCoords(options.manualCoords[0], options.manualCoords[1], 15, 'manual');
-        return;
-      }
-
-      // 2. Check if user requested simulated fallback
-      if (options.forceSimulated) {
-        const wp = DEMO_SIMULATED_WAYPOINTS[0];
-        initializeDemoWithCoords(wp.lat, wp.lng, wp.acc, 'simulated');
-        return;
-      }
-
-      // 3. Primary Path: Detect actual current GPS coordinates
-      const stepBadge = document.getElementById('demo-step-badge');
-      const stepTitle = document.getElementById('demo-step-title');
-      const stepNarrative = document.getElementById('demo-step-narrative');
-      const progressBar = document.getElementById('demo-progress-bar');
-      const timerLabel = document.getElementById('demo-timer-countdown');
-
-      if (stepBadge) stepBadge.textContent = 'Acquiring GPS...';
-      if (stepTitle) stepTitle.textContent = '1. Real-Time Device GPS Acquisition & Locking';
-      if (stepNarrative) stepNarrative.textContent = 'Requesting browser location permission to detect your actual current GPS position...';
-      if (progressBar) progressBar.style.width = '0%';
-      if (timerLabel) timerLabel.textContent = '30s remaining';
-
-      if (!navigator.geolocation) {
-        handleDemoGpsError({ message: 'Geolocation is not supported by your browser.' });
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = Number(pos.coords.latitude.toFixed(5));
-          const lng = Number(pos.coords.longitude.toFixed(5));
-          const acc = Math.round(pos.coords.accuracy || 12);
-          initializeDemoWithCoords(lat, lng, acc, 'live');
-        },
-        (err) => {
-          console.warn('Demo GPS acquisition error:', err);
-          handleDemoGpsError(err);
-        },
-        { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-      );
-    }
-
-    function initializeDemoWithCoords(lat, lng, acc, mode) {
-      demoSessionState.active = true;
-      demoSessionState.mode = mode;
-      demoSessionState.isLiveGps = (mode === 'live');
-      demoSessionState.startCoords = [lat, lng];
-      demoSessionState.currentCoords = [lat, lng];
-      demoSessionState.accuracy = acc;
-      demoSessionState.breadcrumbs = [[lat, lng]];
-      demoSessionState.resolvedAddress = null;
-      demoSessionState.secondsLeft = 30;
-      demoSessionState.realDistanceMoved = 0;
-
-      appState.companionCoords = [lat, lng];
-      appState.companionAccuracy = acc;
-      appState.companionBreadcrumbs = [[lat, lng]];
-      appState.companionDemoActive = true;
-      appState.companionDemoSecondsLeft = 30;
-
-      let markerLabel = 'Your Current Location: ' + (demoSessionState.resolvedAddress || `${lat}° N, ${lng}° E`) + ' (Stationary)';
-      if (mode === 'manual') markerLabel = 'Selected Custom Start Pin (±' + acc + 'm)';
-      if (mode === 'simulated') markerLabel = '[SIMULATED DEMO] Church Street Corridor (±' + acc + 'm)';
-
-      renderCompanionUserMarker([lat, lng], markerLabel);
-      renderCompanionAccuracyCircle([lat, lng], acc);
-      walkLeafletMap?.setView([lat, lng], 16);
-
-      SoundController.play('step');
-
-      if (mode === 'live') {
-        appendCompanionTelemetry(`[DEMO LIVE GPS] Exact position acquired: ${lat}° N, ${lng}° E (±${acc}m accuracy circle). Status: Stationary.`);
-        // Reverse geocode asynchronously
-        fetchReverseGeocode(lat, lng).then(addr => {
-          if (addr && demoSessionState.active) {
-            demoSessionState.resolvedAddress = addr;
-            renderCompanionUserMarker([lat, lng], `Your Current Location: ${addr} (Stationary • 0m moved)`);
-            appendCompanionTelemetry(`[DEMO LIVE GPS] Locality identified: ${addr}.`);
-            const elapsed = 30 - demoSessionState.secondsLeft;
-            if (elapsed < 10) updateDemoUI(elapsed);
-          }
-        });
-
-        // Set up real GPS watch with jitter filtering to eliminate false movement
-        if (navigator.geolocation && !demoSessionState.watchId) {
-          demoSessionState.watchId = navigator.geolocation.watchPosition(
-            (pos) => {
-              if (!demoSessionState.active || !demoSessionState.isLiveGps) return;
-              const nLat = Number(pos.coords.latitude.toFixed(5));
-              const nLng = Number(pos.coords.longitude.toFixed(5));
-              const nAcc = Math.round(pos.coords.accuracy || 10);
-              
-              // Filter indoor/stationary GPS jitter: consumer GPS naturally drifts ±10-20m while sitting still
-              const distFromStart = calcDistanceMeters(
-                demoSessionState.startCoords[0],
-                demoSessionState.startCoords[1],
-                nLat,
-                nLng
-              );
-
-              // Minimum physical relocation threshold (must exceed accuracy radius or 25 meters)
-              const motionThreshold = Math.max(nAcc * 1.25, 25);
-
-              if (distFromStart >= motionThreshold) {
-                // Genuine physical movement detected
-                demoSessionState.realDistanceMoved = Math.round(distFromStart);
-                demoSessionState.currentCoords = [nLat, nLng];
-                demoSessionState.accuracy = nAcc;
-                if (!demoSessionState.breadcrumbs.some(pt => pt[0] === nLat && pt[1] === nLng)) {
-                  demoSessionState.breadcrumbs.push([nLat, nLng]);
-                }
-                appState.companionCoords = [nLat, nLng];
-                appState.companionAccuracy = nAcc;
-                appState.companionBreadcrumbs = demoSessionState.breadcrumbs;
-
-                const locText = demoSessionState.resolvedAddress || `${nLat}° N, ${nLng}° E`;
-                renderCompanionUserMarker([nLat, nLng], `Live Motion Detected: ${locText} (Moved ${demoSessionState.realDistanceMoved}m)`);
-                renderCompanionAccuracyCircle([nLat, nLng], nAcc);
-                drawCompanionBreadcrumbs();
-                appendCompanionTelemetry(`[DEMO LIVE GPS] Genuine physical movement detected: +${demoSessionState.realDistanceMoved}m from start.`);
-              } else {
-                // Device is stationary - keep anchored at startCoords and do not accumulate false motion
-                demoSessionState.realDistanceMoved = 0;
-                demoSessionState.accuracy = nAcc;
-                renderCompanionAccuracyCircle(demoSessionState.startCoords, nAcc);
-                const locText = demoSessionState.resolvedAddress || `${demoSessionState.startCoords[0]}° N, ${demoSessionState.startCoords[1]}° E`;
-                renderCompanionUserMarker(demoSessionState.startCoords, `Your Current Location: ${locText} (Stationary • 0m moved)`);
-              }
-            },
-            (err) => console.warn('Demo live watch notice:', err),
-            { enableHighAccuracy: true, maximumAge: 2000 }
-          );
-        }
-      } else if (mode === 'manual') {
-        appendCompanionTelemetry(`[DEMO MANUAL] Custom location pinned: ${lat}° N, ${lng}° E.`);
-      } else {
-        appendCompanionTelemetry(`[SIMULATED DEMO] Running illustrative demonstration along Bengaluru Church Street corridor.`);
-      }
-
-      updateDemoUI(0);
-
-      // Start 30s countdown loop
-      demoSessionState.interval = setInterval(() => {
-        if (!demoSessionState.active) {
-          clearInterval(demoSessionState.interval);
-          return;
-        }
-
-        demoSessionState.secondsLeft--;
-        appState.companionDemoSecondsLeft = demoSessionState.secondsLeft;
-        const elapsed = 30 - demoSessionState.secondsLeft;
-        updateDemoUI(elapsed);
-
-        if (demoSessionState.secondsLeft <= 0) {
-          clearInterval(demoSessionState.interval);
-          finishCompanionDemo();
-        }
-      }, 1000);
-    }
-
-    function handleDemoGpsError(err) {
-      const stepBadge = document.getElementById('demo-step-badge');
-      const stepTitle = document.getElementById('demo-step-title');
-      const stepNarrative = document.getElementById('demo-step-narrative');
-      const fallbackActions = document.getElementById('demo-fallback-actions');
-
-      if (stepBadge) stepBadge.textContent = 'GPS Notice';
-      if (stepTitle) stepTitle.textContent = 'Location Permission / GPS Required';
-      if (stepNarrative) {
-        stepNarrative.textContent = 'SafeCity could not retrieve your exact GPS (' + (err.message || 'Permission denied or timed out') + '). To experience the demonstration, select an option below:';
-      }
-
-      if (fallbackActions) {
-        fallbackActions.classList.remove('hidden');
-        fallbackActions.innerHTML = `
-          <button type="button" onclick="startCompanionDemo({ forceSimulated: true })" class="px-3 py-1.5 rounded-lg bg-plum-800 hover:bg-plum-700 text-white font-semibold text-xs transition flex items-center gap-1.5 shadow-sm">
-            <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
-            <span>Run Simulated Corridor Demo</span>
-          </button>
-          <button type="button" onclick="promptManualPinForDemo()" class="px-3 py-1.5 rounded-lg bg-plum-700 hover:bg-plum-600 text-ivory-100 font-semibold text-xs transition flex items-center gap-1.5 shadow-sm">
-            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-            <span>Click Map to Pick Start Location</span>
-          </button>
-        `;
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-      }
-
-      appendCompanionTelemetry('[DEMO] Location unavailable (' + (err.message || 'denied') + '). Simulated demo or manual map pin offered.');
-      showToast('Live GPS unavailable. You can run the simulated demo or pin a location.', 'warning');
-    }
-
-    function updateDemoUI(elapsed) {
-      const progress = Math.min(Math.round((elapsed / 30) * 100), 100);
-      const progressBar = document.getElementById('demo-progress-bar');
-      const timerLabel = document.getElementById('demo-timer-countdown');
-      const stepBadge = document.getElementById('demo-step-badge');
-      const stepTitle = document.getElementById('demo-step-title');
-      const stepNarrative = document.getElementById('demo-step-narrative');
-
-      if (progressBar) progressBar.style.width = progress + '%';
-      if (timerLabel) timerLabel.textContent = (30 - elapsed) + 's remaining';
-
-      const isLive = (demoSessionState.mode === 'live');
-      const isManual = (demoSessionState.mode === 'manual');
-      const lat = demoSessionState.startCoords ? demoSessionState.startCoords[0] : 12.9738;
-      const lng = demoSessionState.startCoords ? demoSessionState.startCoords[1] : 77.6074;
-      const acc = demoSessionState.accuracy || 12;
-      const locLabel = demoSessionState.resolvedAddress
-        ? `${demoSessionState.resolvedAddress} (${lat.toFixed(4)}° N, ${lng.toFixed(4)}° E)`
-        : `${lat.toFixed(4)}° N, ${lng.toFixed(4)}° E`;
-
-      const modePrefix = isLive ? '' : (isManual ? '[MANUAL PIN] ' : '[SIMULATED DEMO] ');
-
-      const { maskedName, maskedPhone } = maskContactDetails(
-        appState.emergencyContact.name,
-        appState.emergencyContact.phone
-      );
-
-      if (elapsed < 5) {
-        // Step 1: Real GPS Lock (0-5s)
-        if (stepBadge) stepBadge.textContent = 'Step 1/6: GPS Lock';
-        if (stepTitle) stepTitle.textContent = isLive
-          ? '1. Real-Time Device GPS Acquisition & Locking'
-          : (isManual ? '1. Custom Start Position Pinned & Verified' : '1. [Simulated] Commuter GPS Calibration');
-
-        if (stepNarrative) {
-          stepNarrative.textContent = isLive
-            ? `Calibrated Companion escort to your actual device GPS at ${locLabel} (±${acc}m accuracy circle). Device status: Stationary.`
-            : (isManual
-              ? `Calibrated Companion escort to your selected map coordinates at ${locLabel}.`
-              : `Calibrating illustrative commuter coordinates along Church Street corridor (±${acc}m).`);
-        }
-      } else if (elapsed < 10) {
-        // Step 2: Escort Engaged & Location Verified (5-10s)
-        if (stepBadge) stepBadge.textContent = 'Step 2/6: Escort Engaged';
-        if (stepTitle) stepTitle.textContent = isLive
-          ? '2. Live Escort Guard Active & Watchdog Armed'
-          : '2. Escort Guard Active & Watchdog Armed';
-
-        if (stepNarrative) {
-          stepNarrative.textContent = isLive
-            ? `Companion escort active at your exact location (${locLabel}). 180s inactivity watchdog armed. Status: Stationary (0m moved).`
-            : `${modePrefix}Escort active at ${locLabel}. 180s inactivity watchdog armed. Simulated safe corridor monitored.`;
-        }
-
-        if (elapsed === 5) {
-          SoundController.play('step');
-          if (!isLive && !isManual) {
-            const wp = DEMO_SIMULATED_WAYPOINTS[1];
-            appState.companionBreadcrumbs.push([wp.lat, wp.lng]);
-            drawCompanionBreadcrumbs();
-            renderCompanionUserMarker([wp.lat, wp.lng], '[SIMULATED] Active Guard (±' + wp.acc + 'm)');
-          }
-          appendCompanionTelemetry(isLive
-            ? `[DEMO] Escort active at ${locLabel}. Device stationary (0m moved). Inactivity watchdog threshold: 180s.`
-            : `[DEMO] Escort engaged at ${locLabel}. Inactivity watchdog threshold: 180s.`);
-        }
-      } else if (elapsed < 15) {
-        // Step 3: Active Escort & Dynamic GPS Updates (10-15s)
-        if (stepBadge) stepBadge.textContent = 'Step 3/6: Dynamic Tracking';
-        if (stepTitle) stepTitle.textContent = isLive
-          ? '3. Live Sensor & Motion Tracking Active'
-          : '3. Dynamic Waypoint Tracking & Refuge Proximity';
-
-        if (stepNarrative) {
-          if (isLive) {
-            stepNarrative.textContent = demoSessionState.realDistanceMoved >= 25
-              ? `Physical displacement detected: ${demoSessionState.realDistanceMoved}m logged from starting point with live breadcrumb tracking.`
-              : `Live GPS & motion sensors verified at your exact position (${locLabel}). Device is stationary (0m moved). Zero distress anomalies; safe perimeter monitored.`;
-          } else {
-            stepNarrative.textContent = `${modePrefix}Simulating transit along safe corridor within 80m of 24/7 Verified Safe Refuge Pharmacy.`;
-          }
-        }
-
-        if (elapsed === 10) {
-          SoundController.play('step');
-          if (!isLive && !isManual) {
-            const wp = DEMO_SIMULATED_WAYPOINTS[2];
-            appState.companionBreadcrumbs.push([wp.lat, wp.lng]);
-            drawCompanionBreadcrumbs();
-            renderCompanionUserMarker([wp.lat, wp.lng], '[SIMULATED] Safe Corridor Waypoint (±' + wp.acc + 'm)');
-          }
-          appendCompanionTelemetry(isLive
-            ? (demoSessionState.realDistanceMoved >= 25
-              ? `[DEMO LIVE GPS] Motion confirmed: ${demoSessionState.realDistanceMoved}m traveled from start.`
-              : `[DEMO LIVE GPS] Motion sensors active at ${locLabel}. Device confirmed stationary (0m moved).`)
-            : `[DEMO SIMULATED] Waypoint verified near 24/7 Safe Haven refuge.`);
-        }
-      } else if (elapsed < 20) {
-        // Step 4: Trusted Contact Telemetry Link (15-20s)
-        if (stepBadge) stepBadge.textContent = 'Step 4/6: Contact Dispatch';
-        if (stepTitle) stepTitle.textContent = '4. Automated Trusted Contact Telemetry Link';
-
-        if (stepNarrative) {
-          stepNarrative.textContent = `In active escort mode, automated WhatsApp and SMS links with your real GPS pin (${lat.toFixed(4)}° N, ${lng.toFixed(4)}° E) are prepared for trusted contact ${maskedName} (${maskedPhone}). (Demonstration: No actual alerts dispatched).`;
-        }
-
-        if (elapsed === 15) {
-          SoundController.play('step');
-          if (!isLive && !isManual) {
-            const wp = DEMO_SIMULATED_WAYPOINTS[3];
-            appState.companionBreadcrumbs.push([wp.lat, wp.lng]);
-            drawCompanionBreadcrumbs();
-            renderCompanionUserMarker([wp.lat, wp.lng], '[SIMULATED] Escort Checkpoint');
-          }
-          appendCompanionTelemetry(`[DEMO] Trusted contact link generated for ${maskedName} (${maskedPhone}). Live location payload ready without transmitting private records.`);
-        }
-      } else if (elapsed < 25) {
-        // Step 5: Inactivity Watchdog Check-in (20-25s)
-        if (stepBadge) stepBadge.textContent = 'Step 5/6: Watchdog Check-in';
-        if (stepTitle) stepTitle.textContent = '5. Watchdog Inactivity Alert & Safe Check-in';
-
-        if (stepNarrative) {
-          stepNarrative.textContent = `Watchdog demonstration: If movement pauses for 180s without check-in, an 'Are You Safe?' prompt appears. Simulating user tap on 'I'm Safe (Reset)' — timer safely reset to 180s without triggering alarms.`;
-        }
-
-        if (elapsed === 20) {
-          SoundController.play('step');
-          if (!isLive && !isManual) {
-            const wp = DEMO_SIMULATED_WAYPOINTS[4];
-            appState.companionBreadcrumbs.push([wp.lat, wp.lng]);
-            drawCompanionBreadcrumbs();
-            renderCompanionUserMarker([wp.lat, wp.lng], '[SIMULATED] Watchdog Verification');
-          }
-          appendCompanionTelemetry('[DEMO] Inactivity watchdog test: Safe check-in simulated. Countdown restored to 180s.');
-        }
-      } else {
-        // Step 6: Arrival & Summary (25-30s)
-        if (stepBadge) stepBadge.textContent = 'Step 6/6: Summary';
-        if (stepTitle) stepTitle.textContent = '6. Safe Companion Escort Verified';
-
-        if (stepNarrative) {
-          const moveSummary = demoSessionState.realDistanceMoved >= 25
-            ? `${demoSessionState.realDistanceMoved}m traveled`
-            : `Stationary baseline confirmed (0m moved)`;
-          stepNarrative.textContent = isLive
-            ? `Demonstration completed successfully at your exact location (${locLabel}). Escort verified: ${moveSummary}, masked contact dispatch ready, and inactivity watchdog active.`
-            : `${modePrefix}Demonstration concluded safely along Bengaluru corridor: 0 distress flags, verified safe havens, and responsive watchdog.`;
-        }
-
-        if (elapsed === 25) {
-          if (!isLive && !isManual) {
-            const wp = DEMO_SIMULATED_WAYPOINTS[5];
-            appState.companionBreadcrumbs.push([wp.lat, wp.lng]);
-            drawCompanionBreadcrumbs();
-            renderCompanionUserMarker([wp.lat, wp.lng], '[SIMULATED] Safely Arrived');
-          }
-          appendCompanionTelemetry(`[DEMO] 30-Second Walk Companion demonstration concluded safely at ${locLabel}.`);
-        }
-      }
-    }
-
-    function finishCompanionDemo() {
-      SoundController.play('complete');
-      document.getElementById('demo-complete-actions')?.classList.remove('hidden');
-      const stepBadge = document.getElementById('demo-step-badge');
-      const timerLabel = document.getElementById('demo-timer-countdown');
-      if (stepBadge) stepBadge.textContent = 'Completed';
-      if (timerLabel) timerLabel.textContent = '0s';
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-      showToast('30-second Companion demo finished! Commute verified safe.', 'success');
-    }
-
-    function stopCompanionDemo() {
-      appState.companionDemoActive = false;
-      demoSessionState.active = false;
-
-      if (demoSessionState.interval) {
-        clearInterval(demoSessionState.interval);
-        demoSessionState.interval = null;
-      }
-      if (appState.companionDemoInterval) {
-        clearInterval(appState.companionDemoInterval);
-        appState.companionDemoInterval = null;
-      }
-      if (demoSessionState.watchId && navigator.geolocation) {
-        navigator.geolocation.clearWatch(demoSessionState.watchId);
-        demoSessionState.watchId = null;
-      }
-
-      document.getElementById('companion-demo-active')?.classList.add('hidden');
-      document.getElementById('companion-demo-promo')?.classList.remove('hidden');
-      document.getElementById('demo-fallback-actions')?.classList.add('hidden');
-
-      const orig = demoSessionState.originalCompanionState;
-      if (orig && orig.coords) {
-        appState.companionCoords = orig.coords;
-        appState.companionAccuracy = orig.accuracy;
-        appState.companionBreadcrumbs = orig.breadcrumbs;
-        appState.inactivitySecondsRemaining = orig.timer;
-        renderCompanionUserMarker(appState.companionCoords, 'Current Companion Location');
-        if (appState.companionAccuracy) renderCompanionAccuracyCircle(appState.companionCoords, appState.companionAccuracy);
-        drawCompanionBreadcrumbs();
-        walkLeafletMap?.setView(appState.companionCoords, 15);
-      } else {
-        if (walkBreadcrumbsPolyline && walkLeafletLayerGroup) {
-          walkLeafletLayerGroup.removeLayer(walkBreadcrumbsPolyline);
-          walkBreadcrumbsPolyline = null;
-        }
-        if (walkAccuracyCircle && walkLeafletLayerGroup) {
-          walkLeafletLayerGroup.removeLayer(walkAccuracyCircle);
-          walkAccuracyCircle = null;
-        }
-      }
-      appendCompanionTelemetry('Companion Demo closed. Normal escort mode available.');
     }
 
     // -------------------------------------------------------------------------
@@ -6296,6 +5996,8 @@ app.listen(5000, () => console.log('SafeCity API running on port 5000'));`
       if (ecName) ecName.value = appState.emergencyContact.name;
       if (ecPhone) ecPhone.value = appState.emergencyContact.phone;
       if (ecRel) ecRel.value = appState.emergencyContact.relation;
+
+      updateGuardianDisplayUI();
 
       showCodeTab('mysql');
     });
