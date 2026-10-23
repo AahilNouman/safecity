@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B1B3E"/>
+      <stop offset="50%" stop-color="#2A132C"/>
+      <stop offset="100%" stop-color="#140916"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E11D48"/>
+      <stop offset="50%" stop-color="#B83A5D"/>
+      <stop offset="100%" stop-color="#881337"/>
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDA4AF" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#E11D48" stop-opacity="0.2"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Background squircle for maskable PWA / Android adaptive icon -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle inner border -->
+  <rect x="8" y="8" width="496" height="496" rx="120" fill="none" stroke="#B83A5D" stroke-opacity="0.3" stroke-width="4"/>
+
+  <!-- Shield Shape -->
+  <g filter="url(#shadow)">
+    <path d="M256 70 C340 70 410 96 410 170 C410 320 280 410 256 442 C232 410 102 320 102 170 C102 96 172 70 256 70 Z" 
+          fill="url(#shieldGrad)" 
+          stroke="url(#glowGrad)" 
+          stroke-width="12" 
+          stroke-linejoin="round"/>
+  </g>
+
+  <!-- Inner Shield Contrast Accent -->
+  <path d="M256 100 C322 100 376 122 376 182 C376 302 276 376 256 404 C236 376 136 302 136 182 C136 122 190 100 256 100 Z" 
+        fill="#1C0D1E" 
+        fill-opacity="0.65"/>
+
+  <!-- Checkmark / Safe Path Icon -->
+  <path d="M200 256 L240 296 L318 206" 
+        fill="none" 
+        stroke="#FFFFFF" 
+        stroke-width="28" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+
+  <!-- SafeCity Text Accent -->
+  <text x="256" y="360" 
+        text-anchor="middle" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+        font-weight="900" 
+        font-size="28" 
+        letter-spacing="4" 
+        fill="#FDA4AF">SAFECITY</text>
+</svg>
