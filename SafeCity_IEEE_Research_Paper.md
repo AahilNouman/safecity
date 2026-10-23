@@ -72,7 +72,10 @@ Table I positions SafeCity against existing works in the literature, highlightin
 ## III. PROPOSED METHODOLOGY AND SYSTEM ARCHITECTURE
 
 ### A. Architecture Overview
-SafeCity implements a multi-tier decoupled architecture comprising a responsive client application, an asynchronous geospatial routing layer, a verified administrative moderation pipeline, and a persistent spatial database. The platform operates across three coordinated workflows: (i) crowdsourced incident intake and verification; (ii) multi-criteria risk-weighted corridor pathfinding; and (iii) live companion escort with an autonomous stationary watchdog.
+SafeCity implements a multi-tier decoupled architecture comprising a responsive client application, an asynchronous geospatial routing layer, a verified administrative moderation pipeline, and a persistent spatial database. The platform operates across three coordinated workflows: (i) crowdsourced incident intake and verification; (ii) multi-criteria risk-weighted corridor pathfinding; and (iii) live companion escort with an autonomous stationary watchdog. Fig. 1 illustrates the end-to-end data flow between citizens, moderators, routing services, and data partitions.
+
+![Fig. 1. Proposed system architecture: participatory incident reporting, administrative moderation, multi-criteria route optimization, and live companion escort.](docs/fig1_system_architecture.png)
+*Fig. 1. Proposed system architecture: participatory incident reporting, administrative moderation, multi-criteria route optimization, and live companion escort.*
 
 ### B. Geospatial Incident Ingestion and Verification Lifecycle
 Citizens submit incident telemetry anonymously through a lightweight, mobile-optimized form. The intake payload captures categorical classification (e.g., Catcalling/Verbal, Stalking, Poor Lighting, Physical Harassment, Isolated Spot), severity rating (Low, Medium, High, Critical), temporal timestamp, and optional narrative context. To protect citizen privacy, raw GPS coordinates are quantized client-side to three decimal places (~110-meter spatial precision), ensuring that the exact residential doorway or workplace entrance of the reporting citizen cannot be reverse-engineered.
