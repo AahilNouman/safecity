@@ -1,16 +1,14 @@
 # SafeCity: Smart Community Based Women Protection and Incident Reporting Platform
 
-**Akshat Singh, Mohammed Aahil Nouman, Siddiq**  
-*Department of Computer Science and Engineering, School of Computer Science and Engineering*  
-*Presidency University, Bengaluru, India*  
-
-**Under the Supervision of: Mr. Muthuraju V, Assistant Professor**  
-*Department of Computer Science and Engineering, Presidency University, Bengaluru, India*  
+**Akshat Singh¹**, **Mohammed Aahil Nouman¹**, **Siddiq¹**  
+**Under the Supervision of: Mr. Muthuraju V²**  
+*¹Student Authors, ²Assistant Professor, Department of Computer Science and Engineering*  
+*School of Computer Science and Engineering, Presidency University, Bengaluru, India*  
 
 ---
 
 ### Abstract
-Personal mobility and physical safety in expanding metropolitan transit environments remain severely constrained by street harassment, stalking, and isolated transit corridors. Traditional mobile safety solutions suffer from a critical structural deficiency: they rely almost exclusively on reactive panic alarms triggered after an assault is already underway, offering zero preventive intelligence and failing to capture the vast majority of street-level intimidation—a phenomenon known as the "dark figure of crime." Furthermore, mainstream navigation engines systematically optimize for shortest distance or travel duration, inadvertently steering pedestrians through hazardous, unilluminated alleys. This paper presents **SafeCity**, an integrated, proactive community safety and spatial navigation platform designed to bridge crowdsourced incident reporting with real-time risk-aware pathfinding. SafeCity combines an anonymous, privacy-preserving incident ingestion pipeline with moderator verification, a multi-criteria route optimization algorithm that penalizes recent spatial crimes while rewarding street illumination and 24/7 safe-haven proximity, an active GPS companion escort equipped with a continuous motion-and-inactivity watchdog, and an intelligent emergency assistance guide. Evaluated across metropolitan transit corridors in Bengaluru, empirical results demonstrate sub-second pathfinding latency (median 310 ms), reliable 12-meter GPS tracking accuracy, a high-precision 180-second stationary escalation state machine, and pronounced safety discrimination (evaluating well-lit arterial corridors at 94/100 versus high-hazard shortcuts at 48/100). The proposed platform supports United Nations Sustainable Development Goal 5 (Gender Equality), Goal 9 (Industry, Innovation, and Infrastructure), and Goal 11 (Sustainable Cities and Communities) by transforming passive civic reports into actionable, life-saving mobility intelligence.
+Personal mobility and physical security in expanding metropolitan transit environments remain severely constrained by street harassment, stalking, and isolated transit corridors. Most mobile safety apps only act as post-incident panic buttons—requiring a user to trigger an SOS after a confrontation has already begun, rather than helping commuters avoid high-risk streets beforehand. This leaves a vast amount of street intimidation unrecorded—a well-documented challenge criminologists term the "dark figure of crime." Simultaneously, standard GPS mapping services route pedestrians along shortest physical paths without considering street illumination or deserted alleys. This paper introduces **SafeCity**, a unified mobile and web platform bridging crowdsourced hazard reporting with proactive, safety-weighted navigation. The system pairs an anonymous, coordinate-quantized reporting workflow with administrative verification, a multi-criteria pathfinding algorithm that discounts historical spatial hazards while rewarding 24/7 safe havens and active lighting, a continuous GPS companion escort with an autonomous 180-second stationary watchdog, and an emergency audio-visual beacon. Field evaluations across Bengaluru transit corridors confirm sub-second routing response (median 310 ms), reliable 12-meter GPS tracking accuracy, a high-precision inactivity state machine, and sharp safety discrimination (scoring well-lit arterials at 94/100 versus unlit shortcuts at 48/100). Our design aligns with UN SDG targets 5, 9, and 11 by advancing gender-equitable mobility, resilient civic infrastructure, and safer urban transit corridors [10].
 
 **Keywords** — Women's Safety, Crowdsourced Incident Reporting, Geographic Information Systems (GIS), Multi-Objective Route Optimization, Haversine Telemetry, Spatial Clustering, Geolocation API, Civic Computing.
 
@@ -18,52 +16,52 @@ Personal mobility and physical safety in expanding metropolitan transit environm
 
 ## I. INTRODUCTION
 
-Personal safety and unhindered physical mobility in public spaces constitute fundamental human rights and essential prerequisites for equitable socio-economic participation [1]. Despite extensive civic modernization, women, students, and night commuters in rapidly expanding metropolitan environments regularly encounter acute vulnerabilities when traversing public transit hubs, poorly lit underpasses, and isolated connectors [2]. In expanding tech centers such as Bengaluru, decentralization of commercial corridors has outpaced pedestrian municipal infrastructure, exacerbating spatial inequalities in street illumination, foot traffic, and institutional police coverage.
+Freedom of movement and personal security in public spaces are critical requirements for equal social and economic opportunity [1]. Even with ongoing municipal investments, women, university students, and late-night workers in fast-growing cities regularly face intimidation in unmonitored underpasses, poorly lit bus stands, and deserted connecting roads [2]. In major technological centers like Bengaluru, suburban commercial expansion has outpaced pedestrian infrastructure, leaving visible gaps in street lighting, night foot traffic, and police presence.
 
-Historically, technological safety solutions developed for vulnerable citizens have operated almost entirely within reactive paradigms [3]. Emergency mobile applications, smart SOS jewelry, and hardware panic buttons rely on active distress triggers deployed while an attack or ambush is taking place. Criminological and human-computer interaction studies demonstrate that reactive mechanisms exhibit three fatal failure modes:
-1. **Cognitive and Physical Freeze:** Victims in high-stress ambush situations experience severe cognitive freezing and physical restraint, preventing them from retrieving, unlocking, and operating a smartphone.
-2. **Absence of Pre-Emptive Intelligence:** Reactive systems provide zero preventive hazard guidance, allowing users to enter dangerous spatial pockets unaware.
-3. **The "Dark Figure of Crime":** Reactive platforms omit minor intimidation, catcalling, verbal stalking, and flashing, which citizens rarely report to law enforcement due to reporting friction, administrative apathy, and fear of retaliation [4].
+Field studies in criminology and HCI highlight three practical limitations with reactive SOS tools [3]:
+1. **Panic and Physical Restraint:** Sudden physical threats often induce panic or physical restraint, making it difficult to unlock a phone and press an alarm.
+2. **Absence of Pre-Trip Guidance:** Panic buttons do not offer pre-trip hazard warnings, meaning commuters still walk into dangerous areas without realizing it.
+3. **The "Dark Figure of Crime":** They ignore everyday harassment, stalking, and catcalling that victims rarely report to law enforcement due to social stigma, procedural burden, or fear of retaliation [4].
 
-Simultaneously, commercial navigation platforms such as Google Maps and Apple Maps optimize purely for kinematic efficiency: minimizing spatial distance or estimated transit time [5], [6]. In urban street networks, the algorithmically shortest pedestrian route frequently traverses deserted alleys, unmonitored service corridors, and unilluminated parks, exposing commuters to acute ambush risks merely to save a few meters of walking distance. Commercial routing engines lack contextual awareness of human vulnerability and street-level safety indicators.
+At the same time, commercial mapping tools (such as Google Maps and Apple Maps) focus almost exclusively on minimizing walking distance or transit duration [5], [6]. In dense neighborhoods, the quickest walking route often cuts through deserted alleys or unlit residential lanes, steering commuters into high-risk spots just to save a few minutes. Mainstream routing systems do not account for perceived human safety or physical visibility.
 
-To overcome these systemic limitations, this paper proposes **SafeCity**, a unified platform that integrates crowdsourced participatory safety intelligence, multi-criteria risk-aware route planning, and real-time virtual companion escorts. The specific contributions of this work are as follows:
+To address these gaps, SafeCity introduces an integrated platform combining grassroots participatory safety reporting, risk-weighted navigation, and live companion escorts. The core contributions of this work include:
 * **Proactive Multi-Criteria Pathfinding:** A route planning algorithm that balances distance, street illumination, active 24/7 civic refuge havens, and exponentially decaying spatial crime clusters, enabling commuters to deliberately trade slight distance increases for substantial crime risk reductions.
 * **Privacy-Preserving Participatory Incident Ingestion:** An anonymous reporting pipeline that quantizes spatial coordinates to a 3-decimal grid cell (~110-meter resolution) to eliminate victim doorway identification while maintaining actionable geographic intelligence.
 * **Real-Time Companion Escort & Inactivity Watchdog:** A continuous GPS-driven virtual escort module featuring live telemetry tracking, speed filtering, an autonomous 180-second stationary countdown watchdog, and multi-stage acoustic-visual emergency escalation.
 * **Comprehensive Civic Refuge Network:** A verified directory of 24/7 open public sanctuaries (hospitals, petrol bunks, police assistance booths, 24/7 transit desks) coupled with a two-tier administrative moderation workflow to prevent malicious misinformation.
 
-The remainder of this paper is structured as follows. Section II reviews related literature in participatory safety sensing, multi-objective pathfinding, and emergency IoT systems. Section III presents the proposed methodology, architectural data flows, and mathematical scoring formulations. Section IV details the implementation stack, algorithm pseudocode, and testing methodology. Section V analyzes the security, location privacy, and threat model. Section VI presents expected experimental results, benchmarking metrics, and evaluation plans. Section VII concludes the paper and outlines future directions.
+In the following sections, Section II surveys prior work across participatory crime mapping and safety routing. Section III formulates the SafeCity architecture and scoring model, Section IV details the software stack, Section V evaluates the threat model, and Section VI presents our Bengaluru corridor benchmarks.
 
 ---
 
 ## II. RELATED WORK
 
-Technological interventions in personal safety and urban mobility span four primary research domains: participatory crime sensing, safety-aware route optimization, IoT emergency alarms, and spatial location privacy.
+Safety-oriented urban computing spans several fields: citizen crime reporting, safety-weighted path planning, wearable IoT alarms, and geospatial location privacy.
 
 ### A. Participatory Safety Sensing and Crowdsourced Audits
-Grassroots participatory mapping has emerged as a vital methodology for uncovering unrecorded urban hazards. Lea, D'Silva, and Asok [4] analyzed over 10,000 public harassment reports from Safecity India, demonstrating that anonymous crowdsourcing uncovers critical micro-spatial patterns of gender-based intimidation that never appear in official police records. Solymosi et al. [7] conducted an exhaustive systematic review of 42 mobile applications measuring place-based fear of crime, concluding that in-situ citizen reporting accurately captures dynamic environmental fear. However, the authors noted that nearly all existing crowdsourced archives remain passive retrospective repositories that fail to feed their intelligence directly into active navigation engines.
+Participatory mapping has demonstrated clear value in documenting invisible street harassment. Lea, D'Silva, and Asok [2] analyzed over 10,000 community reports from Safecity India, showing that anonymous public crowdsourcing captures fine-grained spatial harassment patterns that never appear in police records. Solymosi et al. [4] reviewed 42 mobile applications recording place-based fear of crime, confirming that in-situ citizen reporting accurately reflects dynamic environmental fear. However, they observed that almost all existing systems function as static databases, failing to integrate directly with live navigation engines.
 
 ### B. Safety-Aware and Multi-Objective Navigation
-In multi-objective urban routing, Galbrun, Pelechrinis, and Terzi [1] formulated the foundational SAFEPATHS biobjective routing framework. Their experimental results proved that pedestrians can achieve a 40% to 60% reduction in crime exposure at the expense of only a 5% to 12% increase in walking distance, theoretically validating the utility of safety-distance trade-offs. Quercia, Schifanella, and Aiello [5] expanded this concept by proposing algorithms that recommend happy, beautiful, and quiet urban paths using crowdsourced perceptual scores. More recently, Levy et al. [8] introduced SafeRoute, employing deep reinforcement learning to navigate pedestrians around violent crime concentrations in Boston, New York, and San Francisco. While algorithmically advanced, these prior routing frameworks depended strictly on historical municipal crime records and ignored grassroots community telemetry and dynamic safe havens.
+In multi-objective path planning, Galbrun, Pelechrinis, and Terzi [1] established the biobjective SAFEPATHS model. Their experiments showed pedestrians can reduce crime exposure by 40% to 60% with only a 5% to 12% increase in walking distance, proving the practicality of safety-distance trade-offs. Quercia, Schifanella, and Aiello [5] designed algorithms recommending pleasant, quiet, and attractive urban walks using crowdsourced sentiment. Levy et al. [6] developed SafeRoute using deep reinforcement learning to navigate pedestrians around violent crime hotspots in major US cities. Nevertheless, these platforms relied on historical police incident records rather than grassroots telemetry or verified 24/7 safe havens.
 
 ### C. Mobile Panic Buttons and Reactive Hardware
-Numerous studies have explored reactive mobile alarms and wearable IoT switches. Prasad et al. [9] developed Abhaya, an Android-based personal emergency application that broadcasts GPS coordinates via SMS upon an explicit button press. Harikiran et al. [10] proposed an IoT-enabled wearable safety band incorporating a panic switch, shock mechanism, and GSM communicator. Majumdar, Kirkley, and Srivastava [11] investigated voice-activated assistants capable of triggering distress alerts upon recognizing acoustic distress cues. While valuable during physical confrontations, these systems remain fundamentally post-incident mechanisms that provide no preventive routing guidance or spatial risk awareness.
+Prior research has also investigated mobile distress buttons and wearable safety hardware. Prasad et al. [3] implemented Abhaya, an Android safety app transmitting GPS coordinates over SMS upon emergency triggering. Harikiran et al. [7] designed an IoT safety wearable with a physical trigger and GSM module. Majumdar, Kirkley, and Srivastava [8] developed voice-activated assistants that sound distress alarms upon detecting vocal distress. While effective during active ambushes, these approaches remain strictly post-incident responses without preventive corridor guidance.
 
 ### D. Positioning Against Existing Literature
-Table I positions SafeCity against existing works in the literature, highlighting how SafeCity unifies proactive safety routing, verified crowdsourced reporting, and active escort telemetry within a single integrated architecture.
+Table I positions SafeCity against existing works in the literature, illustrating how SafeCity unifies proactive routing, verified crowdsourced reports, and live escort telemetry.
 
 #### TABLE I. POSITIONING RELATIVE TO RELATED WORK
 | Reference | Core Technique | Pre-Emptive Routing? | Dynamic Escort Watchdog? | Privacy-Preserving Intake? |
 | :--- | :--- | :---: | :---: | :---: |
 | **Galbrun et al. [1]** | SAFEPATHS biobjective pathfinding | Yes | No | No (Police data) |
-| **Lea et al. [4]** | Safecity crowdsourced audit | No (Passive) | No | Yes |
+| **Lea et al. [2]** | Safecity crowdsourced audit | No (Passive) | No | Yes |
+| **Prasad et al. [3]** | Abhaya SOS panic SMS | No (Reactive) | No | No |
+| **Solymosi et al. [4]** | Systematic fear mapping | No (Archival) | No | Varies |
 | **Quercia et al. [5]** | Perceptual urban routing | Yes (Aesthetic) | No | No |
-| **Solymosi et al. [7]** | Systematic fear mapping | No (Archival) | No | Varies |
-| **Levy et al. [8]** | SafeRoute DRL crime avoidance | Yes | No | No (Municipal data) |
-| **Prasad et al. [9]** | Abhaya SOS panic SMS | No (Reactive) | No | No |
-| **Harikiran et al. [10]** | IoT wearable panic switch | No (Reactive) | No | No |
-| **Majumdar et al. [11]** | Voice-activated distress alarm | No (Reactive) | No | No |
+| **Levy et al. [6]** | SafeRoute DRL crime avoidance | Yes | No | No (Municipal data) |
+| **Harikiran et al. [7]** | IoT wearable panic switch | No (Reactive) | No | No |
+| **Majumdar et al. [8]** | Voice-activated distress alarm | No (Reactive) | No | No |
 | **This Work (SafeCity)** | Multi-criteria routing + GPS companion | **Yes** | **Yes (180s Watchdog)** | **Yes (3-dec grid cell)** |
 
 ---
@@ -92,13 +90,13 @@ where $S_{\text{base}} = 75$ is the default nominal score for standard urban str
 
 $$P(d_i, \Delta t_i, w_i) = w_i \cdot \exp\left(-\frac{d_i^2}{2\sigma^2}\right) \cdot \exp(-\lambda \Delta t_i)$$
 
-Here, $w_i$ represents the severity penalty coefficient ($w_{\text{Critical}} = 25, w_{\text{High}} = 16, w_{\text{Medium}} = 9, w_{\text{Low}} = 4$), $\sigma = 250\text{ m}$ defines the spatial attenuation radius, and $\lambda = 0.005\text{ hr}^{-1}$ governs temporal decay, ensuring recent incidents exert stronger repulsive forces than historical ones. The safe haven bonus $B(r_j)$ for an active refuge $j$ (e.g., 24/7 hospital, police station, or fuel station) within radius $r_j < 400\text{ m}$ provides a positive reinforcement of $+8$ points per haven, capped at a maximum additive bonus of $+18$ points. Capping the score at $98/100$ reinforces the ethical tenet that digital systems cannot guarantee absolute safety in dynamic urban environments.
+Here, $w_i$ represents the severity penalty coefficient ($w_{\text{Critical}} = 25, w_{\text{High}} = 16, w_{\text{Medium}} = 8, w_{\text{Low}} = 4$), $\sigma = 250\text{ m}$ defines the spatial attenuation radius, and $\lambda = 0.005\text{ hr}^{-1}$ governs temporal decay, ensuring recent incidents exert stronger repulsive forces than historical ones. The safe haven bonus $B(r_j)$ for an active refuge $j$ (e.g., 24/7 hospital, police station, or fuel station) within radius $r_j < 400\text{ m}$ provides a positive reinforcement of $+8$ points per haven, capped at a maximum additive bonus of $+18$ points. We cap the maximum route score at 98 rather than 100 to reflect that no routing algorithm can guarantee complete physical safety on public streets.
 
 ### D. Walk With Me Virtual Escort and Telemetry Watchdog
-The Walk With Me companion serves as an active guardian during solitary pedestrian transit. Upon initiating a session, the system continuously samples the device's HTML5 Geolocation API, acquiring high-accuracy latitude, longitude, velocity, and positional uncertainty. Great-circle distance between successive coordinates $(\phi_1, \lambda_1)$ and $(\phi_2, \lambda_2)$ is computed via the Haversine formulation:
+The Walk With Me companion serves as an active guardian during solitary pedestrian transit. Upon initiating a session, the system continuously samples the device's HTML5 Geolocation API, acquiring high-accuracy latitude, longitude, velocity, and positional uncertainty. Surface displacement $d$ between consecutive GPS fixes $(\phi_1, \lambda_1)$ and $(\phi_2, \lambda_2)$ is calculated on a spherical earth radius $R_e$ as:
 
 $$a = \sin^2\left(\frac{\phi_2 - \phi_1}{2}\right) + \cos(\phi_1)\cos(\phi_2)\sin^2\left(\frac{\lambda_2 - \lambda_1}{2}\right)$$
-$$d = 2R_{\text{earth}} \arcsin\left(\sqrt{a}\right)$$
+$$d = 2 R_e \arcsin\left(\sqrt{a}\right)$$
 
 To distinguish between natural transit halts (e.g., pedestrian traffic signals) and genuine emergencies (e.g., abduction, physical assault, or coercion), the escort engine executes an autonomous 180-second stationary watchdog state machine. If instantaneous pedestrian displacement remains below 10 meters for more than 45 seconds, an inactivity warning is triggered. If stationary status persists for 180 seconds without user dismissal, the system automatically transitions into an escalated emergency state: triggering visual strobe pulses, activating dual-frequency high-decibel synthetic alarms (880 Hz / 440 Hz) via the Web Audio API, and dispatching automated SMS coordinates to pre-configured trusted emergency contacts.
 
@@ -118,7 +116,7 @@ SafeCity is implemented as four decoupled, collaborating system components: a re
 | **Geospatial Rendering** | Leaflet 1.9.4, OpenStreetMap | Dynamic map tile rendering, marker clustering, safe corridors |
 | **Synthetic Audio** | Web Audio API (OscillatorNode) | Synthesized dual-frequency emergency sirens (440Hz / 880Hz) |
 | **Backend REST API** | Node.js, Express.js 4.19 | Incident ingestion, spatial filtering, and moderator workflows |
-| **Database Layer** | MySQL 8.0 / Supabase Relational | Structured spatial persistence, RBAC policies, audit logs |
+| **Database Layer** | MySQL 8.0 / Relational Schema | Structured spatial persistence, RBAC policies, audit logs |
 | **Routing Engine** | OSRM (Open Source Routing Machine) | Real-world road-network pedestrian path calculation |
 | **Mobile Hybrid App** | Capacitor 8.5 & PWA Manifest | Native Android APK compilation and 1-tap browser installation |
 | **CI/CD Pipeline** | GitHub Actions, Ubuntu Runner | Automated syntax validation, testing, and APK compilation |
@@ -184,7 +182,7 @@ SafeCity explicitly considers four adversary classes:
 To counter Adversary Class (ii), SafeCity incorporates client-side coordinate quantization. Latitude and longitude readings submitted in incident reports are truncated to three decimal places before leaving the user's device. In geographic terms, a 0.001-degree displacement at Bengaluru's latitude (12.97° N) corresponds to approximately 111 meters. This level of spatial coarsening preserves the street-level utility of the report while completely preventing an adversary from isolating the victim's exact doorway or office entrance. Furthermore, live companion escort telemetry is ephemeral: real-time waypoints are maintained in volatile client-side memory and purged immediately upon session completion.
 
 ### C. Data Minimization and Regulatory Alignment
-SafeCity complies with modern data-protection statutes, including the Indian Digital Personal Data Protection (DPDP) Act of 2023 and the Information Technology Act of 2000. In strict accordance with the principle of data minimization, citizens can report incidents, view the safety map, and navigate safe corridors without registering an account or providing identifiable credentials. Authentication is strictly reserved for administrative moderators and optional cloud synchronization.
+Our data pipeline adheres to India's 2023 DPDP framework [11] and the IT Act (2000). By limiting collection to strictly necessary telemetry, citizens can log incidents and compute routes without creating an account or providing identifiable credentials. Authentication is strictly reserved for administrative moderators and optional cloud synchronization.
 
 ### D. Residual Risks and Operational Mitigations
 Two residual risks are acknowledged. First, GPS multipath reflection in dense urban high-rise corridors (e.g., tech parks) can cause momentary positional drift; SafeCity mitigates this by applying a 15-meter horizontal accuracy threshold, discarding erratic satellite fixes. Second, severe cellular dead zones can delay telemetry transmission; the platform caches pending incident reports locally in IndexedDB, synchronizing automatically when connectivity is restored.
@@ -202,7 +200,7 @@ To ensure real-time responsiveness on low-end mobile devices, path calculation l
 The multi-criteria pathfinding engine was evaluated on a verified 7.2 km suburban-to-arterial corridor between Manyata Tech Park and Nagavara Metro Station. Route 1 (via Outer Ring Road, 7.2 km) utilized well-illuminated commercial arterials with two active 24/7 safe havens, achieving a Safety Score of 94/100. Route 2 (via Govindpura interior service lanes, 6.4 km) was 800 meters shorter but traversed two high-severity historical harassment zones with zero illumination, resulting in a Safety Score of 48/100. Whereas commercial routing engines unconditionally recommended Route 2, SafeCity correctly directed users toward Route 1.
 
 ### C. Usability Evaluation (SUS)
-A task-based usability study conducted with 25 female college students and night commuters evaluated SafeCity across scripted reporting and companion escort tasks. Participants completed the standardized 10-item System Usability Scale (SUS) questionnaire, yielding a mean score of 82.4/100, significantly exceeding the established industry acceptance threshold of 70.0 ("Good").
+A task-based usability study conducted with 25 female college students and night commuters evaluated SafeCity across scripted reporting and companion escort tasks. Each participant rated the workflow using Brooke's 10-question SUS survey [9], producing an average score of 82.4 out of 100—well above the 70.0 benchmark for usable systems.
 
 ### D. Comparative Summary
 Table III summarizes the qualitative and operational advantages of SafeCity over traditional commercial mapping platforms and standalone reactive panic alarms.
@@ -225,7 +223,7 @@ The experimental evaluation was conducted within the Bengaluru metropolitan regi
 
 ## VII. CONCLUSION AND FUTURE WORK
 
-This paper presented SafeCity, a comprehensive community-based women protection and proactive incident reporting platform designed to eliminate the systemic shortcomings of reactive panic buttons and shortest-path navigation engines. By unifying privacy-preserving crowdsourced incident reporting, administrative moderation, multi-criteria risk-aware pathfinding, an autonomous 180-second stationary companion watchdog, and verified civic refuge havens, SafeCity empowers urban commuters to actively avoid environmental hazards. Empirical evaluations in Bengaluru confirm sub-second pathfinding latencies, accurate hazard discrimination, and high user acceptance (SUS score 82.4/100). The platform directly advances United Nations Sustainable Development Goals 5, 9, 11, and 16.
+This paper presented SafeCity, a comprehensive community-based women protection and proactive incident reporting platform designed to eliminate the systemic shortcomings of reactive panic buttons and shortest-path navigation engines. By unifying privacy-preserving crowdsourced incident reporting, administrative moderation, multi-criteria risk-aware pathfinding, an autonomous 180-second stationary companion watchdog, and verified civic refuge havens, SafeCity empowers urban commuters to actively avoid environmental hazards. Empirical evaluations in Bengaluru confirm sub-second pathfinding latencies, accurate hazard discrimination, and high user acceptance (SUS score 82.4/100). The platform directly advances United Nations Sustainable Development Goals 5, 9, and 11 [10].
 
 Future work will explore four key extensions:
 1. Lightweight on-device acoustic machine learning models to detect vocal distress or screams in real time.
@@ -237,7 +235,7 @@ Future work will explore four key extensions:
 
 ## ACKNOWLEDGMENT
 
-The authors express their deepest gratitude to Mr. Muthuraju V., Assistant Professor, Department of Computer Science and Engineering, School of Computer Science and Engineering, Presidency University, Bengaluru, for his exceptional mentorship, technical guidance, and constructive review throughout the research, implementation, and academic formulation of the SafeCity platform. The authors also acknowledge Presidency University for providing the computational infrastructure and academic environment that made this research possible.
+The authors are deeply grateful to Mr. Muthuraju V for his technical guidance and constructive feedback during the architecture and evaluation of SafeCity. We also thank the School of Computer Science and Engineering at Presidency University for supporting our work with testing facilities.
 
 ---
 
@@ -259,16 +257,8 @@ The authors express their deepest gratitude to Mr. Muthuraju V., Assistant Profe
 
 [8] S. Majumdar, S. E. Kirkley, and M. Srivastava, "Voice command AI assistant for public safety," in *Proc. 2022 Int. Conf. Innov. Intell. Informatics, Comput., Technol. (3ICT)*, Sakheer, Bahrain, 2022, pp. 627–632. DOI: 10.1109/3ICT56508.2022.9990716.
 
-[9] V. Sanh, L. Debut, J. Chaumond, and T. Wolf, "DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter," in *Proc. 5th Workshop Energy Efficient Mach. Learn. Cogn. Comput. (NeurIPS 2019)*, Vancouver, Canada, 2019, arXiv:1910.01108. DOI: 10.48550/arXiv.1910.01108.
+[9] J. Brooke, "SUS: A 'quick and dirty' usability scale," *Usability Evaluation in Industry*, P. W. Jordan, B. Thomas, I. L. McClelland, and B. Weerdmeester, Eds. London, UK: Taylor & Francis, 1996, pp. 189–194.
 
-[10] M. Ester, H.-P. Kriegel, J. Sander, and X. Xu, "A density-based algorithm for discovering clusters in large spatial databases with noise," in *Proc. 2nd Int. Conf. Knowl. Discovery Data Mining (KDD-96)*, Portland, OR, 1996, pp. 226–231.
+[10] United Nations, "Transforming our world: the 2030 Agenda for Sustainable Development," *UN General Assembly Resolution A/RES/70/1*, Oct. 2015. [Online]. Available: https://sdgs.un.org/goals
 
-[11] R. Mukta, J. Martens, H.-Y. Paik, Q. Lu, and S. S. Kanhere, "Blockchain-Based Verifiable Credential Sharing with Selective Disclosure," in *Proc. IEEE 19th Int. Conf. Trust, Security and Privacy in Computing and Communications (TrustCom)*, 2020, pp. 959–966. DOI: 10.1109/TrustCom50675.2020.00130.
-
-[12] R. Joshi, A. Gupta, N. Kanvinde, and P. Ghonge, "Forged Image Detection Using SOTA Image Classification Deep Learning Methods for Image Forensics with Error Level Analysis," arXiv:2211.15196, 2022. DOI: 10.48550/arXiv.2211.15196.
-
-[13] J. Brooke, "SUS: A 'quick and dirty' usability scale," *Usability Evaluation in Industry*, P. W. Jordan, B. Thomas, I. L. McClelland, and B. Weerdmeester, Eds. London, UK: Taylor & Francis, 1996, pp. 189–194.
-
-[14] United Nations, "Transforming our world: the 2030 Agenda for Sustainable Development," *UN General Assembly Resolution A/RES/70/1*, Oct. 2015. [Online]. Available: https://sdgs.un.org/goals
-
-[15] Ministry of Law and Justice (Govt. of India), "The Digital Personal Data Protection Act, 2023," *The Gazette of India*, Act No. 22 of 2023, Aug. 2023.
+[11] Ministry of Law and Justice (Govt. of India), "The Digital Personal Data Protection Act, 2023," *The Gazette of India*, Act No. 22 of 2023, Aug. 2023.
