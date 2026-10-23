@@ -41,25 +41,51 @@ def add_title(text):
     run.font.bold = True
     run.font.color.rgb = RGBColor(15, 23, 42)
 
-def add_authors(names, affiliations, supervisor):
-    p = doc.add_paragraph()
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_after = Pt(2)
-    run = p.add_run(names + '\n')
-    run.font.name = 'Times New Roman'
-    run.font.size = Pt(11)
-    run.font.bold = True
+def add_authors(names, dept_school, university, supervisor_title, supervisor_dept_univ):
+    p1 = doc.add_paragraph()
+    p1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p1.paragraph_format.space_before = Pt(0)
+    p1.paragraph_format.space_after = Pt(2)
+    r1 = p1.add_run(names)
+    r1.font.name = 'Times New Roman'
+    r1.font.size = Pt(11)
+    r1.font.bold = True
 
-    run_aff = p.add_run(affiliations + '\n')
-    run_aff.font.name = 'Times New Roman'
-    run_aff.font.size = Pt(9.5)
-    run_aff.font.italic = True
+    p2 = doc.add_paragraph()
+    p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p2.paragraph_format.space_before = Pt(0)
+    p2.paragraph_format.space_after = Pt(1)
+    r2 = p2.add_run(dept_school)
+    r2.font.name = 'Times New Roman'
+    r2.font.size = Pt(9.5)
+    r2.font.italic = True
 
-    run_sup = p.add_run(supervisor)
-    run_sup.font.name = 'Times New Roman'
-    run_sup.font.size = Pt(9.5)
-    run_sup.font.bold = True
-    p.paragraph_format.space_after = Pt(12)
+    p3 = doc.add_paragraph()
+    p3.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p3.paragraph_format.space_before = Pt(0)
+    p3.paragraph_format.space_after = Pt(4)
+    r3 = p3.add_run(university)
+    r3.font.name = 'Times New Roman'
+    r3.font.size = Pt(9.5)
+    r3.font.italic = True
+
+    p4 = doc.add_paragraph()
+    p4.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p4.paragraph_format.space_before = Pt(2)
+    p4.paragraph_format.space_after = Pt(1)
+    r4 = p4.add_run(supervisor_title)
+    r4.font.name = 'Times New Roman'
+    r4.font.size = Pt(9.5)
+    r4.font.bold = True
+
+    p5 = doc.add_paragraph()
+    p5.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p5.paragraph_format.space_before = Pt(0)
+    p5.paragraph_format.space_after = Pt(12)
+    r5 = p5.add_run(supervisor_dept_univ)
+    r5.font.name = 'Times New Roman'
+    r5.font.size = Pt(9.5)
+    r5.font.bold = True
 
 def add_abstract_keywords(abstract_text, keywords_text):
     p = doc.add_paragraph()
@@ -215,8 +241,10 @@ add_title("SafeCity: Smart Community Based Women Protection and Incident Reporti
 
 add_authors(
     "Akshat Singh, Mohammed Aahil Nouman, Siddiq",
-    "Department of Computer Science and Engineering, School of Computer Science and Engineering\\nPresidency University, Bengaluru, India",
-    "Under the Supervision of: Mr. Muthuraju V, Assistant Professor\\nDepartment of Computer Science and Engineering, Presidency University, Bengaluru, India"
+    "Department of Computer Science and Engineering, School of Computer Science and Engineering",
+    "Presidency University, Bengaluru, India",
+    "Under the Supervision of: Mr. Muthuraju V, Assistant Professor",
+    "Department of Computer Science and Engineering, Presidency University, Bengaluru, India"
 )
 
 # =============================================================================
@@ -254,22 +282,22 @@ add_body(
 )
 
 add_bullet(
-    "• Proactive Multi-Criteria Pathfinding:",
+    "Proactive Multi-Criteria Pathfinding:",
     "A route planning algorithm that balances distance, street illumination, active 24/7 civic refuge havens, and exponentially decaying spatial crime clusters, enabling commuters to deliberately trade slight distance increases for substantial crime risk reductions."
 )
 
 add_bullet(
-    "• Privacy-Preserving Participatory Incident Ingestion:",
+    "Privacy-Preserving Participatory Incident Ingestion:",
     "An anonymous reporting pipeline that quantizes spatial coordinates to a 3-decimal grid cell (~110-meter resolution) to eliminate victim doorway identification while maintaining actionable geographic intelligence."
 )
 
 add_bullet(
-    "• Real-Time Companion Escort & Inactivity Watchdog:",
+    "Real-Time Companion Escort & Inactivity Watchdog:",
     "A continuous GPS-driven virtual escort module featuring live telemetry tracking, speed filtering, an autonomous 180-second stationary countdown watchdog, and multi-stage acoustic-visual emergency escalation."
 )
 
 add_bullet(
-    "• Comprehensive Civic Refuge Network:",
+    "Comprehensive Civic Refuge Network:",
     "A verified directory of 24/7 open public sanctuaries (hospitals, petrol bunks, police assistance booths, 24/7 transit desks) coupled with a two-tier administrative moderation workflow to prevent malicious misinformation."
 )
 
