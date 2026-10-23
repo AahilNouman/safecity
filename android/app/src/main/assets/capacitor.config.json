@@ -1,0 +1,26 @@
+{
+	"appId": "org.safecity.app",
+	"appName": "SafeCity",
+	"webDir": "frontend",
+	"bundledWebRuntime": false,
+	"server": {
+		"androidScheme": "https",
+		"cleartext": true
+	},
+	"android": {
+		"allowMixedContent": true,
+		"captureInput": true,
+		"webContentsDebuggingEnabled": true
+	},
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 2000,
+			"backgroundColor": "#1C0D1E",
+			"showSpinner": false
+		},
+		"StatusBar": {
+			"backgroundColor": "#2A132C",
+			"style": "DARK"
+		}
+	}
+}

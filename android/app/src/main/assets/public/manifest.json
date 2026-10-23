@@ -1,0 +1,39 @@
+{
+  "name": "SafeCity — Women Protection & Safety Network",
+  "short_name": "SafeCity",
+  "start_url": "./index.html",
+  "id": "/safecity",
+  "display": "standalone",
+  "background_color": "#1C0D1E",
+  "theme_color": "#2A132C",
+  "orientation": "portrait-primary",
+  "description": "Smart Community-Based Women Protection and Incident Reporting Platform featuring real-time safe routing, Walk With Me companion, SOS triggers, and civic refuge points.",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": [
+    "safety",
+    "social",
+    "navigation",
+    "utilities"
+  ],
+  "screenshots": []
+}
