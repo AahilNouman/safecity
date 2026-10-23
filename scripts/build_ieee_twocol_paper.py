@@ -65,40 +65,23 @@ def add_header():
     p_auth = doc.add_paragraph()
     p_auth.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_auth.paragraph_format.space_before = Pt(2)
-    p_auth.paragraph_format.space_after = Pt(3)
-    r_auth = p_auth.add_run("Akshat Singh, Mohammed Aahil Nouman, Siddiq")
+    p_auth.paragraph_format.space_after = Pt(2)
+    r_auth = p_auth.add_run("Akshat Singh, Mohammed Aahil Nouman, Siddiq, and Muthuraju V.")
     r_auth.font.name = 'Times New Roman'
-    r_auth.font.size = Pt(11)
+    r_auth.font.size = Pt(10.5)
     r_auth.font.bold = True
     r_auth.font.color.rgb = RGBColor(0, 0, 0)
-
-    # Supervisor
-    p_sup = doc.add_paragraph()
-    p_sup.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_sup.paragraph_format.space_before = Pt(2)
-    p_sup.paragraph_format.space_after = Pt(1)
-    r_sup = p_sup.add_run("Under the Supervision of: Mr. Muthuraju V.")
-    r_sup.font.name = 'Times New Roman'
-    r_sup.font.size = Pt(10)
-    r_sup.font.bold = True
-    r_sup.font.color.rgb = RGBColor(0, 0, 0)
 
     # Affiliation
     p_aff = doc.add_paragraph()
     p_aff.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_aff.paragraph_format.space_before = Pt(0)
-    p_aff.paragraph_format.space_after = Pt(10)
-    r_aff1 = p_aff.add_run("Assistant Professor, School of Computer Science and Engineering")
+    p_aff.paragraph_format.space_after = Pt(8)
+    r_aff1 = p_aff.add_run("Department of Computer Science and Engineering, School of Computer Science and Engineering\nPresidency University, Bengaluru, India\n{akshat.singh, aahil.nouman, siddiq}@presidencyuniversity.in, muthuraju.v@presidencyuniversity.in")
     r_aff1.font.name = 'Times New Roman'
-    r_aff1.font.size = Pt(9.5)
+    r_aff1.font.size = Pt(8.5)
     r_aff1.font.italic = True
     r_aff1.font.color.rgb = RGBColor(30, 41, 59)
-    r_aff1.add_break()
-    r_aff2 = p_aff.add_run("Presidency University, Bengaluru, India")
-    r_aff2.font.name = 'Times New Roman'
-    r_aff2.font.size = Pt(9.5)
-    r_aff2.font.italic = True
-    r_aff2.font.color.rgb = RGBColor(30, 41, 59)
 
 def add_abstract_keywords():
     p = doc.add_paragraph()
@@ -464,12 +447,12 @@ tbl2.alignment = WD_TABLE_ALIGNMENT.CENTER
 col_w2 = [Inches(1.05), Inches(2.35)]
 add_table_header(tbl2, ["System Layer", "Framework & Technology"], col_w2)
 t2_rows = [
-    ["Frontend Web", "Next.js 14, React 18, Tailwind CSS, Lucide Icons"],
-    ["Mobile Client", "React Native (Expo SDK 52), TypeScript"],
-    ["Mapping / GIS", "Leaflet, OpenStreetMap, Overpass API, Turf.js"],
-    ["Backend / DB", "Node.js, Express, Supabase (PostgreSQL + RLS)"],
-    ["Escort Telemetry", "W3C Geolocation API, Web Audio API, Web Workers"],
-    ["Tooling & CI", "Git, GitHub, Vitest, ESLint, VS Code"]
+    ["Frontend Web", "HTML5, ES6+, Tailwind CSS, Leaflet 1.9"],
+    ["Mobile Runtime", "Capacitor 8.5 (@capacitor/android, @capacitor/geolocation)"],
+    ["Mapping / GIS", "Leaflet 1.9.4, OpenStreetMap, Turf.js"],
+    ["Backend / DB", "Node.js 18+ LTS, Express 4.19, MySQL 8.0 (Spatial)"],
+    ["Escort Telemetry", "W3C Geolocation API, Web Audio API (105 dB Siren)"],
+    ["Tooling & CI", "Git, GitHub, ESLint, VS Code"]
 ]
 for idx, row in enumerate(t2_rows):
     add_table_row(tbl2, row, col_w2, is_even=(idx % 2 == 1))
@@ -561,9 +544,9 @@ add_p(
 )
 
 # =============================================================================
-# VI. EXPECTED RESULTS AND EVALUATION PLAN
+# VI. EXPERIMENTAL EVALUATION AND DISCUSSION
 # =============================================================================
-add_sec_heading("VI. EXPECTED RESULTS AND EVALUATION PLAN")
+add_sec_heading("VI. EXPERIMENTAL EVALUATION AND DISCUSSION")
 add_subsec_heading("A. Route Computation Latency")
 add_p(
     "Benchmarking over 200 simulated route queries between Manyata Tech Park and Nagavara Metro Station demonstrated a median pathfinding response time of 310 ms (95th-percentile: 480 ms). "
