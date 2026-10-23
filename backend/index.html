@@ -1203,35 +1203,35 @@
     <section id="view-walk" class="hidden space-y-5">
       
       <!-- Top Header & Protocol Pill -->
-      <div class="space-y-2">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#0D2838] text-[#38BDF8] border border-[#0284C7]/40 shadow-sm">
-          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+      <div class="space-y-1.5">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-plum-900 text-rose-300 border border-plum-800 shadow-sm">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-rose-400"></i>
           <span>ACTIVE CITIZEN ESCORT PROTOCOL</span>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Virtual Walk With Me</h2>
-        <p class="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-plum-950 tracking-tight">Virtual Walk With Me</h2>
+        <p class="text-xs sm:text-sm text-ivory-700 max-w-3xl leading-relaxed">
           Real-time GPS travel guardian. Continuously monitors movement, detects prolonged stationary inactivity, and initiates automated emergency protocols if you remain unresponsive.
         </p>
       </div>
 
       <!-- Registered Emergency Guardian Bar -->
-      <div class="bg-[#111827] border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-md">
+      <div class="bg-gradient-to-r from-plum-900 via-plum-850 to-plum-900 border border-plum-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-md text-white">
         <div class="flex items-center gap-3.5">
-          <div class="w-10 h-10 rounded-xl bg-teal-950/60 border border-teal-500/40 text-teal-400 flex items-center justify-center shrink-0">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-400/30 text-rose-300 flex items-center justify-center shrink-0 shadow-inner">
             <i data-lucide="phone" class="w-5 h-5"></i>
           </div>
           <div>
             <div class="flex items-center gap-2">
               <span class="text-sm font-bold text-white">Registered Emergency Guardian</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Active &amp; Verified</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Active &amp; Verified</span>
             </div>
-            <p id="walk-guardian-display" class="text-xs text-slate-400 mt-0.5 font-medium">
+            <p id="walk-guardian-display" class="text-xs text-ivory-300 mt-0.5 font-medium">
               Aahil (Guardian) • 7892548253
             </p>
           </div>
         </div>
-        <button type="button" onclick="openGuardianEditModal()" class="px-3.5 py-2 rounded-xl bg-[#1E293B] hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition shadow-sm">
-          <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+        <button type="button" onclick="openGuardianEditModal()" class="px-3.5 py-2 rounded-xl bg-plum-800 hover:bg-plum-700 text-rose-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 border border-plum-700 transition shadow-sm">
+          <i data-lucide="settings" class="w-3.5 h-3.5 text-rose-300"></i>
           <span>Change Contact</span>
         </button>
       </div>
@@ -1240,21 +1240,21 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         <!-- Left Column: Map Card (lg:col-span-7) -->
-        <div class="lg:col-span-7 bg-[#111827] border border-slate-800 rounded-2xl overflow-hidden shadow-md flex flex-col">
+        <div class="lg:col-span-7 bg-plum-900 border border-plum-800 rounded-2xl overflow-hidden shadow-md flex flex-col">
           <div class="relative w-full h-[480px]" id="walk-buddy-map-wrapper">
             <div id="WalkBuddyMap" class="w-full h-full"></div>
             
             <!-- Map Overlay Status Badge (Top-Right) -->
             <div class="absolute top-3 right-3 z-[1000] pointer-events-none">
-              <div id="map-movement-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-black/85 backdrop-blur-md text-emerald-400 border border-emerald-500/40 flex items-center gap-2 shadow-lg">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="map-movement-status-text">STATIONARY • SAFE</span>
+              <div id="map-movement-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-plum-950/90 backdrop-blur-md text-ivory-400 border border-plum-800 flex items-center gap-2 shadow-lg">
+                <span id="map-movement-pulse-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+                <span id="map-movement-status-text">STANDBY</span>
               </div>
             </div>
           </div>
 
           <!-- Bottom Map Status Bar -->
-          <div class="px-4 py-3 bg-[#0B0F17] border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+          <div class="px-4 py-3 bg-plum-950 border-t border-plum-800 flex items-center justify-between text-xs text-ivory-300 font-mono">
             <div id="map-gps-lock-accuracy">
               GPS Satellite Lock: ±15m accuracy
             </div>
@@ -1268,86 +1268,86 @@
         <div class="lg:col-span-5 space-y-4">
           
           <!-- Card 1: SAFETY SESSION TIMER -->
-          <div class="bg-[#111827] border border-slate-800 rounded-2xl p-5 space-y-4 shadow-md">
+          <div class="bg-plum-900 border border-plum-800 rounded-2xl p-5 space-y-4 shadow-md text-white">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Safety Session Timer</span>
-              <span id="escort-active-pill" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="escort-pill-text">ESCORT ACTIVE</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-rose-300">Safety Session Timer</span>
+              <span id="escort-active-pill" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-plum-950 text-ivory-400 border border-plum-800 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                <span id="escort-pill-text">ESCORT STANDBY</span>
               </span>
             </div>
 
-            <!-- Big Session Clock (e.g. 00:41) -->
+            <!-- Big Session Clock (e.g. 00:00) -->
             <div id="safety-session-clock" class="text-4xl sm:text-5xl font-extrabold font-mono text-white tracking-wider">
               00:00
             </div>
 
             <!-- Primary Action Button: Toggle Journey -->
-            <button type="button" id="btn-toggle-journey" onclick="toggleVirtualWalkSession()" class="w-full py-3 rounded-xl bg-[#F43F5E] hover:bg-rose-600 text-white font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg">
-              <i data-lucide="square" class="w-4 h-4 fill-current"></i>
-              <span id="btn-toggle-journey-text">End Journey Safely</span>
+            <button type="button" id="btn-toggle-journey" onclick="toggleVirtualWalkSession()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition flex items-center justify-center gap-2 shadow-md">
+              <i data-lucide="play" id="btn-toggle-journey-icon" class="w-4 h-4 fill-current"></i>
+              <span id="btn-toggle-journey-text">Start Live Walk Escort</span>
             </button>
 
             <!-- Demo Inactivity Mode (15s) Checkbox Container -->
-            <div class="bg-[#0B0F17] border border-slate-800 rounded-xl p-3.5 flex items-center justify-between">
+            <div class="bg-plum-950/80 border border-plum-800 rounded-xl p-3.5 flex items-center justify-between">
               <div>
                 <div class="text-xs font-bold text-white">Demo Inactivity Mode (15s)</div>
-                <div class="text-[11px] text-slate-400 mt-0.5">Triggers check in 15 seconds</div>
+                <div class="text-[11px] text-ivory-300 mt-0.5">Triggers check in 15 seconds</div>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" id="demo-inactivity-mode-toggle" checked onchange="toggleInactivityDemoMode(this.checked)" class="w-4 h-4 text-emerald-500 rounded border-slate-700 bg-slate-800 focus:ring-emerald-500 cursor-pointer" />
+                <input type="checkbox" id="demo-inactivity-mode-toggle" checked onchange="toggleInactivityDemoMode(this.checked)" class="w-4 h-4 rounded border-plum-700 bg-plum-900 text-rose-600 focus:ring-rose-500 cursor-pointer accent-rose-500" />
               </label>
             </div>
 
             <!-- Trigger Safety Confirmation Now (Test Demo) Button -->
-            <button type="button" onclick="triggerSafetyConfirmationTest()" class="w-full py-2.5 rounded-xl bg-[#161F30] hover:bg-slate-800 text-amber-400 font-semibold text-xs border border-amber-500/30 transition flex items-center justify-center gap-2 shadow-sm">
-              <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400 fill-amber-400"></i>
+            <button type="button" onclick="triggerSafetyConfirmationTest()" class="w-full py-2.5 rounded-xl bg-plum-800/80 hover:bg-plum-800 text-rose-200 hover:text-white font-semibold text-xs border border-plum-700 transition flex items-center justify-center gap-2 shadow-sm">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-rose-300 fill-rose-300"></i>
               <span>Trigger Safety Confirmation Now (Test Demo)</span>
             </button>
           </div>
 
           <!-- Card 2: Live Motion Telemetry -->
-          <div class="bg-[#111827] border border-slate-800 rounded-2xl p-5 space-y-4 shadow-md">
+          <div class="bg-plum-900 border border-plum-800 rounded-2xl p-5 space-y-4 shadow-md text-white">
             <h3 class="text-sm font-bold text-white">Live Motion Telemetry</h3>
 
             <div class="grid grid-cols-2 gap-3">
               <!-- Box 1: Velocity -->
-              <div class="bg-[#0B0F17] border border-slate-800 rounded-xl p-3">
-                <div class="text-[11px] text-slate-400 font-medium">Current Velocity</div>
+              <div class="bg-plum-950/80 border border-plum-800 rounded-xl p-3">
+                <div class="text-[11px] text-ivory-400 font-medium">Current Velocity</div>
                 <div id="telemetry-velocity" class="text-lg font-bold font-mono text-emerald-400 mt-0.5">0.0 km/h</div>
               </div>
 
               <!-- Box 2: Distance Walked -->
-              <div class="bg-[#0B0F17] border border-slate-800 rounded-xl p-3">
-                <div class="text-[11px] text-slate-400 font-medium">Distance Walked</div>
+              <div class="bg-plum-950/80 border border-plum-800 rounded-xl p-3">
+                <div class="text-[11px] text-ivory-400 font-medium">Distance Walked</div>
                 <div id="telemetry-distance" class="text-lg font-bold font-mono text-white mt-0.5">0.00 km</div>
               </div>
 
               <!-- Box 3: Motion State -->
-              <div class="bg-[#0B0F17] border border-slate-800 rounded-xl p-3">
-                <div class="text-[11px] text-slate-400 font-medium">Motion State</div>
-                <div id="telemetry-motion-state" class="text-xs sm:text-sm font-bold text-emerald-400 mt-1 truncate">Stationary (Safe)</div>
+              <div class="bg-plum-950/80 border border-plum-800 rounded-xl p-3">
+                <div class="text-[11px] text-ivory-400 font-medium">Motion State</div>
+                <div id="telemetry-motion-state" class="text-xs sm:text-sm font-bold text-ivory-300 mt-1 truncate">Standby</div>
               </div>
 
               <!-- Box 4: Stationary Timer -->
-              <div class="bg-[#0B0F17] border border-slate-800 rounded-xl p-3">
-                <div class="text-[11px] text-slate-400 font-medium">Stationary Timer</div>
+              <div class="bg-plum-950/80 border border-plum-800 rounded-xl p-3">
+                <div class="text-[11px] text-ivory-400 font-medium">Stationary Timer</div>
                 <div id="telemetry-stationary-timer" class="text-lg font-bold font-mono text-white mt-0.5">0s</div>
               </div>
             </div>
 
             <!-- Bullet list beneath stats -->
-            <div class="space-y-1.5 text-[11px] text-slate-400 leading-relaxed pt-1">
+            <div class="space-y-1.5 text-[11px] text-ivory-300 leading-relaxed pt-1">
               <p class="flex items-start gap-1.5">
-                <span class="text-slate-500">•</span>
-                <span>Inactivity detection triggers after <strong class="text-slate-300" id="inactivity-trigger-label">15 seconds</strong> of stationary tracking.</span>
+                <span class="text-rose-400 font-bold">•</span>
+                <span>Inactivity detection triggers after <strong class="text-white" id="inactivity-trigger-label">15 seconds</strong> of stationary tracking.</span>
               </p>
               <p class="flex items-start gap-1.5">
-                <span class="text-slate-500">•</span>
+                <span class="text-rose-400 font-bold">•</span>
                 <span>A 45-second confirmation dialog asks <em>&ldquo;Are you safe?&rdquo;</em> before contacting your guardian.</span>
               </p>
               <p class="flex items-start gap-1.5">
-                <span class="text-slate-500">•</span>
+                <span class="text-rose-400 font-bold">•</span>
                 <span>Zero false alarms: you can cancel or reset at any time with one tap.</span>
               </p>
             </div>
@@ -1878,19 +1878,19 @@
   </div>
 
   <!-- 4. INACTIVITY WARNING & CONFIRMATION MODAL -->
-  <div id="inactivity-modal" class="hidden fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-[#111827] border border-slate-800 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center text-white">
-      <div class="w-14 h-14 rounded-full bg-rose-500/20 text-rose-400 mx-auto flex items-center justify-center border border-rose-500/30">
+  <div id="inactivity-modal" class="hidden fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-plum-900 border border-plum-700 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center text-white">
+      <div class="w-14 h-14 rounded-full bg-rose-500/20 text-rose-300 mx-auto flex items-center justify-center border border-rose-500/30">
         <i data-lucide="alert-triangle" class="w-7 h-7"></i>
       </div>
       <div>
-        <h3 class="text-xl font-bold text-white tracking-tight">Are you safe?</h3>
-        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+        <h3 class="text-xl font-bold text-white tracking-tight" id="inactivity-modal-title">Are you safe?</h3>
+        <p class="text-xs text-ivory-300 mt-1 leading-relaxed" id="inactivity-modal-desc">
           Prolonged stationary inactivity detected along your active escort corridor. Please confirm your status before emergency escalation.
         </p>
       </div>
-      <div class="text-4xl font-mono font-extrabold text-[#F43F5E]" id="inactivity-modal-seconds">45s</div>
-      <p class="text-[11px] text-slate-400">
+      <div class="text-4xl font-mono font-extrabold text-rose-400" id="inactivity-modal-seconds">45s</div>
+      <p class="text-[11px] text-ivory-400">
         If you remain unresponsive, an automated SOS with your live coordinates will be dispatched to your registered guardian.
       </p>
       <div class="space-y-2 pt-2">
@@ -1898,7 +1898,7 @@
           <i data-lucide="check-circle-2" class="w-4 h-4"></i>
           <span>I Am Safe &amp; Okay</span>
         </button>
-        <button type="button" onclick="sendWalkSOS()" class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition shadow flex items-center justify-center gap-1.5">
+        <button type="button" onclick="handleWalkEmergencyDispatch()" class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition shadow flex items-center justify-center gap-1.5">
           <i data-lucide="alert-circle" class="w-4 h-4"></i>
           <span>Dispatch Emergency SOS Now</span>
         </button>
@@ -1907,34 +1907,34 @@
   </div>
 
   <!-- 4B. REGISTERED GUARDIAN EDIT MODAL -->
-  <div id="guardian-edit-modal" class="hidden fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-[#111827] border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative text-white">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+  <div id="guardian-edit-modal" class="hidden fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-plum-900 border border-plum-700 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative text-white">
+      <div class="flex items-center justify-between border-b border-plum-800 pb-3">
         <div class="flex items-center gap-2">
-          <i data-lucide="phone-call" class="w-5 h-5 text-teal-400"></i>
+          <i data-lucide="phone-call" class="w-5 h-5 text-rose-300"></i>
           <h3 class="text-base font-bold text-white">Registered Emergency Guardian</h3>
         </div>
-        <button type="button" onclick="closeGuardianEditModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+        <button type="button" onclick="closeGuardianEditModal()" class="text-ivory-400 hover:text-white p-1 rounded-lg">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
       
-      <p class="text-xs text-slate-300 leading-relaxed">
+      <p class="text-xs text-ivory-300 leading-relaxed">
         Update the verified guardian who receives automated live GPS coordinates and telemetry if prolonged inactivity or distress is flagged.
       </p>
 
       <div class="space-y-3 pt-1">
         <div>
-          <label for="guardian-name-input" class="text-xs font-medium text-slate-300">Guardian Name:</label>
-          <input type="text" id="guardian-name-input" value="Aahil" class="mt-1 w-full text-xs rounded-xl border border-slate-700 px-3 py-2.5 bg-[#0B0F17] text-white focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          <label for="guardian-name-input" class="text-xs font-medium text-ivory-300">Guardian Name:</label>
+          <input type="text" id="guardian-name-input" value="Aahil" class="mt-1 w-full text-xs rounded-xl border border-plum-700 px-3 py-2.5 bg-plum-950 text-white focus:outline-none focus:ring-2 focus:ring-rose-500" />
         </div>
         <div>
-          <label for="guardian-phone-input" class="text-xs font-medium text-slate-300">Phone Number:</label>
-          <input type="text" id="guardian-phone-input" value="7892548253" class="mt-1 w-full text-xs font-mono rounded-xl border border-slate-700 px-3 py-2.5 bg-[#0B0F17] text-white focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          <label for="guardian-phone-input" class="text-xs font-medium text-ivory-300">Phone Number:</label>
+          <input type="text" id="guardian-phone-input" value="7892548253" class="mt-1 w-full text-xs font-mono rounded-xl border border-plum-700 px-3 py-2.5 bg-plum-950 text-white focus:outline-none focus:ring-2 focus:ring-rose-500" />
         </div>
         <div>
-          <label for="guardian-relation-input" class="text-xs font-medium text-slate-300">Relationship:</label>
-          <select id="guardian-relation-input" class="mt-1 w-full text-xs rounded-xl border border-slate-700 px-3 py-2.5 bg-[#0B0F17] text-white focus:outline-none focus:ring-2 focus:ring-teal-500">
+          <label for="guardian-relation-input" class="text-xs font-medium text-ivory-300">Relationship:</label>
+          <select id="guardian-relation-input" class="mt-1 w-full text-xs rounded-xl border border-plum-700 px-3 py-2.5 bg-plum-950 text-white focus:outline-none focus:ring-2 focus:ring-rose-500">
             <option value="Guardian" selected>Guardian</option>
             <option value="Mother">Mother</option>
             <option value="Father">Father</option>
@@ -1945,11 +1945,11 @@
         </div>
       </div>
 
-      <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-800">
-        <button type="button" onclick="closeGuardianEditModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
+      <div class="pt-2 flex items-center justify-end gap-2 border-t border-plum-800">
+        <button type="button" onclick="closeGuardianEditModal()" class="px-4 py-2 rounded-xl bg-plum-800 hover:bg-plum-750 text-ivory-200 text-xs font-semibold transition">
           Cancel
         </button>
-        <button type="button" onclick="saveGuardianContactFromModal()" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold transition shadow-md">
+        <button type="button" onclick="saveGuardianContactFromModal()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition shadow-md">
           Save Guardian
         </button>
       </div>
@@ -4179,31 +4179,37 @@
     // =========================================================================
     // VIRTUAL WALK WITH ME — REAL-TIME GPS TRAVEL GUARDIAN & WATCHDOG
     // =========================================================================
-    const virtualWalkState = {
+    var virtualWalkState = {
+      // Single Source of Truth for Session Lifecycle
       active: false,
-      sessionSeconds: 0,
-      sessionInterval: null,
-      stationarySeconds: 0,
-      inactivityThreshold: 15, // Default 15s because demo mode is checked
-      demoMode: true,
+      startTime: null,           // Epoch timestamp (ms) when current active session started
+      sessionSeconds: 0,         // Exact elapsed seconds computed via (Date.now() - startTime)
+      sessionInterval: null,     // Interval ID for session clock ticks
       
-      // Telemetry
+      // Stationary & Motion Telemetry
+      stationaryStartTime: null, // Epoch timestamp (ms) when current stationary period started
+      stationarySeconds: 0,      // Elapsed seconds stationary
+      motionState: 'Standby',    // 'Standby' | 'Stationary (Safe)' | 'Walking / Moving'
       velocityKmh: 0.0,
       distanceWalkedKm: 0.00,
-      motionState: 'Stationary (Safe)', // or 'Walking / Moving'
       
-      // GPS & Movement Tracking (Anti-Jitter)
-      anchorCoords: null, // [lat, lng] for displacement reference
-      currentCoords: null,
-      accuracy: 15,
-      watchId: null,
-      waypointCount: 0,
-      breadcrumbs: [],
+      // Inactivity Watchdog Settings
+      demoMode: true,            // Default true (15s check)
+      inactivityThreshold: 15,   // 15 seconds if demoMode, 180 seconds if false
       
       // 45-Second Safety Confirmation Dialog
       confirmationActive: false,
       confirmationCountdown: 45,
-      confirmationInterval: null
+      confirmationInterval: null,
+      isDemoTest: false,         // Distinguishes test demo from live emergency escalation
+      
+      // GPS Watcher & Trajectory
+      anchorCoords: null,        // Reference coordinates for anti-jitter filtering
+      currentCoords: null,       // Latest known position [lat, lng]
+      accuracy: 15,
+      watchId: null,
+      waypointCount: 0,
+      breadcrumbs: []
     };
 
     let walkCustomPinMarker = null;
@@ -4278,19 +4284,34 @@
     }
 
     function triggerSafetyConfirmationTest() {
-      SoundController.play('warning');
-      showSafetyConfirmationDialog();
+      showSafetyConfirmationDialog(true);
     }
 
-    function showSafetyConfirmationDialog() {
+    function showSafetyConfirmationDialog(isTest = false) {
       if (virtualWalkState.confirmationActive) return;
       virtualWalkState.confirmationActive = true;
+      virtualWalkState.isDemoTest = isTest;
       virtualWalkState.confirmationCountdown = 45;
 
       const modal = document.getElementById('inactivity-modal');
       const countEl = document.getElementById('inactivity-modal-seconds');
+      const titleEl = document.getElementById('inactivity-modal-title');
+      const descEl = document.getElementById('inactivity-modal-desc');
+
       if (modal) modal.classList.remove('hidden');
       if (countEl) countEl.textContent = '45s';
+
+      if (titleEl && descEl) {
+        if (isTest) {
+          titleEl.textContent = 'Safety Check-In (Test Demo)';
+          descEl.textContent = 'Previewing automated 45-second inactivity protocol. Zero real alerts will be dispatched in demo mode.';
+        } else {
+          titleEl.textContent = 'Are you safe?';
+          descEl.textContent = 'Prolonged stationary inactivity detected along your active escort corridor. Please confirm your status before emergency escalation.';
+        }
+      }
+
+      SoundController.play('warning');
 
       if (virtualWalkState.confirmationInterval) {
         clearInterval(virtualWalkState.confirmationInterval);
@@ -4305,8 +4326,13 @@
           virtualWalkState.confirmationInterval = null;
           virtualWalkState.confirmationActive = false;
           if (modal) modal.classList.add('hidden');
-          // Dispatch emergency alert
-          sendWalkSOS();
+
+          if (virtualWalkState.isDemoTest) {
+            SoundController.play('warning');
+            showToast('[DEMO MODE] Safety confirmation test finished. Guardian was NOT contacted.', 'info');
+          } else {
+            sendWalkSOS();
+          }
         }
       }, 1000);
     }
@@ -4317,50 +4343,88 @@
         virtualWalkState.confirmationInterval = null;
       }
       virtualWalkState.confirmationActive = false;
-      virtualWalkState.stationarySeconds = 0;
+      const wasDemo = virtualWalkState.isDemoTest;
+      virtualWalkState.isDemoTest = false;
 
-      const statTimerEl = document.getElementById('telemetry-stationary-timer');
-      if (statTimerEl) statTimerEl.textContent = '0s';
+      // Reset stationary timer if in an active session
+      if (virtualWalkState.active) {
+        virtualWalkState.stationaryStartTime = Date.now();
+        virtualWalkState.stationarySeconds = 0;
+        const statTimerEl = document.getElementById('telemetry-stationary-timer');
+        if (statTimerEl) statTimerEl.textContent = '0s';
+      }
 
       const modal = document.getElementById('inactivity-modal');
       if (modal) modal.classList.add('hidden');
 
       SoundController.play('success');
-      showToast('Confirmed safe and okay! Escort resumed.', 'success');
+      showToast(wasDemo ? 'Test confirmation dismissed.' : 'Confirmed safe and okay! Escort resumed.', 'success');
     }
 
     function handleUserSafeCheckin() {
       confirmUserSafe();
     }
 
-    function handleVirtualWalkTick() {
-      if (!virtualWalkState.active) return;
+    function handleWalkEmergencyDispatch() {
+      if (virtualWalkState.confirmationInterval) {
+        clearInterval(virtualWalkState.confirmationInterval);
+        virtualWalkState.confirmationInterval = null;
+      }
+      virtualWalkState.confirmationActive = false;
+      const wasDemo = virtualWalkState.isDemoTest;
+      virtualWalkState.isDemoTest = false;
 
-      // 1. Session Duration Clock (e.g. 00:41)
-      virtualWalkState.sessionSeconds++;
-      const mins = Math.floor(virtualWalkState.sessionSeconds / 60);
-      const secs = virtualWalkState.sessionSeconds % 60;
+      const modal = document.getElementById('inactivity-modal');
+      if (modal) modal.classList.add('hidden');
+
+      if (wasDemo) {
+        SoundController.play('warning');
+        showToast('[DEMO MODE] Emergency SOS test simulation completed. Guardian was NOT contacted.', 'info');
+      } else {
+        sendWalkSOS();
+      }
+    }
+
+    // 1-second cadence tick handler using true timestamp diff
+    function handleVirtualWalkTick() {
+      // Guard: strictly ignore tick if session is not active or has no start timestamp
+      if (!virtualWalkState.active || !virtualWalkState.startTime) return;
+
+      // 1. Session Duration Clock — True Timestamp Difference
+      const elapsedMs = Date.now() - virtualWalkState.startTime;
+      const elapsedSeconds = Math.max(0, Math.floor(elapsedMs / 1000));
+      virtualWalkState.sessionSeconds = elapsedSeconds;
+
+      const mins = Math.floor(elapsedSeconds / 60);
+      const secs = elapsedSeconds % 60;
       const clockEl = document.getElementById('safety-session-clock');
       if (clockEl) {
         clockEl.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
       }
 
-      // 2. Stationary Tracking Logic
+      // 2. Stationary Tracking Logic — Timestamp Difference
       if (virtualWalkState.motionState === 'Stationary (Safe)') {
-        virtualWalkState.stationarySeconds++;
+        if (!virtualWalkState.stationaryStartTime) {
+          virtualWalkState.stationaryStartTime = Date.now();
+        }
+        const statMs = Date.now() - virtualWalkState.stationaryStartTime;
+        const statSeconds = Math.max(0, Math.floor(statMs / 1000));
+        virtualWalkState.stationarySeconds = statSeconds;
+
         const statTimerEl = document.getElementById('telemetry-stationary-timer');
         if (statTimerEl) {
-          statTimerEl.textContent = virtualWalkState.stationarySeconds + 's';
+          statTimerEl.textContent = statSeconds + 's';
         }
 
         // Trigger safety check dialog if inactivity threshold reached
         if (
-          virtualWalkState.stationarySeconds >= virtualWalkState.inactivityThreshold &&
+          statSeconds >= virtualWalkState.inactivityThreshold &&
           !virtualWalkState.confirmationActive
         ) {
-          showSafetyConfirmationDialog();
+          showSafetyConfirmationDialog(false);
         }
       } else {
+        virtualWalkState.stationaryStartTime = Date.now();
         virtualWalkState.stationarySeconds = 0;
         const statTimerEl = document.getElementById('telemetry-stationary-timer');
         if (statTimerEl) statTimerEl.textContent = '0s';
@@ -4368,108 +4432,182 @@
     }
 
     function updateWalkTelemetryUI() {
-      // Current Velocity
+      // 1. Current Velocity
       const velEl = document.getElementById('telemetry-velocity');
       if (velEl) velEl.textContent = virtualWalkState.velocityKmh.toFixed(1) + ' km/h';
 
-      // Distance Walked
+      // 2. Distance Walked
       const distEl = document.getElementById('telemetry-distance');
       if (distEl) distEl.textContent = virtualWalkState.distanceWalkedKm.toFixed(2) + ' km';
 
-      // Motion State
+      // 3. Motion State
       const motionEl = document.getElementById('telemetry-motion-state');
       if (motionEl) {
         motionEl.textContent = virtualWalkState.motionState;
-        if (virtualWalkState.motionState === 'Stationary (Safe)') {
+        if (virtualWalkState.motionState === 'Walking / Moving') {
+          motionEl.className = 'text-xs sm:text-sm font-bold text-rose-300 mt-1 truncate animate-pulse';
+        } else if (virtualWalkState.motionState === 'Stationary (Safe)') {
           motionEl.className = 'text-xs sm:text-sm font-bold text-emerald-400 mt-1 truncate';
         } else {
-          motionEl.className = 'text-xs sm:text-sm font-bold text-sky-400 mt-1 truncate animate-pulse';
+          motionEl.className = 'text-xs sm:text-sm font-bold text-ivory-300 mt-1 truncate';
         }
       }
 
-      // Stationary Timer
+      // 4. Stationary Timer
       const statTimerEl = document.getElementById('telemetry-stationary-timer');
       if (statTimerEl) {
         statTimerEl.textContent = virtualWalkState.stationarySeconds + 's';
       }
 
-      // Top-Right Movement Badge on Map
+      // 5. Top-Right Movement Badge on Map
       const badgeText = document.getElementById('map-movement-status-text');
       const badgeEl = document.getElementById('map-movement-badge');
+      const pulseDot = document.getElementById('map-movement-pulse-dot');
       if (badgeText && badgeEl) {
-        if (virtualWalkState.motionState === 'Walking / Moving') {
+        if (!virtualWalkState.active) {
+          badgeText.textContent = 'STANDBY';
+          badgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-plum-950/90 backdrop-blur-md text-ivory-400 border border-plum-800 flex items-center gap-2 shadow-lg';
+          if (pulseDot) pulseDot.className = 'w-2 h-2 rounded-full bg-slate-400';
+        } else if (virtualWalkState.motionState === 'Walking / Moving') {
           badgeText.textContent = 'MOVING ON CORRIDOR';
-          badgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-black/85 backdrop-blur-md text-emerald-400 border border-emerald-500/40 flex items-center gap-2 shadow-lg';
+          badgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-plum-950/90 backdrop-blur-md text-rose-300 border border-rose-500/40 flex items-center gap-2 shadow-lg';
+          if (pulseDot) pulseDot.className = 'w-2 h-2 rounded-full bg-rose-400 animate-pulse';
         } else {
           badgeText.textContent = 'STATIONARY • SAFE';
-          badgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-black/85 backdrop-blur-md text-emerald-400 border border-emerald-500/40 flex items-center gap-2 shadow-lg';
+          badgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-plum-950/90 backdrop-blur-md text-emerald-300 border border-emerald-500/40 flex items-center gap-2 shadow-lg';
+          if (pulseDot) pulseDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
         }
       }
 
-      // Map Footer Trail Fixes
+      // 6. Map Footer Trail Fixes
       const trailEl = document.getElementById('map-trail-points-count');
       if (trailEl) {
         trailEl.textContent = `Live Trail: ${virtualWalkState.waypointCount} waypoint fixes`;
       }
     }
 
-    function toggleVirtualWalkSession() {
-      virtualWalkState.active = !virtualWalkState.active;
-      appState.walkSessionActive = virtualWalkState.active;
+    // Explicit Start Function with Clean State Reset
+    function startVirtualWalkSession() {
+      // 1. Clean up any lingering intervals or watchers first
+      if (virtualWalkState.sessionInterval) {
+        clearInterval(virtualWalkState.sessionInterval);
+        virtualWalkState.sessionInterval = null;
+      }
+      if (virtualWalkState.confirmationInterval) {
+        clearInterval(virtualWalkState.confirmationInterval);
+        virtualWalkState.confirmationInterval = null;
+      }
+      virtualWalkState.confirmationActive = false;
+      document.getElementById('inactivity-modal')?.classList.add('hidden');
+      stopVirtualWalkGpsWatch();
+
+      // 2. Clear previous trail polyline from Leaflet map
+      if (walkTrailPolyline && walkLeafletLayerGroup) {
+        walkLeafletLayerGroup.removeLayer(walkTrailPolyline);
+        walkTrailPolyline = null;
+      }
+
+      // 3. Reset session lifecycle & telemetry to pure baseline zero
+      const now = Date.now();
+      virtualWalkState.active = true;
+      appState.walkSessionActive = true;
+      virtualWalkState.startTime = now;
+      virtualWalkState.sessionSeconds = 0;
+      virtualWalkState.stationaryStartTime = now;
+      virtualWalkState.stationarySeconds = 0;
+      virtualWalkState.distanceWalkedKm = 0.00;
+      virtualWalkState.velocityKmh = 0.0;
+      virtualWalkState.motionState = 'Stationary (Safe)';
+      virtualWalkState.waypointCount = 0;
+      virtualWalkState.breadcrumbs = [];
+
+      if (virtualWalkState.currentCoords) {
+        virtualWalkState.anchorCoords = [...virtualWalkState.currentCoords];
+        virtualWalkState.breadcrumbs = [[...virtualWalkState.currentCoords]];
+        renderVirtualWalkMarker(virtualWalkState.currentCoords);
+      }
+
+      // 4. Update UI immediately to 00:00 and active states
+      const clockEl = document.getElementById('safety-session-clock');
+      if (clockEl) clockEl.textContent = '00:00';
 
       const btn = document.getElementById('btn-toggle-journey');
       const btnText = document.getElementById('btn-toggle-journey-text');
+      const btnIcon = document.getElementById('btn-toggle-journey-icon');
+      if (btn) {
+        btn.className = 'w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm transition flex items-center justify-center gap-2 shadow-md';
+      }
+      if (btnText) btnText.textContent = 'End Journey Safely';
+      if (btnIcon) btnIcon.setAttribute('data-lucide', 'square');
+
       const pill = document.getElementById('escort-active-pill');
+      if (pill) {
+        pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5';
+        pill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span id="escort-pill-text">ESCORT ACTIVE</span>';
+      }
 
+      updateWalkTelemetryUI();
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      // 5. Start GPS watcher and session cadence interval
+      startVirtualWalkGpsWatch();
+      virtualWalkState.sessionInterval = setInterval(handleVirtualWalkTick, 1000);
+
+      SoundController.play('login');
+      showToast('Virtual Walk escort activated. Registered guardian active.', 'success');
+    }
+
+    // Explicit End Function with Resource Teardown
+    function endVirtualWalkSession() {
+      // 1. Immediately deactivate session state
+      virtualWalkState.active = false;
+      appState.walkSessionActive = false;
+
+      // 2. Stop and nullify all active intervals and watchers
+      if (virtualWalkState.sessionInterval) {
+        clearInterval(virtualWalkState.sessionInterval);
+        virtualWalkState.sessionInterval = null;
+      }
+      if (virtualWalkState.confirmationInterval) {
+        clearInterval(virtualWalkState.confirmationInterval);
+        virtualWalkState.confirmationInterval = null;
+      }
+      virtualWalkState.confirmationActive = false;
+      document.getElementById('inactivity-modal')?.classList.add('hidden');
+      stopVirtualWalkGpsWatch();
+
+      // 3. Update motion telemetry to Standby
+      virtualWalkState.motionState = 'Standby';
+      virtualWalkState.velocityKmh = 0.0;
+
+      // 4. Update UI to Standby state (leaving final summary elapsed time visible on clock)
+      const btn = document.getElementById('btn-toggle-journey');
+      const btnText = document.getElementById('btn-toggle-journey-text');
+      const btnIcon = document.getElementById('btn-toggle-journey-icon');
+      if (btn) {
+        btn.className = 'w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition flex items-center justify-center gap-2 shadow-md';
+      }
+      if (btnText) btnText.textContent = 'Start Live Walk Escort';
+      if (btnIcon) btnIcon.setAttribute('data-lucide', 'play');
+
+      const pill = document.getElementById('escort-active-pill');
+      if (pill) {
+        pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-plum-950 text-ivory-400 border border-plum-800 flex items-center gap-1.5';
+        pill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span><span id="escort-pill-text">ESCORT STANDBY</span>';
+      }
+
+      updateWalkTelemetryUI();
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      SoundController.play('logout');
+      showToast('Virtual Walk escort journey ended safely.', 'info');
+    }
+
+    function toggleVirtualWalkSession() {
       if (virtualWalkState.active) {
-        SoundController.play('login');
-        if (btn) {
-          btn.className = 'w-full py-3 rounded-xl bg-[#F43F5E] hover:bg-rose-600 text-white font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg';
-        }
-        if (btnText) btnText.textContent = 'End Journey Safely';
-        if (pill) {
-          pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5';
-          pill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span id="escort-pill-text">ESCORT ACTIVE</span>';
-        }
-
-        // Start session ticking
-        if (virtualWalkState.sessionInterval) clearInterval(virtualWalkState.sessionInterval);
-        virtualWalkState.sessionInterval = setInterval(handleVirtualWalkTick, 1000);
-
-        // Start GPS tracking watch
-        startVirtualWalkGpsWatch();
-
-        showToast('Virtual Walk escort protocol activated. Registered guardian active.', 'success');
+        endVirtualWalkSession();
       } else {
-        SoundController.play('logout');
-        if (btn) {
-          btn.className = 'w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg';
-        }
-        if (btnText) btnText.textContent = 'Start Live Walk Escort';
-        if (pill) {
-          pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-slate-800 text-slate-400 border border-slate-700 flex items-center gap-1.5';
-          pill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span><span id="escort-pill-text">ESCORT STANDBY</span>';
-        }
-
-        // Stop session ticking
-        if (virtualWalkState.sessionInterval) {
-          clearInterval(virtualWalkState.sessionInterval);
-          virtualWalkState.sessionInterval = null;
-        }
-
-        // Stop GPS watch
-        stopVirtualWalkGpsWatch();
-
-        // Close confirmation if open
-        if (virtualWalkState.confirmationActive) {
-          confirmUserSafe();
-        }
-
-        virtualWalkState.velocityKmh = 0.0;
-        virtualWalkState.motionState = 'Stationary (Safe)';
-        updateWalkTelemetryUI();
-
-        showToast('Virtual Walk escort journey ended safely.', 'info');
+        startVirtualWalkSession();
       }
     }
 
@@ -4478,15 +4616,23 @@
     }
 
     function startCompanionDemo(opts = {}) {
-      if (!virtualWalkState.active) {
-        toggleVirtualWalkSession();
-      }
-      showToast('Virtual Walk escort active. Demo watchdog check armed (15s).', 'info');
+      virtualWalkState.demoMode = true;
+      virtualWalkState.inactivityThreshold = 15;
+      const toggle = document.getElementById('demo-inactivity-mode-toggle');
+      if (toggle) toggle.checked = true;
+      const label = document.getElementById('inactivity-trigger-label');
+      if (label) label.textContent = '15 seconds';
+      showToast('Demo Inactivity Mode active: triggers check in 15 seconds.', 'info');
     }
 
     function stopCompanionDemo() {
-      if (virtualWalkState.active) {
-        toggleVirtualWalkSession();
+      if (virtualWalkState.confirmationActive && virtualWalkState.isDemoTest) {
+        if (virtualWalkState.confirmationInterval) {
+          clearInterval(virtualWalkState.confirmationInterval);
+          virtualWalkState.confirmationInterval = null;
+        }
+        virtualWalkState.confirmationActive = false;
+        document.getElementById('inactivity-modal')?.classList.add('hidden');
       }
     }
 
@@ -4504,6 +4650,8 @@
 
       virtualWalkState.watchId = navigator.geolocation.watchPosition(
         (pos) => {
+          if (!virtualWalkState.active) return;
+
           const lat = Number(pos.coords.latitude.toFixed(5));
           const lng = Number(pos.coords.longitude.toFixed(5));
           const acc = Math.round(pos.coords.accuracy || 15);
@@ -4538,6 +4686,7 @@
             virtualWalkState.velocityKmh = speedKmh;
             virtualWalkState.distanceWalkedKm += Number((dist / 1000).toFixed(3));
             virtualWalkState.anchorCoords = [lat, lng];
+            virtualWalkState.stationaryStartTime = Date.now();
             virtualWalkState.stationarySeconds = 0;
             virtualWalkState.waypointCount++;
 
@@ -4574,7 +4723,7 @@
       const escortPinHtml = `
         <div style="position:relative;width:32px;height:42px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6));cursor:pointer;">
           <svg width="32" height="42" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 0C5.37258 0 0 5.37258 0 12C0 21 12 32 12 32C12 32 24 21 24 12C24 5.37258 18.6274 0 12 0Z" fill="#0284C7"/>
+            <path d="M12 0C5.37258 0 0 5.37258 0 12C0 21 12 32 12 32C12 32 24 21 24 12C24 5.37258 18.6274 0 12 0Z" fill="#B83A5D"/>
             <circle cx="12" cy="12" r="5.5" fill="#FFFFFF"/>
             <circle cx="12" cy="12" r="3.5" fill="#10B981"/>
           </svg>
@@ -4592,24 +4741,24 @@
       if (!walkCustomPinMarker) {
         walkCustomPinMarker = L.marker(coords, { icon: escortIcon }).addTo(walkLeafletLayerGroup);
         walkCustomPinMarker.bindPopup(`
-          <div style="font-family:sans-serif;font-size:12px;color:#0F172A;line-height:1.4;">
-            <strong style="color:#0284C7;">Live Citizen Escort Active</strong><br>
-            <span style="font-size:11px;color:#64748B;">Safe corridor radius active (±${virtualWalkState.accuracy}m)</span><br>
-            <span style="font-family:monospace;font-size:10px;color:#334155;">${coords[0].toFixed(5)}° N, ${coords[1].toFixed(5)}° E</span>
+          <div style="font-family:sans-serif;font-size:12px;color:#1C0D1E;line-height:1.4;">
+            <strong style="color:#B83A5D;">Live Citizen Escort Active</strong><br>
+            <span style="font-size:11px;color:#5E574D;">Safe corridor radius active (±${virtualWalkState.accuracy}m)</span><br>
+            <span style="font-family:monospace;font-size:10px;color:#46204A;">${coords[0].toFixed(5)}° N, ${coords[1].toFixed(5)}° E</span>
           </div>
         `);
       } else {
         walkCustomPinMarker.setLatLng(coords);
       }
 
-      // Safe Corridor Circle (Cyan/Teal radius circle matching screenshot)
+      // Safe Corridor Circle (Translucent Rose/Plum boundary matching SafeCity theme)
       const corridorRadius = 35;
       if (!walkCorridorCircle) {
         walkCorridorCircle = L.circle(coords, {
           radius: corridorRadius,
-          color: '#0D9488',
-          fillColor: '#14B8A6',
-          fillOpacity: 0.22,
+          color: '#B83A5D',
+          fillColor: '#DF708E',
+          fillOpacity: 0.18,
           weight: 2
         }).addTo(walkLeafletLayerGroup);
       } else {
@@ -4624,7 +4773,7 @@
         walkTrailPolyline.setLatLngs(virtualWalkState.breadcrumbs);
       } else {
         walkTrailPolyline = L.polyline(virtualWalkState.breadcrumbs, {
-          color: '#0284C7',
+          color: '#B83A5D',
           weight: 4,
           opacity: 0.85,
           dashArray: '2, 4'
@@ -4663,7 +4812,7 @@
         walkLeafletMap.invalidateSize();
       }
 
-      // Initial GPS acquisition
+      // Initial GPS acquisition: Standby mode by default, strictly zero auto-start
       if (virtualWalkState.currentCoords) {
         renderVirtualWalkMarker(virtualWalkState.currentCoords);
         walkLeafletMap.setView(virtualWalkState.currentCoords, 16);
@@ -4676,18 +4825,12 @@
             virtualWalkState.accuracy = acc;
             virtualWalkState.currentCoords = [lat, lng];
             virtualWalkState.anchorCoords = [lat, lng];
-            virtualWalkState.breadcrumbs = [[lat, lng]];
 
             const accEl = document.getElementById('map-gps-lock-accuracy');
             if (accEl) accEl.textContent = `GPS Satellite Lock: ±${acc}m accuracy`;
 
             renderVirtualWalkMarker([lat, lng]);
             walkLeafletMap.setView([lat, lng], 16);
-
-            // Auto-start escort session if not yet active to match screenshot
-            if (!virtualWalkState.active) {
-              toggleVirtualWalkSession();
-            }
           },
           (err) => {
             console.warn('GPS position error:', err);
@@ -4696,10 +4839,6 @@
             virtualWalkState.anchorCoords = fallback;
             renderVirtualWalkMarker(fallback);
             walkLeafletMap.setView(fallback, 15);
-
-            if (!virtualWalkState.active) {
-              toggleVirtualWalkSession();
-            }
           },
           { enableHighAccuracy: true, timeout: 8000 }
         );
@@ -4709,10 +4848,6 @@
         virtualWalkState.anchorCoords = fallback;
         renderVirtualWalkMarker(fallback);
         walkLeafletMap.setView(fallback, 15);
-
-        if (!virtualWalkState.active) {
-          toggleVirtualWalkSession();
-        }
       }
 
       updateWalkTelemetryUI();
