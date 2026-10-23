@@ -39,6 +39,8 @@ CREATE TABLE users (
     password_hash VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
     emergency_contact VARCHAR(20),
+    emergency_contact_name VARCHAR(255),
+    emergency_contact_relationship VARCHAR(100),
     role VARCHAR(50) DEFAULT 'citizen',
     auth_provider VARCHAR(50) DEFAULT 'local',
     avatar_url VARCHAR(500),
@@ -158,6 +160,23 @@ BEFORE INSERT ON incidents
 FOR EACH ROW
 WHEN (NEW.public_report_id IS NULL)
 EXECUTE FUNCTION generate_report_id();
+
+CREATE TABLE IF NOT EXISTS emergency_alerts (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    alert_type VARCHAR(50) NOT NULL,
+    latitude DECIMAL(10,8),
+    longitude DECIMAL(11,8),
+    address TEXT,
+    contact_name VARCHAR(255),
+    contact_phone VARCHAR(50),
+    contact_relationship VARCHAR(100),
+    status VARCHAR(50) DEFAULT 'TRIGGERED',
+    session_duration_seconds INTEGER DEFAULT 0,
+    details JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    resolved_at TIMESTAMPTZ
+);
 
 CREATE INDEX idx_incidents_location ON incidents USING GIST (location);
 CREATE INDEX idx_clusters_centroid ON clusters USING GIST (centroid);
