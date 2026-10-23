@@ -4705,7 +4705,7 @@
       appState.companionDemoActive = true;
       appState.companionDemoSecondsLeft = 30;
 
-      let markerLabel = 'Your Current GPS Location (±' + acc + 'm)';
+      let markerLabel = 'Your Current Location: ' + (demoSessionState.resolvedAddress || `${lat}° N, ${lng}° E`) + ' (Stationary)';
       if (mode === 'manual') markerLabel = 'Selected Custom Start Pin (±' + acc + 'm)';
       if (mode === 'simulated') markerLabel = '[SIMULATED DEMO] Church Street Corridor (±' + acc + 'm)';
 
@@ -4716,19 +4716,19 @@
       SoundController.play('step');
 
       if (mode === 'live') {
-        appendCompanionTelemetry(`[DEMO LIVE GPS] Exact position acquired: ${lat}° N, ${lng}° E (±${acc}m accuracy circle).`);
+        appendCompanionTelemetry(`[DEMO LIVE GPS] Exact position acquired: ${lat}° N, ${lng}° E (±${acc}m accuracy circle). Status: Stationary.`);
         // Reverse geocode asynchronously
         fetchReverseGeocode(lat, lng).then(addr => {
           if (addr && demoSessionState.active) {
             demoSessionState.resolvedAddress = addr;
-            renderCompanionUserMarker([lat, lng], `Your Current Location: ${addr} (±${acc}m)`);
+            renderCompanionUserMarker([lat, lng], `Your Current Location: ${addr} (Stationary • 0m moved)`);
             appendCompanionTelemetry(`[DEMO LIVE GPS] Locality identified: ${addr}.`);
             const elapsed = 30 - demoSessionState.secondsLeft;
             if (elapsed < 10) updateDemoUI(elapsed);
           }
         });
 
-        // Set up real GPS watch to detect physical movement during demo
+        // Set up real GPS watch with jitter filtering to eliminate false movement
         if (navigator.geolocation && !demoSessionState.watchId) {
           demoSessionState.watchId = navigator.geolocation.watchPosition(
             (pos) => {
@@ -4736,25 +4736,46 @@
               const nLat = Number(pos.coords.latitude.toFixed(5));
               const nLng = Number(pos.coords.longitude.toFixed(5));
               const nAcc = Math.round(pos.coords.accuracy || 10);
-              const dist = calcDistanceMeters(demoSessionState.currentCoords[0], demoSessionState.currentCoords[1], nLat, nLng);
+              
+              // Filter indoor/stationary GPS jitter: consumer GPS naturally drifts ±10-20m while sitting still
+              const distFromStart = calcDistanceMeters(
+                demoSessionState.startCoords[0],
+                demoSessionState.startCoords[1],
+                nLat,
+                nLng
+              );
 
-              if (dist >= 2.5) {
-                demoSessionState.realDistanceMoved += dist;
+              // Minimum physical relocation threshold (must exceed accuracy radius or 25 meters)
+              const motionThreshold = Math.max(nAcc * 1.25, 25);
+
+              if (distFromStart >= motionThreshold) {
+                // Genuine physical movement detected
+                demoSessionState.realDistanceMoved = Math.round(distFromStart);
                 demoSessionState.currentCoords = [nLat, nLng];
                 demoSessionState.accuracy = nAcc;
-                demoSessionState.breadcrumbs.push([nLat, nLng]);
+                if (!demoSessionState.breadcrumbs.some(pt => pt[0] === nLat && pt[1] === nLng)) {
+                  demoSessionState.breadcrumbs.push([nLat, nLng]);
+                }
                 appState.companionCoords = [nLat, nLng];
                 appState.companionAccuracy = nAcc;
                 appState.companionBreadcrumbs = demoSessionState.breadcrumbs;
 
-                renderCompanionUserMarker([nLat, nLng], `Live GPS Movement: ${demoSessionState.resolvedAddress || ''} (±${nAcc}m)`);
+                const locText = demoSessionState.resolvedAddress || `${nLat}° N, ${nLng}° E`;
+                renderCompanionUserMarker([nLat, nLng], `Live Motion Detected: ${locText} (Moved ${demoSessionState.realDistanceMoved}m)`);
                 renderCompanionAccuracyCircle([nLat, nLng], nAcc);
                 drawCompanionBreadcrumbs();
-                appendCompanionTelemetry(`[DEMO LIVE GPS] Real displacement: +${dist.toFixed(1)}m (Total: ${demoSessionState.realDistanceMoved.toFixed(1)}m).`);
+                appendCompanionTelemetry(`[DEMO LIVE GPS] Genuine physical movement detected: +${demoSessionState.realDistanceMoved}m from start.`);
+              } else {
+                // Device is stationary - keep anchored at startCoords and do not accumulate false motion
+                demoSessionState.realDistanceMoved = 0;
+                demoSessionState.accuracy = nAcc;
+                renderCompanionAccuracyCircle(demoSessionState.startCoords, nAcc);
+                const locText = demoSessionState.resolvedAddress || `${demoSessionState.startCoords[0]}° N, ${demoSessionState.startCoords[1]}° E`;
+                renderCompanionUserMarker(demoSessionState.startCoords, `Your Current Location: ${locText} (Stationary • 0m moved)`);
               }
             },
             (err) => console.warn('Demo live watch notice:', err),
-            { enableHighAccuracy: true, maximumAge: 1500 }
+            { enableHighAccuracy: true, maximumAge: 2000 }
           );
         }
       } else if (mode === 'manual') {
@@ -4851,7 +4872,7 @@
 
         if (stepNarrative) {
           stepNarrative.textContent = isLive
-            ? `Calibrated Companion escort to your actual device GPS at ${locLabel} (±${acc}m accuracy circle).`
+            ? `Calibrated Companion escort to your actual device GPS at ${locLabel} (±${acc}m accuracy circle). Device status: Stationary.`
             : (isManual
               ? `Calibrated Companion escort to your selected map coordinates at ${locLabel}.`
               : `Calibrating illustrative commuter coordinates along Church Street corridor (±${acc}m).`);
@@ -4865,7 +4886,7 @@
 
         if (stepNarrative) {
           stepNarrative.textContent = isLive
-            ? `Companion escort active at your exact location (${locLabel}). 180s inactivity watchdog armed. Real-time sensor telemetry initiated.`
+            ? `Companion escort active at your exact location (${locLabel}). 180s inactivity watchdog armed. Status: Stationary (0m moved).`
             : `${modePrefix}Escort active at ${locLabel}. 180s inactivity watchdog armed. Simulated safe corridor monitored.`;
         }
 
@@ -4877,7 +4898,9 @@
             drawCompanionBreadcrumbs();
             renderCompanionUserMarker([wp.lat, wp.lng], '[SIMULATED] Active Guard (±' + wp.acc + 'm)');
           }
-          appendCompanionTelemetry(`[DEMO] Escort engaged at ${locLabel}. Inactivity watchdog threshold: 180s.`);
+          appendCompanionTelemetry(isLive
+            ? `[DEMO] Escort active at ${locLabel}. Device stationary (0m moved). Inactivity watchdog threshold: 180s.`
+            : `[DEMO] Escort engaged at ${locLabel}. Inactivity watchdog threshold: 180s.`);
         }
       } else if (elapsed < 15) {
         // Step 3: Active Escort & Dynamic GPS Updates (10-15s)
@@ -4888,9 +4911,9 @@
 
         if (stepNarrative) {
           if (isLive) {
-            stepNarrative.textContent = demoSessionState.realDistanceMoved > 2
-              ? `Real device motion detected: ${demoSessionState.realDistanceMoved.toFixed(1)}m logged along your route with live green breadcrumb tracking.`
-              : `Live GPS & accelerometer sensors active at your current position (${locLabel}). Zero distress anomalies detected; safe perimeter monitored.`;
+            stepNarrative.textContent = demoSessionState.realDistanceMoved >= 25
+              ? `Physical displacement detected: ${demoSessionState.realDistanceMoved}m logged from starting point with live breadcrumb tracking.`
+              : `Live GPS & motion sensors verified at your exact position (${locLabel}). Device is stationary (0m moved). Zero distress anomalies; safe perimeter monitored.`;
           } else {
             stepNarrative.textContent = `${modePrefix}Simulating transit along safe corridor within 80m of 24/7 Verified Safe Refuge Pharmacy.`;
           }
@@ -4905,7 +4928,9 @@
             renderCompanionUserMarker([wp.lat, wp.lng], '[SIMULATED] Safe Corridor Waypoint (±' + wp.acc + 'm)');
           }
           appendCompanionTelemetry(isLive
-            ? `[DEMO LIVE GPS] Motion sensor monitoring active at ${locLabel}. Real GPS readings synchronized.`
+            ? (demoSessionState.realDistanceMoved >= 25
+              ? `[DEMO LIVE GPS] Motion confirmed: ${demoSessionState.realDistanceMoved}m traveled from start.`
+              : `[DEMO LIVE GPS] Motion sensors active at ${locLabel}. Device confirmed stationary (0m moved).`)
             : `[DEMO SIMULATED] Waypoint verified near 24/7 Safe Haven refuge.`);
         }
       } else if (elapsed < 20) {
@@ -4952,8 +4977,11 @@
         if (stepTitle) stepTitle.textContent = '6. Safe Companion Escort Verified';
 
         if (stepNarrative) {
+          const moveSummary = demoSessionState.realDistanceMoved >= 25
+            ? `${demoSessionState.realDistanceMoved}m traveled`
+            : `Stationary baseline confirmed (0m moved)`;
           stepNarrative.textContent = isLive
-            ? `Demonstration completed successfully at your exact location (${locLabel}). All escort systems verified: real-time GPS tracking, masked contact dispatch, and inactivity watchdog.`
+            ? `Demonstration completed successfully at your exact location (${locLabel}). Escort verified: ${moveSummary}, masked contact dispatch ready, and inactivity watchdog active.`
             : `${modePrefix}Demonstration concluded safely along Bengaluru corridor: 0 distress flags, verified safe havens, and responsive watchdog.`;
         }
 
