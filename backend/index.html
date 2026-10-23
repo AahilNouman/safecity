@@ -213,20 +213,17 @@
   <header class="bg-plum-900 text-white sticky top-0 z-40 border-b border-plum-800 shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4">
       
-      <!-- Brand Logo -->
+      <!-- Brand Logo & Name (Matching Mobile Image 2) -->
       <button type="button" onclick="switchTab('home')" class="flex items-center gap-3 text-left group focus:outline-none" aria-label="SafeCity Home">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-600 via-plum-700 to-plum-900 border border-rose-400/30 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-200">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-600 via-plum-700 to-plum-900 border border-rose-400/30 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-200 shrink-0">
           <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             <path d="M9 12l2 2 4-4"/>
           </svg>
         </div>
         <div>
-          <div class="flex items-center gap-1.5">
-            <span class="text-base sm:text-lg font-bold tracking-tight text-white group-hover:text-rose-200 transition">SafeCity</span>
-            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-plum-800 text-rose-200 border border-plum-700">BLR</span>
-          </div>
-          <p class="text-[11px] text-ivory-300 font-normal leading-none hidden sm:block">Community Safety &amp; Civic Refuge Network</p>
+          <div class="text-base sm:text-lg font-bold tracking-tight text-white group-hover:text-rose-200 transition leading-tight">SafeCity</div>
+          <div class="text-[9px] sm:text-[10px] font-bold tracking-wider text-rose-300 uppercase leading-none mt-0.5">Safety Network</div>
         </div>
       </button>
 
@@ -234,7 +231,15 @@
       <nav class="hidden lg:flex items-center gap-1 bg-plum-950/70 p-1 rounded-xl border border-plum-800" aria-label="Main Navigation">
         <button type="button" id="nav-btn-home" onclick="switchTab('home')" class="nav-tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-plum-800 text-white shadow">
           <i data-lucide="home" class="w-3.5 h-3.5"></i>
-          <span>Overview</span>
+          <span>Home</span>
+        </button>
+        <button type="button" id="nav-btn-routes" onclick="switchTab(&apos;routes&apos;)" class="nav-tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-ivory-200 hover:text-white hover:bg-plum-800/60">
+          <i data-lucide="navigation" class="w-3.5 h-3.5 text-rose-300"></i>
+          <span>Safe Route</span>
+        </button>
+        <button type="button" id="nav-btn-walk" onclick="switchTab('walk')" class="nav-tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-ivory-200 hover:text-white hover:bg-plum-800/60">
+          <i data-lucide="compass" class="w-3.5 h-3.5 text-rose-300"></i>
+          <span>Walk With Me</span>
         </button>
         <button type="button" id="nav-btn-map" onclick="switchTab('map')" class="nav-tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-ivory-200 hover:text-white hover:bg-plum-800/60">
           <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-300"></i>
@@ -242,49 +247,40 @@
         </button>
         <button type="button" id="nav-btn-report" onclick="switchTab('report')" class="nav-tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-ivory-200 hover:text-white hover:bg-plum-800/60">
           <i data-lucide="file-text" class="w-3.5 h-3.5 text-rose-300"></i>
-          <span>Report Incident</span>
-        </button>
-        <button type="button" id="nav-btn-routes" onclick="switchTab(&apos;routes&apos;)" class="nav-tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-ivory-200 hover:text-white hover:bg-plum-800/60">
-          <i data-lucide="navigation" class="w-3.5 h-3.5 text-rose-300"></i>
-          <span>Safe Routes</span>
-        </button>
-        <button type="button" id="nav-btn-walk" onclick="switchTab('walk')" class="nav-tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-ivory-200 hover:text-white hover:bg-plum-800/60">
-          <i data-lucide="compass" class="w-3.5 h-3.5 text-rose-300"></i>
-          <span>Companion</span>
+          <span>Report</span>
         </button>
         <button type="button" id="nav-btn-admin" onclick="switchTab('admin')" class="hidden nav-tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-ivory-200 hover:text-white hover:bg-plum-800/60">
           <i data-lucide="shield-check" class="w-3.5 h-3.5 text-rose-300"></i>
           <span>Moderator</span>
           <span id="nav-badge-pending" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-rose-600 text-white font-bold ml-0.5">3</span>
         </button>
-        </nav>
+      </nav>
 
-      <!-- User Account Actions / Active Session Pill -->
+      <!-- Right Actions: Desktop Account & Audio + Mobile Hamburger (Matching Image 2) -->
       <div class="flex items-center gap-2">
-        <!-- Subtle Audio Feedback Toggle -->
-        <button type="button" id="btn-sound-toggle" onclick="SoundController.toggleMute()" title="Toggle Safety Audio Feedback" class="p-1.5 rounded-lg text-rose-300 hover:text-white hover:bg-plum-800 transition flex items-center justify-center">
+        <!-- Audio Feedback Toggle (Desktop) -->
+        <button type="button" id="btn-sound-toggle" onclick="SoundController.toggleMute()" title="Toggle Safety Audio Feedback" class="hidden sm:flex p-1.5 rounded-lg text-rose-300 hover:text-white hover:bg-plum-800 transition items-center justify-center">
           <i data-lucide="volume-2" id="sound-toggle-icon" class="w-4 h-4"></i>
         </button>
 
-        <!-- Logged Out State -->
-        <div id="auth-logged-out-actions" class="flex items-center gap-2">
+        <!-- Desktop Logged Out State -->
+        <div id="auth-logged-out-actions" class="hidden sm:flex items-center gap-2">
           <button type="button" onclick="openAuthModal('login')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-ivory-200 hover:text-white hover:bg-plum-800 border border-plum-700/80 transition flex items-center gap-1.5">
             <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
             <span>Sign In</span>
           </button>
           <button type="button" onclick="openAuthModal('register')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white transition flex items-center gap-1.5 shadow-sm">
             <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline">Create Account</span>
-            <span class="sm:hidden">Join</span>
+            <span>Join</span>
           </button>
         </div>
 
-        <!-- Logged In State (Hidden by default) -->
-        <div id="auth-logged-in-actions" class="hidden flex items-center gap-2">
+        <!-- Desktop Logged In State -->
+        <div id="auth-logged-in-actions" class="hidden items-center gap-2">
           <div class="flex items-center gap-2 px-3 py-1 rounded-lg bg-plum-800/80 border border-plum-700">
-            <div class="w-6 h-6 rounded-full bg-rose-500 text-white text-xs font-bold flex items-center justify-center" id="user-avatar-initials">AR</div>
+            <div class="w-6 h-6 rounded-full bg-rose-500 text-white text-xs font-bold flex items-center justify-center" id="user-avatar-initials">AN</div>
             <div class="text-left hidden sm:block">
-              <div class="text-xs font-semibold text-white leading-tight" id="user-display-name">Ananya Rao</div>
+              <div class="text-xs font-semibold text-white leading-tight" id="user-display-name">Aahil Nouman</div>
               <div class="text-[10px] text-rose-300 leading-tight">Verified Citizen</div>
             </div>
           </div>
@@ -293,39 +289,80 @@
           </button>
         </div>
 
-        <!-- Mobile Menu Toggle Button -->
-        <button type="button" onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg text-ivory-200 hover:text-white hover:bg-plum-800" aria-label="Toggle Navigation Menu">
+        <!-- Mobile Menu Hamburger Button (Matching Image 2) -->
+        <button type="button" onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl text-ivory-200 hover:text-white hover:bg-plum-800/80 bg-plum-950/80 border border-plum-800 transition flex items-center justify-center shadow-sm" aria-label="Toggle Navigation Menu">
           <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
       </div>
 
     </div>
 
-    <!-- Mobile Drawer Navigation -->
-    <div id="mobile-nav-drawer" class="hidden lg:hidden border-t border-plum-800 bg-plum-950 px-4 py-3 space-y-1">
-      <button type="button" onclick="switchTab('home'); toggleMobileMenu(false);" class="w-full px-3 py-2.5 rounded-lg text-xs font-semibold text-ivory-200 hover:bg-plum-850 text-left flex items-center gap-2.5">
-        <i data-lucide="home" class="w-4 h-4 text-rose-300"></i> Overview
+    <!-- Mobile Drawer Navigation (Matching Image 3) -->
+    <div id="mobile-nav-drawer" class="hidden lg:hidden border-t border-plum-800 bg-plum-950 px-4 py-4 space-y-3 shadow-2xl">
+      <!-- Nav Links List -->
+      <div class="space-y-1" id="mobile-nav-links-list">
+        <button type="button" id="mobile-tab-home" onclick="switchTab('home'); toggleMobileMenu(false);" class="w-full px-4 py-3 rounded-xl text-sm font-semibold text-rose-300 bg-plum-850/90 border border-plum-800 text-left flex items-center justify-between transition shadow-sm">
+          <span>Home</span>
+        </button>
+        <button type="button" id="mobile-tab-routes" onclick="switchTab(&apos;routes&apos;); toggleMobileMenu(false);" class="w-full px-4 py-3 rounded-xl text-sm font-semibold text-ivory-200 hover:text-white hover:bg-plum-850 text-left flex items-center justify-between transition">
+          <span>Safe Route</span>
+        </button>
+        <button type="button" id="mobile-tab-walk" onclick="switchTab('walk'); toggleMobileMenu(false);" class="w-full px-4 py-3 rounded-xl text-sm font-semibold text-ivory-200 hover:text-white hover:bg-plum-850 text-left flex items-center justify-between transition">
+          <span>Walk With Me</span>
+        </button>
+        <button type="button" id="mobile-tab-map" onclick="switchTab('map'); toggleMobileMenu(false);" class="w-full px-4 py-3 rounded-xl text-sm font-semibold text-ivory-200 hover:text-white hover:bg-plum-850 text-left flex items-center justify-between transition">
+          <span>Safety Map</span>
+        </button>
+        <button type="button" id="mobile-tab-report" onclick="switchTab('report'); toggleMobileMenu(false);" class="w-full px-4 py-3 rounded-xl text-sm font-semibold text-ivory-200 hover:text-white hover:bg-plum-850 text-left flex items-center justify-between transition">
+          <span>Report</span>
+        </button>
+        <button type="button" id="mobile-nav-btn-admin" onclick="switchTab('admin'); toggleMobileMenu(false);" class="hidden w-full px-4 py-3 rounded-xl text-sm font-semibold text-ivory-200 hover:text-white hover:bg-plum-850 text-left flex items-center justify-between transition">
+          <span>Moderator Command</span>
+        </button>
+      </div>
+
+      <!-- Guest Mode / User Account Card (Matching Image 3) -->
+      <div class="bg-plum-900/90 border border-plum-800 rounded-2xl p-4 flex items-center justify-between shadow-sm" id="mobile-user-card">
+        <!-- Logged Out View -->
+        <div id="mobile-guest-content" class="flex items-center justify-between w-full">
+          <div>
+            <div class="text-sm font-bold text-rose-300">Guest Mode</div>
+            <div class="text-[11px] text-ivory-400 mt-0.5">Anonymous civic protection</div>
+          </div>
+          <button type="button" onclick="openAuthModal('login'); toggleMobileMenu(false);" class="px-4 py-2 rounded-xl bg-plum-800 hover:bg-plum-750 text-white font-semibold text-xs border border-plum-700 shadow transition">
+            Sign In
+          </button>
+        </div>
+
+        <!-- Logged In View -->
+        <div id="mobile-user-content" class="hidden items-center justify-between w-full">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-600 to-plum-700 text-white text-xs font-bold flex items-center justify-center shadow-inner" id="mobile-user-avatar">
+              AN
+            </div>
+            <div>
+              <div class="text-sm font-bold text-white leading-tight" id="mobile-user-name">Aahil Nouman</div>
+              <div class="text-[10px] text-rose-300 leading-tight">Verified Citizen</div>
+            </div>
+          </div>
+          <button type="button" onclick="signOutUser(); toggleMobileMenu(false);" class="px-3.5 py-2 rounded-xl bg-plum-800 hover:bg-plum-750 text-ivory-200 hover:text-white font-semibold text-xs border border-plum-700 transition">
+            Sign Out
+          </button>
+        </div>
+      </div>
+
+      <!-- Report an Incident Full-Width CTA Button (Matching Image 3) -->
+      <button type="button" onclick="switchTab('report'); toggleMobileMenu(false);" class="w-full py-3.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
+        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+        <span>Report an Incident</span>
       </button>
-      <button type="button" onclick="switchTab('map'); toggleMobileMenu(false);" class="w-full px-3 py-2.5 rounded-lg text-xs font-semibold text-ivory-200 hover:bg-plum-850 text-left flex items-center gap-2.5">
-        <i data-lucide="map-pin" class="w-4 h-4 text-rose-300"></i> Safety Map &amp; 24/7 Havens
-      </button>
-      <button type="button" onclick="switchTab('report'); toggleMobileMenu(false);" class="w-full px-3 py-2.5 rounded-lg text-xs font-semibold text-ivory-200 hover:bg-plum-850 text-left flex items-center gap-2.5">
-        <i data-lucide="file-text" class="w-4 h-4 text-rose-300"></i> Report an Incident (Anonymous)
-      </button>
-      <button type="button" onclick="switchTab(&apos;routes&apos;); toggleMobileMenu(false);" class="w-full px-3 py-2.5 rounded-lg text-xs font-semibold text-ivory-200 hover:bg-plum-850 text-left flex items-center gap-2.5">
-        <i data-lucide="navigation" class="w-4 h-4 text-rose-300"></i> Lower-Risk Route Navigation
-      </button>
-      <button type="button" onclick="switchTab('walk'); toggleMobileMenu(false);" class="w-full px-3 py-2.5 rounded-lg text-xs font-semibold text-ivory-200 hover:bg-plum-850 text-left flex items-center gap-2.5">
-        <i data-lucide="compass" class="w-4 h-4 text-rose-300"></i> Walk Companion &amp; SOS
-      </button>
-      <button type="button" id="mobile-nav-btn-admin" onclick="switchTab('admin'); toggleMobileMenu(false);" class="hidden w-full px-3 py-2.5 rounded-lg text-xs font-semibold text-ivory-200 hover:bg-plum-850 text-left flex items-center gap-2.5">
-        <i data-lucide="shield-check" class="w-4 h-4 text-rose-300"></i> Moderator Safety Command
-      </button>
-      <div class="pt-2 border-t border-plum-850 flex items-center justify-between px-3 py-2 text-xs text-ivory-300">
-        <span class="flex items-center gap-2"><i data-lucide="volume-2" class="w-4 h-4 text-rose-300"></i> Audio Feedback</span>
+
+      <!-- Audio Feedback Toggle (Mobile) -->
+      <div class="pt-2 border-t border-plum-850 flex items-center justify-between px-2 text-xs text-ivory-400">
+        <span class="flex items-center gap-2"><i data-lucide="volume-2" class="w-4 h-4 text-rose-300"></i> Safety Audio Chimes</span>
         <button type="button" onclick="SoundController.toggleMute()" class="px-2.5 py-1 rounded bg-plum-800 hover:bg-plum-700 text-white text-[11px] font-semibold">Toggle</button>
       </div>
-      </div>
+    </div>
   </header>
 
   <!-- MAIN APPLICATION CONTENT CONTAINER -->
@@ -1717,7 +1754,7 @@
         <form id="form-auth-register" onsubmit="handleUserRegistration(event)" class="hidden space-y-3 pt-1">
           <div>
             <label for="reg-name" class="text-xs font-semibold text-ivory-700">Full Name:</label>
-            <input type="text" id="reg-name" required placeholder="Ananya Rao" class="mt-1 w-full text-xs rounded-lg border border-surface-border px-3 py-2 bg-white text-plum-950 focus:outline-none focus:ring-2 focus:ring-plum-400" />
+            <input type="text" id="reg-name" required placeholder="Aahil Nouman" class="mt-1 w-full text-xs rounded-lg border border-surface-border px-3 py-2 bg-white text-plum-950 focus:outline-none focus:ring-2 focus:ring-plum-400" />
           </div>
 
           <div>
@@ -2605,7 +2642,11 @@
         }
         const savedUser = localStorage.getItem('safecity_user_v3') || localStorage.getItem('astrasafe_user_v3');
         if (savedUser) {
-          appState.currentUser = JSON.parse(savedUser);
+          try {
+            const parsed = JSON.parse(savedUser);
+            if (parsed && parsed.name === 'Ananya Rao') parsed.name = 'Aahil Nouman';
+            appState.currentUser = parsed;
+          } catch(e) {}
         }
         const savedAdmin = localStorage.getItem('safecity_admin_token');
         if (savedAdmin) {
@@ -4936,12 +4977,12 @@
       const confirmed = window.confirm(
         "Google Sign-In Authentication:\n\n" +
         "SafeCity integrates with Google Identity Services. To bind your custom client in production, configure GOOGLE_CLIENT_ID in your environment.\n\n" +
-        "Proceed with verified Google Profile (Ananya Rao · ananya.safety@gmail.com)?"
+        "Proceed with verified Google Profile (Aahil Nouman · aahil.safety@gmail.com)?"
       );
       if (confirmed) {
         handleGoogleCredentialResponse({
-          email: 'ananya.safety@gmail.com',
-          name: 'Ananya Rao',
+          email: 'aahil.safety@gmail.com',
+          name: 'Aahil Nouman',
           sub: 'google-sub-1029384756'
         });
       }
@@ -5244,6 +5285,12 @@
       const navBtnAdmin = document.getElementById('nav-btn-admin');
       const mobileNavBtnAdmin = document.getElementById('mobile-nav-btn-admin');
 
+      // Mobile Drawer Elements (Image 3)
+      const mobileGuestBox = document.getElementById('mobile-guest-content');
+      const mobileUserBox = document.getElementById('mobile-user-content');
+      const mobileUserName = document.getElementById('mobile-user-name');
+      const mobileUserAvatar = document.getElementById('mobile-user-avatar');
+
       const isModerator = appState.adminLoggedIn || (appState.currentUser && appState.currentUser.role === 'SUPER_MODERATOR');
 
       // Conditionally reveal moderator nav links ONLY when authenticated as moderator
@@ -5258,15 +5305,28 @@
       if (appState.currentUser) {
         loggedOutBox?.classList.add('hidden');
         loggedInBox?.classList.remove('hidden');
-        if (nameEl) nameEl.textContent = appState.currentUser.name;
-        if (initialsEl) {
-          const parts = appState.currentUser.name.split(' ');
-          const inits = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].slice(0, 2).toUpperCase();
-          initialsEl.textContent = inits;
-        }
+        loggedInBox?.classList.add('flex');
+
+        mobileGuestBox?.classList.add('hidden');
+        mobileUserBox?.classList.remove('hidden');
+        mobileUserBox?.classList.add('flex');
+
+        const userName = appState.currentUser.name || 'Aahil Nouman';
+        if (nameEl) nameEl.textContent = userName;
+        if (mobileUserName) mobileUserName.textContent = userName;
+
+        const parts = userName.split(' ');
+        const inits = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].slice(0, 2).toUpperCase();
+        if (initialsEl) initialsEl.textContent = inits;
+        if (mobileUserAvatar) mobileUserAvatar.textContent = inits;
       } else {
         loggedOutBox?.classList.remove('hidden');
         loggedInBox?.classList.add('hidden');
+        loggedInBox?.classList.remove('flex');
+
+        mobileGuestBox?.classList.remove('hidden');
+        mobileUserBox?.classList.add('hidden');
+        mobileUserBox?.classList.remove('flex');
       }
     }
 
@@ -6044,15 +6104,28 @@ app.listen(5000, () => console.log('SafeCity API running on port 5000'));`
       tabs.forEach((t) => {
         const view = document.getElementById('view-' + t);
         const btn = document.getElementById('nav-btn-' + t);
+        const mBtn = document.getElementById('mobile-tab-' + t);
+
         if (view) {
           if (t === tab) view.classList.remove('hidden');
           else view.classList.add('hidden');
         }
+
+        // Desktop nav tab styling
         if (btn) {
           if (t === tab) {
             btn.className = 'nav-tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-plum-800 text-white shadow';
           } else {
             btn.className = 'nav-tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-ivory-200 hover:text-white hover:bg-plum-800/60';
+          }
+        }
+
+        // Mobile drawer tab styling (Matching Image 3)
+        if (mBtn) {
+          if (t === tab) {
+            mBtn.className = 'w-full px-4 py-3 rounded-xl text-sm font-semibold text-rose-300 bg-plum-850/90 border border-plum-800 text-left flex items-center justify-between transition shadow-sm';
+          } else {
+            mBtn.className = 'w-full px-4 py-3 rounded-xl text-sm font-semibold text-ivory-200 hover:text-white hover:bg-plum-850/60 text-left flex items-center justify-between transition';
           }
         }
       });
