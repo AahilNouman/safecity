@@ -47,7 +47,16 @@ app.use(express.json({ limit: '10mb' }));
 
 // Vercel Serverless Path Normalizer: seamlessly maps both /api/* and rewritten /* to Express routes
 app.use((req, res, next) => {
-  if (!req.url.startsWith('/api') && req.url !== '/' && !req.url.startsWith('/index.html') && !req.url.startsWith('/icons') && !req.url.startsWith('/manifest') && !req.url.startsWith('/service-worker')) {
+  const matched = req.headers['x-matched-path'] || req.headers['x-vercel-matched-path'];
+  if (matched && matched.startsWith('/api')) {
+    req.url = matched;
+  } else if (req.url === '/server.js' || req.url === '/backend/server.js' || req.url.startsWith('/server.js?') || req.url.startsWith('/backend/server.js?')) {
+    if (matched && matched !== req.url) {
+      req.url = matched;
+    } else {
+      req.url = '/api/health';
+    }
+  } else if (!req.url.startsWith('/api') && req.url !== '/' && !req.url.startsWith('/index.html') && !req.url.startsWith('/icons') && !req.url.startsWith('/manifest') && !req.url.startsWith('/service-worker')) {
     req.url = '/api' + req.url;
   }
   next();

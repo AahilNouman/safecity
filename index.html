@@ -3200,7 +3200,9 @@
           }
         });
         if (res.ok) {
-          const data = await res.json();
+          const contentType = res.headers.get('content-type') || '';
+          if (!contentType.includes('application/json')) return;
+          const data = await res.json().catch(() => null);
           if (data && data.success && Array.isArray(data.incidents)) {
             let hasChanges = false;
             const currentMap = new Map(appState.incidents.map(i => [i.report_id, i.status]));
@@ -6386,9 +6388,14 @@
         clearTimeout(timeout);
 
         if (res.ok) {
-          const data = await res.json();
-          if (data && data.success && Array.isArray(data.incidents)) {
-            fetchedIncidents = data.incidents;
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const data = await res.json().catch(() => null);
+            if (data && data.success && Array.isArray(data.incidents)) {
+              fetchedIncidents = data.incidents;
+            }
+          } else {
+            syncError = 'Server returned non-JSON response';
           }
         } else {
           const errData = await res.json().catch(() => ({}));
