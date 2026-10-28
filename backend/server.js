@@ -45,6 +45,14 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '10mb' }));
 
+// Vercel Serverless Path Normalizer: seamlessly maps both /api/* and rewritten /* to Express routes
+app.use((req, res, next) => {
+  if (!req.url.startsWith('/api') && req.url !== '/' && !req.url.startsWith('/index.html') && !req.url.startsWith('/icons') && !req.url.startsWith('/manifest') && !req.url.startsWith('/service-worker')) {
+    req.url = '/api' + req.url;
+  }
+  next();
+});
+
 // Helper: Haversine distance in meters with numerical bounds protection
 function haversineMeters(lat1, lon1, lat2, lon2) {
   const nLat1 = Number(lat1);
