@@ -1,7 +1,0 @@
-{
-  "version": 2,
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/server.js?path=$1" },
-    { "source": "/(.*)", "destination": "/server.js?path=$1" }
-  ]
-}

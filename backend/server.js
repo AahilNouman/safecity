@@ -47,24 +47,30 @@ app.use(express.json({ limit: '10mb' }));
 
 // Vercel Serverless Path Normalizer: seamlessly maps both /api/* and rewritten /* to Express routes
 app.use((req, res, next) => {
-  if (req.query && req.query.path) {
+  const matched = req.headers['x-matched-path'] || req.headers['x-vercel-matched-path'];
+  if (matched && matched.startsWith('/api')) {
+    req.url = matched;
+  } else if (req.query && req.query.path) {
     const sub = Array.isArray(req.query.path) ? req.query.path.join('/') : req.query.path;
     req.url = '/api/' + sub.replace(/^\/+/, '');
-  } else {
-    const matched = req.headers['x-matched-path'] || req.headers['x-vercel-matched-path'];
-    if (matched && matched.startsWith('/api')) {
-      req.url = matched;
-    } else if (req.url === '/server.js' || req.url === '/backend/server.js' || req.url.startsWith('/server.js?') || req.url.startsWith('/backend/server.js?')) {
-      if (matched && matched !== req.url) {
-        req.url = matched;
-      } else {
-        req.url = '/api/health';
-      }
-    } else if (!req.url.startsWith('/api') && req.url !== '/' && !req.url.startsWith('/index.html') && !req.url.startsWith('/icons') && !req.url.startsWith('/manifest') && !req.url.startsWith('/service-worker')) {
-      req.url = '/api' + req.url;
-    }
+  } else if (req.url === '/server.js' || req.url === '/api/server.js' || req.url === '/backend/server.js' || req.url === '/api/backend/server.js' || req.url.startsWith('/server.js?') || req.url.startsWith('/api/server.js?')) {
+    req.url = '/api/health';
+  } else if (!req.url.startsWith('/api') && req.url !== '/' && !req.url.startsWith('/index.html') && !req.url.startsWith('/icons') && !req.url.startsWith('/manifest') && !req.url.startsWith('/service-worker')) {
+    req.url = '/api' + req.url;
   }
   next();
+});
+
+// Explicit route interceptor for /server.js
+app.all(['/server.js', '/backend/server.js', '/api/server.js', '/api/backend/server.js'], (req, res, next) => {
+  const target = req.query && req.query.path
+    ? (Array.isArray(req.query.path) ? req.query.path.join('/') : req.query.path)
+    : '';
+  if (target) {
+    req.url = '/api/' + target.replace(/^\/+/, '');
+    return app._router.handle(req, res, next);
+  }
+  return res.json({ status: 'ok', service: 'SafeCity Backend API', vercel: true });
 });
 
 // Vercel Serverless Debug Endpoint
@@ -1230,7 +1236,7 @@ app.get('*', (req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
+if (require.main === module) {
   // Bind to 0.0.0.0 so the server is reachable from mobile phones on the same network
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`\n╔══════════════════════════════════════════════════════════╗`);

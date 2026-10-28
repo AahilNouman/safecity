@@ -277,12 +277,6 @@
           <i data-lucide="volume-2" id="sound-toggle-icon" class="w-4 h-4"></i>
         </button>
 
-        <!-- Desktop Mobile Pair Button -->
-        <button type="button" onclick="openConnectMobileModal()" title="Connect Mobile Phone via QR Code or LAN URL" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-plum-800 hover:bg-plum-750 text-white text-xs font-semibold border border-plum-700 shadow-xs transition cursor-pointer">
-          <i data-lucide="smartphone" class="w-3.5 h-3.5 text-rose-300"></i>
-          <span>📱 Mobile Pair</span>
-        </button>
-
         <!-- Desktop Logged Out State -->
         <div id="auth-logged-out-actions" class="hidden sm:flex items-center gap-2">
           <button type="button" onclick="openAuthModal('login')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-ivory-200 hover:text-white hover:bg-plum-800 border border-plum-700/80 transition flex items-center gap-1.5">
@@ -3271,11 +3265,9 @@
       }
     };
 
-    const KNOWN_SERVER_LAN_URL = 'http://172.20.10.2:5000';
-
-    // API Base URL Resolver (works seamlessly in local development, LAN mobile testing, file:// protocol, Capacitor, and production deployments)
+    // API Base URL Resolver (Zero-configuration, cross-device compatible across desktop, mobile, cloud & LAN)
     function resolveApiBaseUrl() {
-      // 1. Explicit override via window global or localStorage
+      // 1. Explicit override via window global or localStorage (if explicitly configured)
       const override = window.SAFECITY_API_URL || (typeof localStorage !== 'undefined' && localStorage.getItem('safecity_api_url'));
       if (override && typeof override === 'string' && override.trim()) {
         return override.trim().replace(/\/+$/, '');
@@ -3283,40 +3275,19 @@
 
       const host = window.location.hostname;
       const protocol = window.location.protocol;
-      const port = window.location.port;
 
-      // 2. Mobile Detection (Android app, iOS Safari, Android Chrome, WebView, Capacitor)
-      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-        (typeof window.Capacitor !== 'undefined') ||
-        protocol === 'capacitor:' || protocol === 'ionic:';
-
-      if (isMobileDevice) {
-        // If phone loaded the page from a remote host or LAN IP with port 5000, use relative API calls
-        if (host && host !== 'localhost' && host !== '127.0.0.1') {
-          return (port === '5000') ? '' : `http://${host}:5000`;
-        }
-        // If phone is running inside Capacitor (https://localhost) or file://, default to desktop's LAN IP
-        return KNOWN_SERVER_LAN_URL;
+      // 2. Standard Web Access (Desktop & Mobile Browsers, Cloud Deployments, Incognito, LAN)
+      // When loaded over http:// or https://, ALWAYS use same-origin relative URLs ('')
+      // No IP pairing, no network setup, and zero mixed-content blocking.
+      if (protocol === 'http:' || protocol === 'https:') {
+        return '';
       }
 
-      // 3. Direct file:// URL access on desktop
-      if (protocol === 'file:' || !host) {
-        return 'http://localhost:5000';
+      // 3. Native App wrapper fallback (Capacitor / Cordova / file://)
+      if (host && host !== 'localhost' && host !== '127.0.0.1') {
+        return `http://${host}:5000`;
       }
-
-      // 4. Localhost or Loopback on desktop
-      if (host === 'localhost' || host === '127.0.0.1') {
-        return (port === '5000') ? '' : 'http://localhost:5000';
-      }
-
-      // 5. LAN IP address (Desktop accessing via LAN IP)
-      const isLanIp = /^192\.168\./.test(host) || /^10\./.test(host) || /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(host);
-      if (isLanIp) {
-        return (port === '5000') ? '' : `http://${host}:5000`;
-      }
-
-      // 6. Production cloud deployment (e.g. Vercel, Railway, Render)
-      return '';
+      return 'http://localhost:5000';
     }
 
     let API_BASE_URL = resolveApiBaseUrl();
@@ -3328,34 +3299,27 @@
       const connText = document.getElementById('mobile-conn-text');
       const connDot = document.getElementById('mobile-conn-indicator');
 
-      if (!connBar) return;
-      connBar.classList.remove('hidden');
-
       try {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 3500);
         const res = await fetch(`${targetUrl}/api/health`, { signal: controller.signal });
         clearTimeout(timeout);
         if (res.ok) {
-          if (connDot) {
-            connDot.className = 'w-2 h-2 rounded-full bg-emerald-500 shadow-sm shrink-0';
-          }
-          if (connText) {
-            const displayUrl = targetUrl ? targetUrl.replace(/^https?:\/\//, '') : 'Localhost (Port 5000)';
-            connText.innerHTML = `<span class="text-emerald-700 font-bold">🟢 Connected:</span> <span class="text-ivory-600">${escapeHtml(displayUrl)}</span>`;
-          }
-          connBar.className = 'text-xs py-1.5 px-4 flex items-center justify-between bg-emerald-50 border-b border-emerald-200 transition-colors';
+          if (connBar) connBar.classList.add('hidden');
         } else {
           throw new Error(`Server returned ${res.status}`);
         }
       } catch (err) {
-        if (connDot) {
-          connDot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0';
+        if (connBar) {
+          connBar.classList.remove('hidden');
+          if (connDot) {
+            connDot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0';
+          }
+          if (connText) {
+            connText.innerHTML = `<span class="text-rose-700 font-bold">🔴 Server Offline:</span> <span class="text-rose-600 font-medium">Reconnecting...</span>`;
+          }
+          connBar.className = 'text-xs py-1.5 px-4 flex items-center justify-between bg-rose-50 border-b border-rose-200 transition-colors';
         }
-        if (connText) {
-          connText.innerHTML = `<span class="text-rose-700 font-bold">🔴 Server Disconnected:</span> <span class="text-rose-600 font-medium">Tap Configure to set IP</span>`;
-        }
-        connBar.className = 'text-xs py-1.5 px-4 flex items-center justify-between bg-rose-50 border-b border-rose-200 transition-colors';
       }
     }
 
@@ -3363,7 +3327,7 @@
       const modal = document.getElementById('connect-mobile-modal');
       const urlText = document.getElementById('mobile-pairing-url-text');
       const qrImg = document.getElementById('mobile-qr-image');
-      const currentLanUrl = KNOWN_SERVER_LAN_URL;
+      const currentLanUrl = (window.location.origin && window.location.origin !== 'null') ? window.location.origin : 'http://localhost:5000';
 
       if (urlText) urlText.textContent = currentLanUrl;
       if (qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(currentLanUrl)}`;
@@ -3378,13 +3342,13 @@
     }
 
     function copyMobilePairingUrl() {
-      const text = document.getElementById('mobile-pairing-url-text')?.textContent || KNOWN_SERVER_LAN_URL;
+      const text = document.getElementById('mobile-pairing-url-text')?.textContent || window.location.origin || 'http://localhost:5000';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => {
-          showToast('Mobile URL copied to clipboard!', 'success');
+          showToast('Website URL copied to clipboard!', 'success');
         });
       } else {
-        showToast(`Mobile URL: ${text}`, 'info');
+        showToast(`Website URL: ${text}`, 'info');
       }
     }
 
@@ -3395,7 +3359,7 @@
       const sbKeyInput = document.getElementById('cfg-input-sb-key');
 
       if (input) {
-        input.value = localStorage.getItem('safecity_api_url') || resolveApiBaseUrl() || KNOWN_SERVER_LAN_URL;
+        input.value = localStorage.getItem('safecity_api_url') || resolveApiBaseUrl() || window.location.origin;
       }
       if (sbUrlInput) {
         sbUrlInput.value = localStorage.getItem('safecity_supabase_url') || '';
