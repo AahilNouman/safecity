@@ -8,7 +8,8 @@ const rootDir = path.resolve(__dirname, '..');
 const targets = [
   path.join(rootDir, 'frontend'),
   path.join(rootDir, 'backend', 'public'),
-  path.join(rootDir, 'backend')
+  path.join(rootDir, 'backend'),
+  path.join(rootDir, 'android', 'app', 'src', 'main', 'assets', 'public')
 ];
 
 const filesToSync = [

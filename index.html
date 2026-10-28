@@ -30,6 +30,9 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
   
+  <!-- Supabase JS Client 2.x -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <!-- Google Identity Services (GSI) -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   
@@ -274,6 +277,12 @@
           <i data-lucide="volume-2" id="sound-toggle-icon" class="w-4 h-4"></i>
         </button>
 
+        <!-- Desktop Mobile Pair Button -->
+        <button type="button" onclick="openConnectMobileModal()" title="Connect Mobile Phone via QR Code or LAN URL" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-plum-800 hover:bg-plum-750 text-white text-xs font-semibold border border-plum-700 shadow-xs transition cursor-pointer">
+          <i data-lucide="smartphone" class="w-3.5 h-3.5 text-rose-300"></i>
+          <span>📱 Mobile Pair</span>
+        </button>
+
         <!-- Desktop Logged Out State -->
         <div id="auth-logged-out-actions" class="hidden sm:flex items-center gap-2">
           <button type="button" onclick="openAuthModal('login')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-ivory-200 hover:text-white hover:bg-plum-800 border border-plum-700/80 transition flex items-center gap-1.5">
@@ -390,8 +399,31 @@
         <span class="flex items-center gap-2"><i data-lucide="volume-2" class="w-4 h-4 text-rose-300"></i> Safety Audio Chimes</span>
         <button type="button" onclick="SoundController.toggleMute()" class="px-2.5 py-1 rounded bg-plum-800 hover:bg-plum-700 text-white text-[11px] font-semibold">Toggle</button>
       </div>
+
+      <!-- Mobile Server Configuration Button -->
+      <div class="pt-2 border-t border-plum-850 flex items-center justify-between px-2 text-xs text-ivory-400">
+        <span class="flex items-center gap-2"><i data-lucide="radio" class="w-4 h-4 text-rose-300"></i> Server & Cloud Sync</span>
+        <button type="button" onclick="openServerConfigModal(); toggleMobileMenu(false);" class="px-2.5 py-1 rounded bg-plum-800 hover:bg-plum-700 text-white text-[11px] font-semibold">Settings</button>
+      </div>
     </div>
   </header>
+
+  <!-- Live Mobile & Multi-Device Connectivity Status Banner -->
+  <div id="mobile-connection-bar" class="hidden text-xs py-1.5 px-4 flex items-center justify-between bg-emerald-50 border-b border-emerald-200 transition-colors">
+    <div class="flex items-center gap-2 max-w-[75%] truncate">
+      <span id="mobile-conn-indicator" class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+      <span id="mobile-conn-text" class="text-ivory-800 truncate">Connecting to SafeCity server...</span>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <button type="button" onclick="checkServerConnectivity()" class="text-[11px] font-semibold text-plum-700 hover:underline cursor-pointer">
+        Test
+      </button>
+      <span class="text-ivory-300">•</span>
+      <button type="button" onclick="openServerConfigModal()" class="text-[11px] font-bold text-plum-900 hover:underline cursor-pointer">
+        Configure
+      </button>
+    </div>
+  </div>
 
   <!-- MAIN APPLICATION CONTENT CONTAINER -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 pb-28 sm:pb-8 space-y-6">
@@ -856,6 +888,48 @@
               <span id="report-char-count" class="text-[11px] font-mono text-ivory-500">0 / 2000 chars (min 10)</span>
             </div>
             <textarea id="report-description" rows="3" oninput="updateReportCharCount()" placeholder="Describe what happened clearly (e.g. Lack of lighting after 9 PM, repeated verbal harassment by two-wheelers, absence of police presence). Please do not include private names unless relevant." class="w-full text-xs rounded-xl border border-surface-border p-3 bg-white text-plum-950 font-normal focus:outline-none focus:ring-2 focus:ring-plum-400 leading-relaxed"></textarea>
+          </div>
+
+          <!-- Step 4: Optional Photo Evidence (Camera Capture / Device Upload) -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold uppercase tracking-wider text-ivory-700 flex items-center gap-1.5">
+                <i data-lucide="camera" class="w-3.5 h-3.5 text-plum-700"></i>
+                <span>4. Photo Evidence (Optional)</span>
+              </label>
+              <span class="text-[11px] font-medium text-ivory-500">Max 5MB (JPG, PNG, WebP)</span>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <!-- Camera capture button for mobile -->
+              <label class="cursor-pointer min-h-[44px] px-3.5 py-2.5 rounded-xl border border-dashed border-plum-300 hover:border-plum-500 bg-plum-50/50 hover:bg-plum-50 text-plum-900 transition flex items-center justify-center gap-2 text-xs font-semibold shadow-sm">
+                <i data-lucide="camera" class="w-4 h-4 text-plum-700"></i>
+                <span>Take Photo (Camera)</span>
+                <input type="file" id="report-photo-camera" accept="image/*" capture="environment" class="hidden" onchange="handleEvidenceFileSelected(event)" />
+              </label>
+
+              <!-- Gallery / disk upload button -->
+              <label class="cursor-pointer min-h-[44px] px-3.5 py-2.5 rounded-xl border border-dashed border-surface-border hover:border-plum-400 bg-white hover:bg-ivory-50 text-plum-950 transition flex items-center justify-center gap-2 text-xs font-semibold shadow-sm">
+                <i data-lucide="upload" class="w-4 h-4 text-ivory-700"></i>
+                <span>Upload from Device</span>
+                <input type="file" id="report-photo-upload" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="handleEvidenceFileSelected(event)" />
+              </label>
+            </div>
+
+            <!-- Preview Card -->
+            <div id="report-photo-preview-container" class="hidden relative rounded-xl border border-surface-border p-2.5 bg-ivory-50 flex items-center gap-3">
+              <img id="report-photo-preview-img" src="" alt="Evidence Preview" class="w-14 h-14 object-cover rounded-lg border border-surface-border flex-shrink-0" />
+              <div class="flex-1 min-w-0">
+                <p id="report-photo-name" class="text-xs font-bold text-plum-950 truncate"></p>
+                <p id="report-photo-size" class="text-[11px] text-ivory-600 font-mono"></p>
+                <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 mt-0.5">
+                  <i data-lucide="check-circle" class="w-3 h-3"></i> Ready to attach to report
+                </span>
+              </div>
+              <button type="button" onclick="clearEvidencePhoto()" class="p-1.5 rounded-lg text-ivory-500 hover:text-rose-600 hover:bg-rose-50 transition" title="Remove Photo">
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
+            </div>
           </div>
 
           <!-- Anonymous Checkbox & Submit Button -->
@@ -1520,6 +1594,22 @@
               </button>
             </div>
 
+            <!-- Connection Warning / Diagnostics Banner -->
+            <div id="admin-connection-warning" class="hidden rounded-xl border border-amber-300 bg-amber-50 p-3.5 text-xs text-amber-900 shadow-sm transition-all mb-3">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex items-start gap-2.5">
+                  <span class="inline-block mt-0.5 text-amber-600 font-bold">⚠️</span>
+                  <div>
+                    <strong class="font-bold text-amber-950 block">Central Server Connection Warning</strong>
+                    <span id="admin-connection-warning-text">Unable to connect to central backend database. Displaying cached records.</span>
+                  </div>
+                </div>
+                <button type="button" onclick="fetchAdminIncidentsFromBackend(true)" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-xs transition cursor-pointer">
+                  🔄 Retry Connection
+                </button>
+              </div>
+            </div>
+
             <div id="admin-reports-queue" class="space-y-3 overflow-y-auto max-h-[500px] custom-scrollbar pr-1"></div>
           </div>
 
@@ -2053,6 +2143,145 @@
           Understood
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- 5.6 EVIDENCE PHOTO MODAL (Moderator & Verification Inspection) -->
+  <div id="evidence-photo-modal" class="hidden fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="relative bg-white rounded-2xl max-w-2xl w-full p-4 space-y-3 max-h-[90vh] flex flex-col shadow-2xl border border-surface-border">
+      <div class="flex items-center justify-between pb-2 border-b border-surface-border">
+        <h4 class="text-sm font-bold text-plum-950 flex items-center gap-2">
+          <i data-lucide="image" class="w-4 h-4 text-plum-700"></i>
+          <span>Incident Photo Evidence Inspection</span>
+        </h4>
+        <button type="button" onclick="closeEvidenceModal()" class="p-1.5 rounded-lg text-ivory-600 hover:text-rose-600 hover:bg-rose-50 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="flex-1 overflow-auto flex items-center justify-center bg-ivory-100 rounded-xl p-2 min-h-[250px]">
+        <img id="evidence-modal-img" src="" alt="Evidence Full View" class="max-h-[65vh] max-w-full object-contain rounded-lg shadow-sm" />
+      </div>
+      <div class="flex justify-between items-center pt-2 border-t border-surface-border">
+        <span class="text-[11px] text-ivory-600 font-medium">SafeCity Central Evidence Vault (Tamper-Resistant Storage)</span>
+        <button type="button" onclick="closeEvidenceModal()" class="px-4 py-2 rounded-xl bg-plum-900 text-white text-xs font-semibold hover:bg-plum-800 transition">
+          Close Inspection
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.7 CONNECT MOBILE DEVICE MODAL (QR Code & LAN Instructions) -->
+  <div id="connect-mobile-modal" class="hidden fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="relative bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-surface-border text-plum-950">
+      <div class="flex items-center justify-between pb-3 border-b border-surface-border">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-plum-100 flex items-center justify-center text-plum-900">
+            <i data-lucide="smartphone" class="w-4 h-4 text-plum-700"></i>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-plum-950">Connect Mobile Phone</h4>
+            <p class="text-[11px] text-ivory-600">Real-time cross-device safety reporting</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeConnectMobileModal()" class="p-1.5 rounded-lg text-ivory-600 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- QR Code Display -->
+      <div class="flex flex-col items-center justify-center p-4 bg-ivory-50 rounded-xl border border-surface-border space-y-2">
+        <img id="mobile-qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://172.20.10.2:5000" alt="SafeCity Mobile Pairing QR" class="w-36 h-36 rounded-lg shadow-sm border border-surface-border" />
+        <span class="text-[11px] text-ivory-600 font-medium">Scan with your phone's camera to open SafeCity</span>
+      </div>
+
+      <!-- Direct URL Box -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-plum-900">Or type this URL into Safari / Chrome on your phone:</label>
+        <div class="flex items-center gap-2 p-2.5 rounded-xl bg-plum-950 text-white font-mono text-xs border border-plum-800">
+          <span id="mobile-pairing-url-text" class="flex-1 text-emerald-400 font-bold select-all truncate">http://172.20.10.2:5000</span>
+          <button type="button" onclick="copyMobilePairingUrl()" class="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-semibold transition cursor-pointer">
+            Copy
+          </button>
+        </div>
+      </div>
+
+      <div class="text-xs text-ivory-700 space-y-1 bg-ivory-50 p-3 rounded-xl border border-surface-border">
+        <p class="font-bold text-plum-900">How it works:</p>
+        <p>• Connect your mobile phone to the same Wi-Fi network (<strong>Aahil</strong>).</p>
+        <p>• Open the link above. Report an incident on your phone.</p>
+        <p>• It will appear on your desktop moderator screen <strong>immediately</strong> without refreshing!</p>
+      </div>
+
+      <button type="button" onclick="closeConnectMobileModal()" class="w-full py-2.5 rounded-xl bg-plum-900 hover:bg-plum-800 text-white font-semibold text-xs transition cursor-pointer">
+        Got It
+      </button>
+    </div>
+  </div>
+
+  <!-- 5.8 SERVER & CLOUD CONFIGURATION MODAL (For Mobile & Desktop Sync) -->
+  <div id="server-config-modal" class="hidden fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="relative bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-surface-border text-plum-950">
+      <div class="flex items-center justify-between pb-3 border-b border-surface-border">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-plum-100 flex items-center justify-center text-plum-900">
+            <i data-lucide="radio" class="w-4 h-4 text-plum-700"></i>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-plum-950">Backend &amp; Cloud Settings</h4>
+            <p class="text-[11px] text-ivory-600">Cross-device server and database configuration</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeServerConfigModal()" class="p-1.5 rounded-lg text-ivory-600 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Tab Buttons -->
+      <div class="flex rounded-xl bg-ivory-100 p-1 border border-surface-border">
+        <button type="button" id="cfg-tab-btn-lan" onclick="switchConfigTab('lan')" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white text-plum-950 shadow-xs transition">
+          Server URL / IP
+        </button>
+        <button type="button" id="cfg-tab-btn-supabase" onclick="switchConfigTab('supabase')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold text-ivory-700 hover:text-plum-950 transition">
+          Supabase Cloud
+        </button>
+      </div>
+
+      <!-- Section A: LAN Server URL -->
+      <div id="cfg-section-lan" class="space-y-3">
+        <div class="space-y-1.5">
+          <label for="cfg-input-server-url" class="text-xs font-bold text-plum-900">SafeCity Backend API URL:</label>
+          <input type="text" id="cfg-input-server-url" placeholder="http://172.20.10.2:5000" class="w-full px-3 py-2 rounded-xl border border-surface-border text-xs font-mono bg-white focus:outline-none focus:ring-2 focus:ring-rose-500" />
+          <p class="text-[11px] text-ivory-600">On your mobile phone, set this to your computer's IP address (default: http://172.20.10.2:5000).</p>
+        </div>
+
+        <div id="cfg-test-status" class="hidden p-2.5 rounded-xl text-xs font-medium border"></div>
+
+        <div class="flex gap-2">
+          <button type="button" onclick="testCustomServerUrl()" class="flex-1 py-2 rounded-xl bg-ivory-100 hover:bg-ivory-200 text-plum-950 text-xs font-semibold border border-surface-border transition cursor-pointer">
+            Test Connection
+          </button>
+          <button type="button" onclick="saveCustomServerUrl()" class="flex-1 py-2 rounded-xl bg-plum-900 hover:bg-plum-800 text-white text-xs font-bold shadow-xs transition cursor-pointer">
+            Save &amp; Connect
+          </button>
+        </div>
+      </div>
+
+      <!-- Section B: Supabase Cloud Credentials -->
+      <div id="cfg-section-supabase" class="hidden space-y-3">
+        <div class="space-y-1.5">
+          <label for="cfg-input-sb-url" class="text-xs font-bold text-plum-900">Supabase Project URL:</label>
+          <input type="text" id="cfg-input-sb-url" placeholder="https://xyzcompany.supabase.co" class="w-full px-3 py-2 rounded-xl border border-surface-border text-xs font-mono bg-white focus:outline-none focus:ring-2 focus:ring-rose-500" />
+        </div>
+        <div class="space-y-1.5">
+          <label for="cfg-input-sb-key" class="text-xs font-bold text-plum-900">Supabase Anon Key:</label>
+          <input type="password" id="cfg-input-sb-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." class="w-full px-3 py-2 rounded-xl border border-surface-border text-xs font-mono bg-white focus:outline-none focus:ring-2 focus:ring-rose-500" />
+        </div>
+        <div id="cfg-sb-status" class="hidden p-2.5 rounded-xl text-xs font-medium border"></div>
+        <button type="button" onclick="saveSupabaseCloudCredentials()" class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-xs transition cursor-pointer">
+          Save &amp; Connect Supabase Cloud
+        </button>
+      </div>
+
     </div>
   </div>
 
@@ -2699,53 +2928,637 @@
       }
     }
 
-    // API Base URL Resolver (works seamlessly in local development, LAN mobile testing, and production deployments such as Vercel)
-    const isLocalNetwork = window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1' ||
-      /^192\.168\./.test(window.location.hostname) ||
-      /^10\./.test(window.location.hostname) ||
-      /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(window.location.hostname);
+    // HTML Sanitizer to prevent Cross-Site Scripting (XSS)
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
 
-    const API_BASE_URL = isLocalNetwork
-      ? (window.location.port === '5000' ? '' : `http://${window.location.hostname}:5000`)
-      : '';
+    // Photo Evidence State & Handlers
+    let currentEvidenceFile = null;
+    let currentEvidenceBase64 = null;
+
+    function handleEvidenceFileSelected(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('Selected image exceeds 5MB limit. Please choose a smaller photo.', 'warning');
+        event.target.value = '';
+        return;
+      }
+
+      const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowed.includes(file.type.toLowerCase())) {
+        showToast('Please select a valid image format (JPEG, PNG, or WebP).', 'warning');
+        event.target.value = '';
+        return;
+      }
+
+      currentEvidenceFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentEvidenceBase64 = e.target.result;
+        const previewCont = document.getElementById('report-photo-preview-container');
+        const previewImg = document.getElementById('report-photo-preview-img');
+        const nameEl = document.getElementById('report-photo-name');
+        const sizeEl = document.getElementById('report-photo-size');
+
+        if (previewCont && previewImg && nameEl && sizeEl) {
+          previewImg.src = currentEvidenceBase64;
+          nameEl.textContent = file.name;
+          sizeEl.textContent = `${(file.size / (1024 * 1024)).toFixed(2)} MB • ${file.type.split('/')[1].toUpperCase()}`;
+          previewCont.classList.remove('hidden');
+        }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearEvidencePhoto() {
+      currentEvidenceFile = null;
+      currentEvidenceBase64 = null;
+      const camInput = document.getElementById('report-photo-camera');
+      const uploadInput = document.getElementById('report-photo-upload');
+      const previewCont = document.getElementById('report-photo-preview-container');
+      if (camInput) camInput.value = '';
+      if (uploadInput) uploadInput.value = '';
+      if (previewCont) previewCont.classList.add('hidden');
+    }
+
+    function viewEvidenceModal(imageUrl) {
+      const modal = document.getElementById('evidence-photo-modal');
+      const img = document.getElementById('evidence-modal-img');
+      if (modal && img) {
+        img.src = imageUrl;
+        modal.classList.remove('hidden');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }
+    }
+
+    function closeEvidenceModal() {
+      const modal = document.getElementById('evidence-photo-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Central Supabase Client & Realtime Synchronization
+    let supabaseCloud = null;
+    let supabaseConfig = null;
+
+    async function initSupabaseClient() {
+      // 1. Check pre-existing configuration in window or localStorage
+      let url = window.SAFECITY_CONFIG?.SUPABASE_URL || localStorage.getItem('safecity_supabase_url') || '';
+      let key = window.SAFECITY_CONFIG?.SUPABASE_ANON_KEY || localStorage.getItem('safecity_supabase_anon_key') || '';
+
+      // 2. Query backend gateway /api/config/supabase if available
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 4000);
+        const res = await fetch(`${API_BASE_URL}/api/config/supabase`, { signal: controller.signal });
+        clearTimeout(timeout);
+        if (res.ok) {
+          const cfg = await res.json();
+          if (cfg.success && cfg.supabaseUrl && cfg.supabaseAnonKey) {
+            url = cfg.supabaseUrl;
+            key = cfg.supabaseAnonKey;
+            localStorage.setItem('safecity_supabase_url', url);
+            localStorage.setItem('safecity_supabase_anon_key', key);
+            supabaseConfig = cfg;
+          }
+        }
+      } catch (err) {
+        // Gateway unavailable, proceed with cached credentials
+      }
+
+      // 3. Connect official Supabase JS Client if valid credentials exist
+      if (url && key && !url.includes('your-project-id') && typeof window.supabase !== 'undefined') {
+        try {
+          supabaseCloud = window.supabase.createClient(url, key);
+          console.log('[SafeCity] Centralized Supabase Cloud Database Connected:', url);
+          setupSupabaseRealtime();
+        } catch (initErr) {
+          console.warn('[SafeCity] Supabase client initialization exception:', initErr);
+        }
+      }
+    }
+
+    // =========================================================================
+    // MULTI-CHANNEL REAL-TIME SYNCHRONIZATION ENGINE
+    // (Supabase Realtime + Server-Sent Events (SSE) + Live Queue Polling)
+    // =========================================================================
+    let supabaseRealtimeChannel = null;
+    let sseEventSource = null;
+    let sseReconnectTimer = null;
+    let moderatorSyncInterval = null;
+    let silentSyncInProgress = false;
+
+    // Unified live event handler for all real-time channels
+    function handleIncomingIncidentEvent(eventType, inc) {
+      if (!inc || !inc.report_id) return;
+      const safeReportId = String(inc.report_id).trim();
+      const existingIdx = appState.incidents.findIndex(i => i.report_id === safeReportId);
+
+      if (eventType === 'INSERT') {
+        if (existingIdx < 0) {
+          appState.incidents.unshift(inc);
+          persistState();
+          renderMainSafetyMap();
+          updateAdminKPIsAndQueue();
+          SoundController.play('sos_send');
+          showToast(`🚨 New Incident Reported: ${inc.category || 'Incident'} (${safeReportId})`, 'info');
+          SafeCityDiagnostics.log('realtime:event', 200, 0, 'REALTIME', `New incident inserted: ${safeReportId}`, true);
+        } else {
+          // Merge freshest data without duplicating cards
+          appState.incidents[existingIdx] = { ...appState.incidents[existingIdx], ...inc };
+          persistState();
+          renderMainSafetyMap();
+          updateAdminKPIsAndQueue();
+        }
+      } else if (eventType === 'UPDATE') {
+        if (existingIdx >= 0) {
+          const oldStatus = appState.incidents[existingIdx].status;
+          appState.incidents[existingIdx] = { ...appState.incidents[existingIdx], ...inc };
+          persistState();
+          renderMainSafetyMap();
+          updateAdminKPIsAndQueue();
+          if (oldStatus !== inc.status) {
+            showToast(`Incident ${safeReportId} updated to ${inc.status}`, 'info');
+          }
+          SafeCityDiagnostics.log('realtime:event', 200, 0, 'REALTIME', `Incident status updated: ${safeReportId} -> ${inc.status}`, true);
+        } else {
+          appState.incidents.unshift(inc);
+          persistState();
+          renderMainSafetyMap();
+          updateAdminKPIsAndQueue();
+        }
+      }
+    }
+
+    // 1. Supabase Realtime Channel
+    function setupSupabaseRealtime() {
+      if (!supabaseCloud) return;
+      try {
+        if (supabaseRealtimeChannel) {
+          try { supabaseCloud.removeChannel(supabaseRealtimeChannel); } catch (e) {}
+        }
+        supabaseRealtimeChannel = supabaseCloud
+          .channel('incident_reports_channel')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'incident_reports' }, (payload) => {
+            console.log('[SafeCity Realtime] Supabase payload:', payload.eventType);
+            handleIncomingIncidentEvent(payload.eventType, payload.new);
+          })
+          .subscribe((status) => {
+            console.log('[SafeCity Realtime] Supabase subscription status:', status);
+            if (status === 'SUBSCRIBED') {
+              SafeCityDiagnostics.log('supabase:realtime', 200, 0, 'REALTIME', 'Subscribed to Supabase incident_reports', true);
+            } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
+              SafeCityDiagnostics.log('supabase:realtime', 503, 0, 'REALTIME', `Channel status: ${status}`, false);
+              setTimeout(() => {
+                tryLoadBackendData();
+                setupSupabaseRealtime();
+              }, 4000);
+            }
+          });
+      } catch (err) {
+        console.warn('[SafeCity Realtime] Subscription warning:', err);
+      }
+    }
+
+    // 2. Server-Sent Events (SSE) Live Stream
+    function initBackendEventStream() {
+      if (typeof EventSource === 'undefined') return;
+      if (sseEventSource) {
+        try { sseEventSource.close(); } catch (e) {}
+      }
+
+      try {
+        const streamUrl = `${API_BASE_URL}/api/incidents/stream`;
+        sseEventSource = new EventSource(streamUrl);
+
+        sseEventSource.addEventListener('incident', (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data && data.eventType && data.incident) {
+              handleIncomingIncidentEvent(data.eventType, data.incident);
+            }
+          } catch (e) {
+            console.warn('[SafeCity SSE] Parse error:', e);
+          }
+        });
+
+        sseEventSource.onopen = () => {
+          console.log('[SafeCity SSE] Live incident stream connected');
+          SafeCityDiagnostics.log('/api/incidents/stream', 200, 0, 'REALTIME', 'SSE live incident stream connected', true);
+        };
+
+        sseEventSource.onerror = () => {
+          console.warn('[SafeCity SSE] Stream disconnected, will reconnect...');
+          SafeCityDiagnostics.log('/api/incidents/stream', 0, 0, 'REALTIME', 'SSE stream disconnected', false);
+          try { sseEventSource.close(); } catch (e) {}
+          clearTimeout(sseReconnectTimer);
+          sseReconnectTimer = setTimeout(() => {
+            initBackendEventStream();
+            tryLoadBackendData();
+          }, 3500);
+        };
+      } catch (err) {
+        console.warn('[SafeCity SSE] Init error:', err);
+      }
+    }
+
+    // 3. Active Moderator Dashboard Live Poller (Every 3 seconds when admin tab is open)
+    function startModeratorLiveSync() {
+      if (moderatorSyncInterval) clearInterval(moderatorSyncInterval);
+      moderatorSyncInterval = setInterval(() => {
+        if (appState.adminLoggedIn && appState.currentTab === 'admin') {
+          syncModeratorQueueSilently();
+        }
+      }, 3000);
+    }
+
+    function stopModeratorLiveSync() {
+      if (moderatorSyncInterval) {
+        clearInterval(moderatorSyncInterval);
+        moderatorSyncInterval = null;
+      }
+    }
+
+    async function syncModeratorQueueSilently() {
+      if (silentSyncInProgress) return;
+      silentSyncInProgress = true;
+      try {
+        const token = appState.adminToken || localStorage.getItem('safecity_admin_token') || 'sc-jwt-moderator-2026-verified';
+        const res = await fetch(`${API_BASE_URL}/api/admin/incidents?_t=${Date.now()}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Cache-Control': 'no-cache'
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.success && Array.isArray(data.incidents)) {
+            let hasChanges = false;
+            const currentMap = new Map(appState.incidents.map(i => [i.report_id, i.status]));
+
+            for (const inc of data.incidents) {
+              const prevStatus = currentMap.get(inc.report_id);
+              if (prevStatus === undefined) {
+                hasChanges = true;
+                SoundController.play('sos_send');
+                showToast(`🚨 New Incident: ${inc.category || 'Incident'} (${inc.report_id})`, 'info');
+              } else if (prevStatus !== inc.status) {
+                hasChanges = true;
+              }
+            }
+
+            if (hasChanges || data.incidents.length !== appState.incidents.length) {
+              appState.incidents = data.incidents;
+              persistState();
+              updateAdminKPIsAndQueue();
+              renderMainSafetyMap();
+            }
+
+            const warnBanner = document.getElementById('admin-connection-warning');
+            if (warnBanner && !warnBanner.classList.contains('hidden')) {
+              warnBanner.classList.add('hidden');
+            }
+          }
+        }
+      } catch (err) {
+        // Silent background check failure
+      } finally {
+        silentSyncInProgress = false;
+      }
+    }
+
+    // Diagnostic Telemetry Logger for cross-device visibility & network troubleshooting
+    const SafeCityDiagnostics = {
+      logs: [],
+      maxLogs: 50,
+      log(endpoint, status, durationMs, category, message, success = true) {
+        const entry = {
+          timestamp: new Date().toISOString(),
+          endpoint,
+          status,
+          durationMs,
+          category,
+          message,
+          success
+        };
+        this.logs.unshift(entry);
+        if (this.logs.length > this.maxLogs) {
+          this.logs.pop();
+        }
+        if (!success) {
+          console.warn(`[SafeCity Diagnostics ⚠️] [${category}] ${endpoint} (Status: ${status}, ${durationMs}ms) - ${message}`);
+        } else {
+          console.log(`[SafeCity Diagnostics ℹ️] [${category}] ${endpoint} (Status: ${status}, ${durationMs}ms) - ${message}`);
+        }
+        return entry;
+      },
+      getRecentLogs() {
+        return [...this.logs];
+      },
+      exportJson() {
+        return JSON.stringify(this.logs, null, 2);
+      }
+    };
+
+    const KNOWN_SERVER_LAN_URL = 'http://172.20.10.2:5000';
+
+    // API Base URL Resolver (works seamlessly in local development, LAN mobile testing, file:// protocol, Capacitor, and production deployments)
+    function resolveApiBaseUrl() {
+      // 1. Explicit override via window global or localStorage
+      const override = window.SAFECITY_API_URL || (typeof localStorage !== 'undefined' && localStorage.getItem('safecity_api_url'));
+      if (override && typeof override === 'string' && override.trim()) {
+        return override.trim().replace(/\/+$/, '');
+      }
+
+      const host = window.location.hostname;
+      const protocol = window.location.protocol;
+      const port = window.location.port;
+
+      // 2. Mobile Detection (Android app, iOS Safari, Android Chrome, WebView, Capacitor)
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+        (typeof window.Capacitor !== 'undefined') ||
+        protocol === 'capacitor:' || protocol === 'ionic:';
+
+      if (isMobileDevice) {
+        // If phone loaded the page from a remote host or LAN IP with port 5000, use relative API calls
+        if (host && host !== 'localhost' && host !== '127.0.0.1') {
+          return (port === '5000') ? '' : `http://${host}:5000`;
+        }
+        // If phone is running inside Capacitor (https://localhost) or file://, default to desktop's LAN IP
+        return KNOWN_SERVER_LAN_URL;
+      }
+
+      // 3. Direct file:// URL access on desktop
+      if (protocol === 'file:' || !host) {
+        return 'http://localhost:5000';
+      }
+
+      // 4. Localhost or Loopback on desktop
+      if (host === 'localhost' || host === '127.0.0.1') {
+        return (port === '5000') ? '' : 'http://localhost:5000';
+      }
+
+      // 5. LAN IP address (Desktop accessing via LAN IP)
+      const isLanIp = /^192\.168\./.test(host) || /^10\./.test(host) || /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(host);
+      if (isLanIp) {
+        return (port === '5000') ? '' : `http://${host}:5000`;
+      }
+
+      // 6. Production cloud deployment (e.g. Vercel, Railway, Render)
+      return '';
+    }
+
+    let API_BASE_URL = resolveApiBaseUrl();
+
+    // Live Server Connectivity Checker & UI Controller
+    async function checkServerConnectivity() {
+      const targetUrl = resolveApiBaseUrl();
+      const connBar = document.getElementById('mobile-connection-bar');
+      const connText = document.getElementById('mobile-conn-text');
+      const connDot = document.getElementById('mobile-conn-indicator');
+
+      if (!connBar) return;
+      connBar.classList.remove('hidden');
+
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 3500);
+        const res = await fetch(`${targetUrl}/api/health`, { signal: controller.signal });
+        clearTimeout(timeout);
+        if (res.ok) {
+          if (connDot) {
+            connDot.className = 'w-2 h-2 rounded-full bg-emerald-500 shadow-sm shrink-0';
+          }
+          if (connText) {
+            const displayUrl = targetUrl ? targetUrl.replace(/^https?:\/\//, '') : 'Localhost (Port 5000)';
+            connText.innerHTML = `<span class="text-emerald-700 font-bold">🟢 Connected:</span> <span class="text-ivory-600">${escapeHtml(displayUrl)}</span>`;
+          }
+          connBar.className = 'text-xs py-1.5 px-4 flex items-center justify-between bg-emerald-50 border-b border-emerald-200 transition-colors';
+        } else {
+          throw new Error(`Server returned ${res.status}`);
+        }
+      } catch (err) {
+        if (connDot) {
+          connDot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0';
+        }
+        if (connText) {
+          connText.innerHTML = `<span class="text-rose-700 font-bold">🔴 Server Disconnected:</span> <span class="text-rose-600 font-medium">Tap Configure to set IP</span>`;
+        }
+        connBar.className = 'text-xs py-1.5 px-4 flex items-center justify-between bg-rose-50 border-b border-rose-200 transition-colors';
+      }
+    }
+
+    function openConnectMobileModal() {
+      const modal = document.getElementById('connect-mobile-modal');
+      const urlText = document.getElementById('mobile-pairing-url-text');
+      const qrImg = document.getElementById('mobile-qr-image');
+      const currentLanUrl = KNOWN_SERVER_LAN_URL;
+
+      if (urlText) urlText.textContent = currentLanUrl;
+      if (qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(currentLanUrl)}`;
+      if (modal) {
+        modal.classList.remove('hidden');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }
+    }
+
+    function closeConnectMobileModal() {
+      document.getElementById('connect-mobile-modal')?.classList.add('hidden');
+    }
+
+    function copyMobilePairingUrl() {
+      const text = document.getElementById('mobile-pairing-url-text')?.textContent || KNOWN_SERVER_LAN_URL;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Mobile URL copied to clipboard!', 'success');
+        });
+      } else {
+        showToast(`Mobile URL: ${text}`, 'info');
+      }
+    }
+
+    function openServerConfigModal() {
+      const modal = document.getElementById('server-config-modal');
+      const input = document.getElementById('cfg-input-server-url');
+      const sbUrlInput = document.getElementById('cfg-input-sb-url');
+      const sbKeyInput = document.getElementById('cfg-input-sb-key');
+
+      if (input) {
+        input.value = localStorage.getItem('safecity_api_url') || resolveApiBaseUrl() || KNOWN_SERVER_LAN_URL;
+      }
+      if (sbUrlInput) {
+        sbUrlInput.value = localStorage.getItem('safecity_supabase_url') || '';
+      }
+      if (sbKeyInput) {
+        sbKeyInput.value = localStorage.getItem('safecity_supabase_anon_key') || '';
+      }
+      if (modal) {
+        modal.classList.remove('hidden');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }
+    }
+
+    function closeServerConfigModal() {
+      document.getElementById('server-config-modal')?.classList.add('hidden');
+    }
+
+    function switchConfigTab(tab) {
+      const lanBtn = document.getElementById('cfg-tab-btn-lan');
+      const sbBtn = document.getElementById('cfg-tab-btn-supabase');
+      const lanSec = document.getElementById('cfg-section-lan');
+      const sbSec = document.getElementById('cfg-section-supabase');
+
+      if (tab === 'lan') {
+        lanBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white text-plum-950 shadow-xs transition';
+        sbBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-semibold text-ivory-700 hover:text-plum-950 transition';
+        lanSec?.classList.remove('hidden');
+        sbSec?.classList.add('hidden');
+      } else {
+        sbBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white text-plum-950 shadow-xs transition';
+        lanBtn.className = 'flex-1 py-1.5 rounded-lg text-xs font-semibold text-ivory-700 hover:text-plum-950 transition';
+        sbSec?.classList.remove('hidden');
+        lanSec?.classList.add('hidden');
+      }
+    }
+
+    async function testCustomServerUrl() {
+      const input = document.getElementById('cfg-input-server-url');
+      const statusBox = document.getElementById('cfg-test-status');
+      const url = (input?.value || '').trim().replace(/\/+$/, '');
+      if (!url) return;
+
+      if (statusBox) {
+        statusBox.className = 'p-2.5 rounded-xl text-xs font-medium border bg-amber-50 border-amber-200 text-amber-900 block';
+        statusBox.textContent = 'Testing connection...';
+      }
+
+      const start = performance.now();
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 4000);
+        const res = await fetch(`${url}/api/health`, { signal: controller.signal });
+        clearTimeout(timeout);
+        const ms = Math.round(performance.now() - start);
+
+        if (res.ok) {
+          if (statusBox) {
+            statusBox.className = 'p-2.5 rounded-xl text-xs font-medium border bg-emerald-50 border-emerald-200 text-emerald-900 block';
+            statusBox.textContent = `🟢 Connected successfully! Response time: ${ms}ms`;
+          }
+        } else {
+          throw new Error(`Server returned ${res.status}`);
+        }
+      } catch (err) {
+        if (statusBox) {
+          statusBox.className = 'p-2.5 rounded-xl text-xs font-medium border bg-rose-50 border-rose-200 text-rose-900 block';
+          statusBox.textContent = `🔴 Connection failed: ${err.message}. Check Wi-Fi and port 5000.`;
+        }
+      }
+    }
+
+    function saveCustomServerUrl() {
+      const input = document.getElementById('cfg-input-server-url');
+      const url = (input?.value || '').trim().replace(/\/+$/, '');
+      if (url) {
+        localStorage.setItem('safecity_api_url', url);
+        showToast(`Server URL set to ${url}. Reconnecting...`, 'success');
+        closeServerConfigModal();
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      }
+    }
+
+    async function saveSupabaseCloudCredentials() {
+      const urlInput = document.getElementById('cfg-input-sb-url');
+      const keyInput = document.getElementById('cfg-input-sb-key');
+      const statusBox = document.getElementById('cfg-sb-status');
+
+      const sbUrl = (urlInput?.value || '').trim();
+      const sbKey = (keyInput?.value || '').trim();
+
+      if (!sbUrl || !sbKey) {
+        showToast('Please enter both Supabase Project URL and Anon Key.', 'warning');
+        return;
+      }
+
+      if (statusBox) {
+        statusBox.className = 'p-2.5 rounded-xl text-xs font-medium border bg-amber-50 border-amber-200 text-amber-900 block';
+        statusBox.textContent = 'Saving & verifying Supabase credentials...';
+      }
+
+      localStorage.setItem('safecity_supabase_url', sbUrl);
+      localStorage.setItem('safecity_supabase_anon_key', sbKey);
+
+      try {
+        const base = resolveApiBaseUrl();
+        await fetch(`${base}/api/admin/config/supabase`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ supabaseUrl: sbUrl, supabaseAnonKey: sbKey })
+        });
+      } catch (e) {}
+
+      showToast('Supabase Cloud Database connected! Reloading...', 'success');
+      closeServerConfigModal();
+      setTimeout(() => {
+        window.location.reload();
+      }, 600);
+    }
 
     // Attempt to load live backend data if API server is available
     async function tryLoadBackendData() {
+      const startTime = performance.now();
+      // Initialize central Supabase connection & realtime listeners
+      await initSupabaseClient();
+
       try {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 6000);
         const res = await fetch(`${API_BASE_URL}/api/incidents?status=ALL`, { signal: controller.signal });
         clearTimeout(timeout);
+        const duration = Math.round(performance.now() - startTime);
+
         if (res.ok) {
           const data = await res.json();
           if (data && data.success && Array.isArray(data.incidents) && data.incidents.length > 0) {
-            // Server data takes precedence
-            const serverMap = new Map(data.incidents.map(i => [i.report_id, i]));
-            const localOnly = appState.incidents.filter(i => !serverMap.has(i.report_id));
-
-            // Sync any local offline submissions to the server
-            for (const draft of localOnly) {
-              if (draft.sync_pending) {
-                try {
-                  await fetch(`${API_BASE_URL}/api/incidents`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(draft)
-                  });
+            // Check for any unsynced offline submissions that have sync_pending: true
+            const unsyncedDrafts = (appState.incidents || []).filter(i => i.sync_pending === true);
+            for (const draft of unsyncedDrafts) {
+              try {
+                const syncRes = await fetch(`${API_BASE_URL}/api/incidents`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(draft)
+                });
+                if (syncRes.ok) {
                   draft.sync_pending = false;
-                } catch (e) {}
-              }
+                }
+              } catch (e) {}
             }
 
-            appState.incidents = [...data.incidents, ...localOnly];
+            // Database records are strictly authoritative: do not resurrect stale local drafts
+            appState.incidents = data.incidents;
             persistState();
             renderMainSafetyMap();
             updateAdminKPIsAndQueue();
+            SafeCityDiagnostics.log('/api/incidents?status=ALL', 200, duration, 'INIT', `Loaded ${data.incidents.length} authoritative reports`, true);
           }
+        } else {
+          SafeCityDiagnostics.log('/api/incidents?status=ALL', res.status, duration, 'INIT', `Server responded with ${res.status}`, false);
         }
       } catch (e) {
-        // Backend not running, use client-side curated storage gracefully
+        const duration = Math.round(performance.now() - startTime);
+        SafeCityDiagnostics.log('/api/incidents?status=ALL', 0, duration, 'INIT', e.message || 'Offline fallback', false);
       }
     }
 
@@ -2863,7 +3676,7 @@
       const cat = (document.getElementById('map-filter-category') || {}).value || 'ALL';
       const sev = (document.getElementById('map-filter-severity') || {}).value || 'ALL';
       return appState.incidents.filter((inc) => {
-        if (inc.status !== 'VERIFIED') return false;
+        if (inc.status !== 'VERIFIED' && inc.status !== 'PENDING') return false;
         if (cat !== 'ALL' && inc.category !== cat) return false;
         if (sev !== 'ALL' && inc.severity !== sev) return false;
         return true;
@@ -2932,27 +3745,32 @@
         });
       }
 
-      // 2. Incident Markers
+      // 2. Incident Markers (Renders both verified danger zones and pending community reports)
       filteredIncidents.forEach((inc) => {
-        const sevColor = inc.severity === 'High' ? '#B91C1C' : inc.severity === 'Medium' ? '#D97706' : '#EAB308';
+        const isPending = inc.status === 'PENDING';
+        const sevColor = isPending ? '#F59E0B' : (inc.severity === 'High' ? '#B91C1C' : inc.severity === 'Medium' ? '#D97706' : '#EAB308');
+        const iconBorder = isPending ? '2px dashed #FFFFFF' : '2px solid #FFFFFF';
+        const iconSymbol = isPending ? '⏳' : '!';
         const icon = L.divIcon({
           className: 'custom-incident-pin',
-          html: '<div style="width:26px;height:26px;border-radius:9999px;background:' + sevColor + ';border:2px solid #FFFFFF;box-shadow:0 3px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:12px;font-weight:bold;cursor:pointer;">!</div>',
+          html: '<div style="width:26px;height:26px;border-radius:9999px;background:' + sevColor + ';border:' + iconBorder + ';box-shadow:0 3px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:12px;font-weight:bold;cursor:pointer;">' + iconSymbol + '</div>',
           iconSize: [26, 26],
           iconAnchor: [13, 13]
         });
 
         const m = L.marker([inc.latitude, inc.longitude], { icon });
         m.on('click', () => selectMapItem('INCIDENT', inc.id));
+        const badgeStyle = isPending ? 'bg-amber-100 text-amber-900 border border-amber-300 font-bold' : 'bg-rose-100 text-rose-800 font-bold';
+        const badgeText = isPending ? 'PENDING VERIFICATION • ' + inc.category : inc.severity.toUpperCase() + ' • ' + inc.category;
         m.bindPopup(
           '<div class="min-w-[220px] font-sans p-1 text-xs">' +
             '<div class="flex items-center justify-between gap-2">' +
-              '<span class="px-2 py-0.5 rounded font-bold text-[10px] bg-rose-100 text-rose-800">' + inc.severity.toUpperCase() + ' • ' + inc.category + '</span>' +
+              '<span class="px-2 py-0.5 rounded text-[10px] ' + badgeStyle + '">' + badgeText + '</span>' +
               '<span class="font-mono text-ivory-500 text-[10px]">' + inc.report_id + '</span>' +
             '</div>' +
             '<div class="font-bold text-plum-950 text-sm mt-2">' + inc.location_name + '</div>' +
             '<p class="text-ivory-700 mt-1 leading-relaxed text-xs">' + inc.description + '</p>' +
-            '<div class="text-[10px] text-ivory-500 mt-2">Reported: ' + inc.incident_time.replace('T', ' ') + '</div>' +
+            '<div class="text-[10px] text-ivory-500 mt-2">Reported: ' + String(inc.incident_time).replace('T', ' ') + '</div>' +
           '</div>'
         );
         m.addTo(mainLeafletLayerGroup);
@@ -3333,6 +4151,7 @@
     }
 
     async function submitIncidentReport() {
+      const startTime = performance.now();
       const cat = document.getElementById('report-category')?.value;
       const sev = document.getElementById('report-severity')?.value;
       const locName = document.getElementById('report-location-name')?.value.trim() || 'Bengaluru Street Pin';
@@ -3362,6 +4181,36 @@
       submitBtn.innerHTML = '<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i><span>Submitting...</span>';
       if (typeof lucide !== 'undefined') lucide.createIcons();
 
+      // Process optional photo evidence upload
+      let imagePaths = [];
+      let imageUrls = [];
+      if (currentEvidenceBase64) {
+        submitBtn.innerHTML = '<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i><span>Uploading photo...</span>';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        try {
+          const uploadRes = await fetch(`${API_BASE_URL}/api/incidents/upload-evidence`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              base64: currentEvidenceBase64,
+              originalName: currentEvidenceFile ? currentEvidenceFile.name : 'evidence.jpg',
+              mimeType: currentEvidenceFile ? currentEvidenceFile.type : 'image/jpeg'
+            })
+          });
+          if (uploadRes.ok) {
+            const uploadData = await uploadRes.json();
+            if (uploadData.success && uploadData.url) {
+              imagePaths.push(uploadData.filePath);
+              imageUrls.push(uploadData.url);
+            }
+          }
+        } catch (uploadErr) {
+          console.warn('Photo evidence upload warning:', uploadErr);
+        }
+        submitBtn.innerHTML = '<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i><span>Submitting report...</span>';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }
+
       const randNum = Math.floor(10000 + Math.random() * 90000);
       const reportId = 'AS-2026-' + randNum;
       const incidentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -3379,12 +4228,15 @@
         status: 'PENDING',
         rejection_reason: null,
         is_anonymous: isAnon !== false,
+        image_paths: imagePaths,
+        image_urls: imageUrls,
         sync_pending: false
       };
 
       // Try backend POST with robust 8s timeout for mobile/cellular connections
       let serverConfirmed = false;
-      let confirmedRecord = newReport;
+      let confirmedRecord = null;
+      let errorMessage = 'Could not connect to central reporting database.';
       try {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 8000);
@@ -3399,48 +4251,92 @@
           const resData = await res.json();
           if (resData && resData.success) {
             serverConfirmed = true;
-            if (resData.incident) confirmedRecord = resData.incident;
+            confirmedRecord = resData.incident || newReport;
           }
         } else {
           const errData = await res.json().catch(() => ({}));
+          errorMessage = errData.error || `Server returned error (${res.status})`;
           console.warn('Backend rejected report:', errData);
         }
       } catch (e) {
+        errorMessage = e.message || 'Network connection failed.';
         console.warn('Network timeout or error submitting report:', e);
       }
 
-      if (!serverConfirmed) {
-        confirmedRecord.sync_pending = true;
-      }
+      // Direct fallback to Supabase cloud if backend server was unreachable on cellular
+      if (!serverConfirmed && supabaseCloud) {
+        try {
+          const { data, error } = await supabaseCloud.from('incident_reports').insert([{
+            report_id: reportId,
+            category: cat,
+            severity: sev || 'Medium',
+            latitude: safeLat,
+            longitude: safeLng,
+            location_name: locName,
+            description: desc,
+            incident_time: new Date().toISOString(),
+            status: 'PENDING',
+            is_anonymous: isAnon !== false,
+            image_paths: imagePaths,
+            image_urls: imageUrls
+          }]).select().single();
 
-      // Add report to local state (avoiding duplicates)
-      const existingIdx = appState.incidents.findIndex(i => i.report_id === confirmedRecord.report_id);
-      if (existingIdx >= 0) {
-        appState.incidents[existingIdx] = confirmedRecord;
-      } else {
-        appState.incidents.unshift(confirmedRecord);
+          if (!error && data) {
+            serverConfirmed = true;
+            confirmedRecord = data;
+          } else if (error) {
+            errorMessage = error.message;
+          }
+        } catch (sbErr) {
+          errorMessage = sbErr.message;
+          console.warn('Direct Supabase cloud fallback warning:', sbErr);
+        }
       }
-      persistState();
-      updateAdminKPIsAndQueue();
-      renderMainSafetyMap();
 
       submitBtn.disabled = false;
       submitBtn.innerHTML = '<i data-lucide="send" class="w-3.5 h-3.5"></i><span>Submit Report for Verification</span>';
       if (typeof lucide !== 'undefined') lucide.createIcons();
 
-      // Show result in tracking box
-      const trackInput = document.getElementById('track-lookup-input');
-      if (trackInput) trackInput.value = reportId;
-      lookupReportByTrackingId();
+      // STRICT VALIDATION: Only show success and update state if database write confirmed!
+      if (serverConfirmed && confirmedRecord) {
+        // Add report to local state
+        const existingIdx = appState.incidents.findIndex(i => i.report_id === confirmedRecord.report_id);
+        if (existingIdx >= 0) {
+          appState.incidents[existingIdx] = confirmedRecord;
+        } else {
+          appState.incidents.unshift(confirmedRecord);
+        }
+        persistState();
+        updateAdminKPIsAndQueue();
+        renderMainSafetyMap();
 
-      if (serverConfirmed) {
+        // Clear input form fields only on confirmed success
         document.getElementById('report-description').value = '';
+        clearEvidencePhoto();
         updateReportCharCount();
         SoundController.play('sos_send');
-        showToast('Incident report submitted and queued for moderation! Tracking ID: ' + reportId, 'success');
+        const duration = Math.round(performance.now() - startTime);
+        SafeCityDiagnostics.log('/api/incidents', 201, duration, 'SUBMISSION', `Created incident ${reportId}`, true);
+        showToast('Incident report submitted! Pinned on map (Tracking ID: ' + reportId + ')', 'success');
+
+        // Show result in tracking box
+        const trackInput = document.getElementById('track-lookup-input');
+        if (trackInput) trackInput.value = reportId;
+        lookupReportByTrackingId();
+
+        // Automatically switch to the Map tab and pan directly to the newly reported pin
+        setTimeout(() => {
+          switchTab('map');
+          if (mainLeafletMap) {
+            mainLeafletMap.setView([safeLat, safeLng], 15);
+          }
+        }, 700);
       } else {
-        // Do NOT clear description so the user does not lose their written text on connection drop
-        showToast('Server response delayed. Report saved locally (ID: ' + reportId + ') and queued for background sync.', 'warning');
+        // Submission failed: Preserve user input, do not show false success message
+        const duration = Math.round(performance.now() - startTime);
+        SafeCityDiagnostics.log('/api/incidents', 500, duration, 'SUBMISSION', errorMessage, false);
+        showToast('Submission failed: ' + errorMessage + ' Tap "Configure" at top to check Server URL.', 'danger');
+        openServerConfigModal();
       }
     }
 
@@ -5406,12 +6302,14 @@
         const data = await res.json();
         if (res.ok && data.success) {
           appState.adminLoggedIn = true;
-          localStorage.setItem('safecity_admin_token', data.token || 'verified');
+          appState.adminToken = data.token;
+          localStorage.setItem('safecity_admin_token', data.token || 'sc-jwt-moderator-2026-verified');
           updateAdminKPIsAndQueue();
           updateUserSessionUI();
           SoundController.play('login');
           showToast('Authenticated as Bengaluru Safety Moderator.', 'success');
           fetchAdminIncidentsFromBackend(false);
+          startModeratorLiveSync();
           return;
         } else {
           showToast(data.error || 'Invalid moderator credentials.', 'danger');
@@ -5420,12 +6318,14 @@
         // Secure offline fallback without exposing credentials in notifications
         if ((email === 'admin@safecity.bengaluru.in' || email === 'admin@astrasafe.bengaluru.in') && (pw === 'SafeCity@2026' || pw === 'AstraSafe@2026')) {
           appState.adminLoggedIn = true;
+          appState.adminToken = 'sc-jwt-moderator-2026-verified';
           localStorage.setItem('safecity_admin_token', 'sc-jwt-moderator-2026-verified');
           updateAdminKPIsAndQueue();
           updateUserSessionUI();
           SoundController.play('login');
           showToast('Authenticated as Bengaluru Safety Moderator.', 'success');
           fetchAdminIncidentsFromBackend(false);
+          startModeratorLiveSync();
         } else {
           showToast('Invalid moderator credentials.', 'danger');
         }
@@ -5433,7 +6333,9 @@
     }
 
     function signOutAdmin() {
+      stopModeratorLiveSync();
       appState.adminLoggedIn = false;
+      appState.adminToken = null;
       localStorage.removeItem('safecity_admin_token');
       updateAdminKPIsAndQueue();
       updateUserSessionUI();
@@ -5465,58 +6367,105 @@
         if (typeof lucide !== 'undefined') lucide.createIcons();
       }
 
+      const startTime = performance.now();
+      let fetchedIncidents = null;
+      let syncError = null;
+
+      // Attempt 1: Fetch from Central Gateway Backend
       try {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 6000);
-        const res = await fetch(`${API_BASE_URL}/api/admin/incidents`, { signal: controller.signal });
+        const token = appState.adminToken || localStorage.getItem('safecity_admin_token') || 'sc-jwt-moderator-2026-verified';
+        const res = await fetch(`${API_BASE_URL}/api/admin/incidents?_t=${Date.now()}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Cache-Control': 'no-cache'
+          },
+          signal: controller.signal
+        });
         clearTimeout(timeout);
 
         if (res.ok) {
           const data = await res.json();
           if (data && data.success && Array.isArray(data.incidents)) {
-            const serverMap = new Map();
-            data.incidents.forEach(inc => {
-              serverMap.set(inc.report_id, inc);
-            });
-
-            // Local only records
-            const localOnly = appState.incidents.filter(i => !serverMap.has(i.report_id));
-
-            // Sync any local offline submissions to the server
-            for (const draft of localOnly) {
-              if (draft.sync_pending) {
-                try {
-                  await fetch(`${API_BASE_URL}/api/incidents`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(draft)
-                  });
-                  draft.sync_pending = false;
-                } catch (e) {}
-              }
-            }
-
-            appState.incidents = [...data.incidents, ...localOnly];
-            persistState();
-            updateAdminKPIsAndQueue();
-            renderMainSafetyMap();
-            if (showToastOnManual) {
-              showToast(`Moderation queue refreshed: ${data.incidents.length} reports retrieved from server.`, 'success');
-            }
+            fetchedIncidents = data.incidents;
           }
         } else {
-          if (showToastOnManual) showToast('Could not fetch latest reports from server.', 'warning');
+          const errData = await res.json().catch(() => ({}));
+          syncError = errData.error || `Server error (${res.status})`;
         }
       } catch (err) {
-        console.warn('Backend sync failed:', err);
-        if (showToastOnManual) showToast('Server connection timeout. Displaying locally stored reports.', 'warning');
-      } finally {
-        const refreshBtn = document.getElementById('admin-refresh-btn');
-        if (refreshBtn) {
-          refreshBtn.disabled = false;
-          refreshBtn.innerHTML = '<i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i><span>Refresh Queue</span>';
-          if (typeof lucide !== 'undefined') lucide.createIcons();
+        syncError = err.message || 'Network timeout';
+      }
+
+      // Attempt 2: Query Supabase directly if backend gateway is unreachable
+      if (!fetchedIncidents && supabaseCloud) {
+        try {
+          const { data, error } = await supabaseCloud
+            .from('incident_reports')
+            .select('*')
+            .order('incident_time', { ascending: false });
+
+          if (!error && Array.isArray(data)) {
+            fetchedIncidents = data;
+            syncError = null;
+          } else if (error) {
+            syncError = error.message;
+          }
+        } catch (sbErr) {
+          syncError = sbErr.message;
         }
+      }
+
+      const duration = Math.round(performance.now() - startTime);
+
+      if (fetchedIncidents) {
+        // Authoritative reconciliation: Replace queue with database records without stale duplicates
+        const deduplicated = [];
+        const seenIds = new Set();
+        for (const inc of fetchedIncidents) {
+          if (!seenIds.has(inc.report_id)) {
+            seenIds.add(inc.report_id);
+            deduplicated.push(inc);
+          }
+        }
+
+        appState.incidents = deduplicated;
+        persistState();
+        updateAdminKPIsAndQueue();
+        renderMainSafetyMap();
+
+        // Dismiss connection warning banner
+        const warnBanner = document.getElementById('admin-connection-warning');
+        if (warnBanner) warnBanner.classList.add('hidden');
+
+        SafeCityDiagnostics.log('/api/admin/incidents', 200, duration, 'MODERATION', `Reconciled ${deduplicated.length} database reports`, true);
+
+        if (showToastOnManual) {
+          showToast(`Moderator queue refreshed: ${deduplicated.length} verified/pending reports synchronized from central database.`, 'success');
+        }
+      } else {
+        // Show connection warning banner with action to retry
+        const warnBanner = document.getElementById('admin-connection-warning');
+        if (warnBanner) {
+          warnBanner.classList.remove('hidden');
+          const warnText = document.getElementById('admin-connection-warning-text');
+          if (warnText) {
+            warnText.textContent = `Server connection timeout: ${syncError || 'Could not reach database'}. Displaying cached records. Click Retry to reconnect.`;
+          }
+        }
+
+        SafeCityDiagnostics.log('/api/admin/incidents', 503, duration, 'MODERATION', syncError || 'Could not reach database', false);
+
+        if (showToastOnManual) {
+          showToast(`Queue refresh failed: ${syncError || 'Could not reach database'}. Displaying cached reports.`, 'danger');
+        }
+      }
+
+      if (refreshBtn) {
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = '<i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i><span>Refresh Queue</span>';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
       }
     }
 
@@ -5591,40 +6540,59 @@
         let actionButtons = '';
         if (isPending) {
           actionButtons = `
-            <button type="button" onclick="moderateReport('${item.report_id}', 'REJECTED')" class="min-h-[36px] px-3 py-1.5 rounded-lg bg-ivory-100 hover:bg-rose-50 text-rose-700 text-xs font-semibold border border-surface-border transition">Reject</button>
-            <button type="button" onclick="moderateReport('${item.report_id}', 'VERIFIED')" class="min-h-[36px] px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition">Verify &amp; Publish</button>
+            <button type="button" onclick="moderateReport('${escapeHtml(item.report_id)}', 'REJECTED')" class="min-h-[36px] px-3 py-1.5 rounded-lg bg-ivory-100 hover:bg-rose-50 text-rose-700 text-xs font-semibold border border-surface-border transition">Reject</button>
+            <button type="button" onclick="moderateReport('${escapeHtml(item.report_id)}', 'VERIFIED')" class="min-h-[36px] px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition">Verify &amp; Publish</button>
           `;
         } else if (isVerified) {
           actionButtons = `
             <span class="text-[11px] font-bold text-emerald-700 flex items-center gap-1"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Published</span>
-            <button type="button" onclick="moderateReport('${item.report_id}', 'REJECTED')" class="ml-2 min-h-[32px] px-2.5 py-1 rounded-lg bg-ivory-100 hover:bg-rose-50 text-rose-700 text-[11px] font-semibold border border-surface-border transition">Unpublish</button>
+            <button type="button" onclick="moderateReport('${escapeHtml(item.report_id)}', 'REJECTED')" class="ml-2 min-h-[32px] px-2.5 py-1 rounded-lg bg-ivory-100 hover:bg-rose-50 text-rose-700 text-[11px] font-semibold border border-surface-border transition">Unpublish</button>
           `;
         } else {
           actionButtons = `
             <span class="text-[11px] font-bold text-rose-600 flex items-center gap-1"><i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Rejected</span>
-            <button type="button" onclick="moderateReport('${item.report_id}', 'VERIFIED')" class="ml-2 min-h-[32px] px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-bold border border-emerald-200 transition">Restore &amp; Publish</button>
+            <button type="button" onclick="moderateReport('${escapeHtml(item.report_id)}', 'VERIFIED')" class="ml-2 min-h-[32px] px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-bold border border-emerald-200 transition">Restore &amp; Publish</button>
           `;
         }
 
         const safeLat = (!isNaN(Number(item.latitude))) ? Number(item.latitude).toFixed(4) : '13.0235';
         const safeLng = (!isNaN(Number(item.longitude))) ? Number(item.longitude).toFixed(4) : '77.6142';
 
+        // Check for attached photo evidence
+        let evidenceHtml = '';
+        const imgUrls = item.image_urls || (item.image_url ? [item.image_url] : []);
+        if (Array.isArray(imgUrls) && imgUrls.length > 0 && imgUrls[0]) {
+          const firstImg = imgUrls[0];
+          evidenceHtml = `
+            <div class="flex items-center gap-2.5 p-2 rounded-lg bg-ivory-50 border border-surface-border mt-1.5">
+              <img src="${escapeHtml(firstImg)}" alt="Evidence" class="w-12 h-12 object-cover rounded-md border border-surface-border cursor-pointer hover:opacity-80 transition shrink-0" onclick="viewEvidenceModal('${escapeHtml(firstImg)}')" />
+              <div class="flex-1 min-w-0">
+                <span class="text-[11px] font-bold text-plum-950 flex items-center gap-1">
+                  <i data-lucide="camera" class="w-3 h-3 text-plum-700"></i> Photo Evidence Attached
+                </span>
+                <button type="button" onclick="viewEvidenceModal('${escapeHtml(firstImg)}')" class="text-[11px] text-plum-700 hover:underline font-semibold mt-0.5 block">Click to view full photo</button>
+              </div>
+            </div>
+          `;
+        }
+
         return `
           <div class="p-4 rounded-xl border border-surface-border bg-white space-y-2.5 shadow-sm transition hover:border-plum-300">
             <div class="flex items-center justify-between flex-wrap gap-2">
               <div class="flex items-center gap-2">
-                <span class="font-mono font-bold text-plum-950 text-xs">${item.report_id}</span>
-                <span class="px-2 py-0.5 rounded font-bold text-[10px] ${badgeClass}">${item.status || 'PENDING'}</span>
+                <span class="font-mono font-bold text-plum-950 text-xs">${escapeHtml(item.report_id)}</span>
+                <span class="px-2 py-0.5 rounded font-bold text-[10px] ${badgeClass}">${escapeHtml(item.status || 'PENDING')}</span>
               </div>
-              <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-plum-100 text-plum-900">${item.severity} RISK • ${item.category}</span>
+              <span class="px-2 py-0.5 rounded font-bold text-[10px] bg-plum-100 text-plum-900">${escapeHtml(item.severity)} RISK • ${escapeHtml(item.category)}</span>
             </div>
             <div class="text-xs font-bold text-plum-900 flex items-center gap-1">
               <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-600 shrink-0"></i>
-              <span>${item.location_name || 'Bengaluru Street Pin'} (${safeLat}, ${safeLng})</span>
+              <span>${escapeHtml(item.location_name || 'Bengaluru Street Pin')} (${safeLat}, ${safeLng})</span>
             </div>
-            <p class="text-xs text-ivory-700 leading-relaxed">${item.description}</p>
+            <p class="text-xs text-ivory-700 leading-relaxed">${escapeHtml(item.description)}</p>
+            ${evidenceHtml}
             <div class="flex items-center justify-between pt-2 border-t border-surface-border flex-wrap gap-2">
-              <span class="text-[10px] text-ivory-500 font-mono">${safeTime}</span>
+              <span class="text-[10px] text-ivory-500 font-mono">${escapeHtml(safeTime)}</span>
               <div class="flex items-center gap-2">
                 ${actionButtons}
               </div>
@@ -5639,25 +6607,96 @@
     async function moderateReport(reportId, status) {
       const inc = appState.incidents.find(x => x.report_id === reportId);
       if (!inc) return;
-      inc.status = status;
-      persistState();
-      updateAdminKPIsAndQueue();
-      renderMainSafetyMap();
-      SoundController.play('click');
-      showToast('Report ' + reportId + ' marked as ' + status + '.', 'info');
 
-      // Sync moderation status to backend API
+      const previousStatus = inc.status;
+      const targetStatus = status.toUpperCase();
+
+      let rejectionReason = null;
+      if (targetStatus === 'REJECTED') {
+        const inputReason = window.prompt ? window.prompt('Please provide a reason for rejecting this report:', 'Duplicate report or insufficient details') : 'Moderator rejected report';
+        if (inputReason === null) {
+          return; // User canceled rejection prompt
+        }
+        rejectionReason = inputReason.trim() || 'Rejected by Safety Moderator';
+      }
+
+      const startTime = performance.now();
+      let updateConfirmed = false;
+      let errorMsg = 'Unable to persist moderation status to database.';
+
+      // Attempt 1: Sync moderation status to central backend API with moderator auth token
       try {
+        const token = appState.adminToken || localStorage.getItem('safecity_admin_token') || 'sc-jwt-moderator-2026-verified';
         const res = await fetch(`${API_BASE_URL}/api/admin/incidents/${encodeURIComponent(reportId)}`, {
           method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status })
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            status: targetStatus,
+            rejection_reason: rejectionReason
+          })
         });
-        if (!res.ok) {
-          console.warn('Backend moderation update response:', res.status);
+        if (res.ok) {
+          const resData = await res.json();
+          if (resData.success) {
+            updateConfirmed = true;
+          }
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          errorMsg = errData.error || `Server responded with ${res.status}`;
         }
       } catch (err) {
-        console.warn('Network error syncing report moderation status:', err);
+        console.warn('Backend moderation update error:', err);
+      }
+
+      // Attempt 2: If direct Supabase client is connected, also mirror status update directly
+      if (!updateConfirmed && supabaseCloud) {
+        try {
+          const { data, error } = await supabaseCloud
+            .from('incident_reports')
+            .update({
+              status: targetStatus,
+              rejection_reason: rejectionReason,
+              reviewed_by: 'Bengaluru Safety Command Moderator',
+              reviewed_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            })
+            .eq('report_id', reportId)
+            .select()
+            .single();
+
+          if (!error && data) {
+            updateConfirmed = true;
+          } else if (error) {
+            errorMsg = error.message;
+          }
+        } catch (sbErr) {
+          console.warn('Direct Supabase status update warning:', sbErr);
+        }
+      }
+
+      const duration = Math.round(performance.now() - startTime);
+
+      // Strict Confirmation: Update UI and display success ONLY after database confirms operation
+      if (updateConfirmed) {
+        inc.status = targetStatus;
+        if (rejectionReason) inc.rejection_reason = rejectionReason;
+        inc.reviewed_by = 'Bengaluru Safety Command Moderator';
+        inc.reviewed_at = new Date().toISOString();
+        persistState();
+        updateAdminKPIsAndQueue();
+        renderMainSafetyMap();
+        SoundController.play('click');
+        SafeCityDiagnostics.log(`/api/admin/incidents/${reportId}`, 200, duration, 'MODERATION', `Status updated to ${targetStatus}`, true);
+        showToast(`Report ${reportId} marked as ${targetStatus} in central database.`, 'success');
+      } else {
+        // Retain previous confirmed state and display actionable error
+        inc.status = previousStatus;
+        updateAdminKPIsAndQueue();
+        SafeCityDiagnostics.log(`/api/admin/incidents/${reportId}`, 500, duration, 'MODERATION', `Update failed: ${errorMsg}`, false);
+        showToast(`Moderation update failed: ${errorMsg}`, 'danger');
       }
     }
 
@@ -6176,6 +7215,7 @@ app.listen(5000, () => console.log('SafeCity API running on port 5000'));`
           updateAdminKPIsAndQueue();
           if (appState.adminLoggedIn) {
             fetchAdminIncidentsFromBackend(false);
+            startModeratorLiveSync();
           }
         } else if (tab === 'code') {
           showCodeTab('mysql');
@@ -6258,21 +7298,28 @@ app.listen(5000, () => console.log('SafeCity API running on port 5000'));`
       // Render initial view
       switchTab('home');
 
+      // Check server connectivity and display live status bar
+      checkServerConnectivity();
+
       // Attempt live backend synchronization in the background
       tryLoadBackendData();
 
-      // Periodic background sync if moderator is viewing the admin tab
-      setInterval(() => {
-        if (appState.currentTab === 'admin' && appState.adminLoggedIn) {
-          fetchAdminIncidentsFromBackend(false);
-        }
-      }, 15000);
+      // Initialize real-time multi-channel event stream
+      initBackendEventStream();
+
+      // If moderator is already logged in on reload, start live queue sync immediately
+      if (appState.adminLoggedIn) {
+        startModeratorLiveSync();
+      }
 
       // Listen for reconnect / online event
       window.addEventListener('online', () => {
+        checkServerConnectivity();
         tryLoadBackendData();
+        initBackendEventStream();
         if (appState.adminLoggedIn) {
           fetchAdminIncidentsFromBackend(false);
+          startModeratorLiveSync();
         }
       });
 

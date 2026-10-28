@@ -88,3 +88,11 @@ INSERT INTO safe_havens (name, type, latitude, longitude, phone_number, address,
 ('MedPlus 24x7 Pharmacy — Shivajinagar', 'PHARMACY_24X7', 12.9882, 77.6038, '040-67006700', 'Infantry Road Cross, Shivajinagar, Bengaluru 560001', TRUE),
 ('Apollo Pharmacy 24x7 — Nagawara Manyata', 'PHARMACY_24X7', 13.0435, 77.6205, '080-41256890', 'Opp Manyata Tech Park Gate 2, Nagawara, Bengaluru 560045', TRUE),
 ('Shell 24x7 Bright Select Hub — Hebbal', 'COMMERCIAL_HUB', 13.0358, 77.5970, '080-23541890', 'Bellary Road, Hebbal Flyover Service Rd, Bengaluru 560024', TRUE);
+
+-- Seed Verified Community Street Safety Incidents in Bengaluru
+INSERT INTO incidents (report_id, category, description, latitude, longitude, location_name, severity, incident_time, status, is_anonymous) VALUES
+('AS-2026-10492', 'Poor Lighting', 'Over 6 consecutive streetlights non-functional along Govindpura stretch after 9:30 PM. Heavy blind spots for solo commuters.', 13.0235000, 77.6142000, 'Govindpura Main Rd Cross, Near Nagawara', 'High', '2026-10-20 21:40:00', 'VERIFIED', TRUE),
+('AS-2026-10834', 'Harassment', 'Group on two-wheelers verbally harassing evening commuters near the unlit service lane intersection between 8:30 PM and 11:00 PM.', 13.0195000, 77.6118000, 'Govindpura Junction Service Lane, Arabic College Post', 'High', '2026-10-20 22:15:00', 'VERIFIED', TRUE),
+('AS-2026-11209', 'Stalking', 'Persistent following reported by two students exiting night metro toward Kempegowda bus bays.', 12.9772000, 77.5731000, 'Majestic Subway Underpass towards Platform 4', 'High', '2026-10-19 23:05:00', 'VERIFIED', TRUE),
+('AS-2026-11470', 'Suspicious Activity', 'Frequent loitering in unmonitored commercial corridor after 10 PM. Foot police patrol requested.', 12.9885000, 77.6048000, 'Russell Market South Lane, Shivajinagar', 'Medium', '2026-10-19 22:10:00', 'VERIFIED', TRUE),
+('AS-2026-11982', 'Unsafe Area', 'Deserted unlit lane connecting 80 Feet Road to residential layout with lack of evening civic foot traffic.', 12.9348000, 77.6251000, 'Koramangala 4th Block Interior Link Road', 'Medium', '2026-10-18 20:30:00', 'VERIFIED', TRUE);
